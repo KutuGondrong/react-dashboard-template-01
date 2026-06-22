@@ -1,0 +1,135 @@
+import { lazy, Suspense } from 'react';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { routerBasename } from '@/config/basePath';
+import { isDevFeaturesEnabled } from '@/config/devFeatures';
+import { MainLayout, AuthLayout } from '@/layouts';
+import { ProtectedRoute, PublicRoute } from '@/router/RouteGuards';
+import { SkeletonLoader } from '@/components/SkeletonLoader';
+import { AuthShell } from '@/router/AuthShell';
+
+const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
+const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'));
+const DashboardPage = lazy(() => import('@/features/dashboard/pages/DashboardPage'));
+const UsersPage = lazy(() => import('@/features/users/pages/UsersPage'));
+const SettingsPage = lazy(() => import('@/features/settings/pages/SettingsPage'));
+
+const TutorialLandingPage = isDevFeaturesEnabled
+  ? lazy(() => import('@/features/tutorial/pages/TutorialLandingPage'))
+  : null;
+
+const StorybookLandingPage = isDevFeaturesEnabled
+  ? lazy(() => import('@/features/storybook/pages/StorybookLandingPage'))
+  : null;
+
+function LazyPage({ children }: { children: React.ReactNode }) {
+  return <Suspense fallback={<SkeletonLoader />}>{children}</Suspense>;
+}
+
+const componentsRoutes = StorybookLandingPage
+  ? [
+      {
+        path: 'components',
+        element: (
+          <LazyPage>
+            <StorybookLandingPage />
+          </LazyPage>
+        ),
+      },
+    ]
+  : [];
+
+const tutorialRoutes = TutorialLandingPage
+  ? [
+      {
+        path: 'tutorial',
+        element: (
+          <LazyPage>
+            <TutorialLandingPage />
+          </LazyPage>
+        ),
+      },
+    ]
+  : [];
+
+const protectedChildren = [
+  {
+    index: true,
+    element: <Navigate to="/dashboard" replace />,
+  },
+  {
+    path: 'dashboard',
+    element: (
+      <LazyPage>
+        <DashboardPage />
+      </LazyPage>
+    ),
+  },
+  {
+    path: 'users',
+    element: (
+      <LazyPage>
+        <UsersPage />
+      </LazyPage>
+    ),
+  },
+  {
+    path: 'settings',
+    element: (
+      <LazyPage>
+        <SettingsPage />
+      </LazyPage>
+    ),
+  },
+  ...tutorialRoutes,
+  ...componentsRoutes,
+];
+
+export const appRouter = createBrowserRouter(
+  [
+    {
+      element: <AuthShell />,
+      children: [
+        {
+          path: '/',
+          element: (
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          ),
+          children: protectedChildren,
+        },
+        {
+          path: '/',
+          element: (
+            <PublicRoute>
+              <AuthLayout />
+            </PublicRoute>
+          ),
+          children: [
+            {
+              path: 'login',
+              element: (
+                <LazyPage>
+                  <LoginPage />
+                </LazyPage>
+              ),
+            },
+            {
+              path: 'register',
+              element: (
+                <LazyPage>
+                  <RegisterPage />
+                </LazyPage>
+              ),
+            },
+          ],
+        },
+        {
+          path: '*',
+          element: <Navigate to="/dashboard" replace />,
+        },
+      ],
+    },
+  ],
+  { basename: routerBasename },
+);

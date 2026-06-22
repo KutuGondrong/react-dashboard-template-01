@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "dashboard": "Dasbor",
+    "users": "Pengguna",
+    "settings": "Pengaturan",
+    "components": "Komponen",
+    "componentsOverview": "Ringkasan",
+    "storybook": "Storybook",
+    "tutorial": "Tutorial",
+    "tutorialDocument": "Dokumentasi",
+    "tutorialPreview": "Preview Hasil",
+    "login": "Masuk",
+    "register": "Daftar",
+    "orders": "Pesanan"
+  },
+  "auth": {
+    "loginTitle": "Masuk",
+    "loginSubtitle": "Masukkan kredensial Anda untuk mengakses akun",
+    "registerTitle": "Buat Akun",
+    "registerSubtitle": "Isi detail untuk mendaftarkan akun baru",
+    "emailLabel": "Alamat Email",
+    "emailPlaceholder": "anda@contoh.com",
+    "passwordLabel": "Kata Sandi",
+    "passwordPlaceholder": "Masukkan kata sandi",
+    "confirmPasswordLabel": "Konfirmasi Kata Sandi",
+    "confirmPasswordPlaceholder": "Masukkan ulang kata sandi",
+    "loginButton": "Masuk",
+    "registerButton": "Buat Akun",
+    "noAccount": "Belum punya akun?",
+    "hasAccount": "Sudah punya akun?",
+    "signUpLink": "Daftar",
+    "signInLink": "Masuk",
+    "invalidCredentials": "Email atau kata sandi tidak valid",
+    "emailRequired": "Email wajib diisi",
+    "emailInvalid": "Masukkan alamat email yang valid",
+    "passwordRequired": "Kata sandi wajib diisi",
+    "passwordMinLength": "Kata sandi minimal 6 karakter",
+    "confirmPasswordRequired": "Konfirmasi kata sandi wajib diisi",
+    "passwordMismatch": "Kata sandi tidak cocok",
+    "loginSuccess": "Berhasil masuk",
+    "logoutSuccess": "Anda telah keluar",
+    "demoCredentialsTitle": "Kredensial demo",
+    "demoCredentialsHint": "admin@mail.com / password123"
+  },
+  "dashboard": {
+    "title": "Dasbor",
+    "subtitle": "Ringkasan aplikasi Anda",
+    "totalUsers": "Total Pengguna",
+    "activeSessions": "Sesi Aktif",
+    "recentActivity": "Aktivitas Terbaru",
+    "loadError": "Gagal memuat data dasbor",
+    "charts": {
+      "revenue": "Pendapatan Bulanan",
+      "activity": "Aktivitas Mingguan",
+      "userDistribution": "Distribusi Pengguna",
+      "totalUsers": "Total",
+      "admin": "Admin",
+      "moderator": "Moderator",
+      "user": "Pengguna"
+    }
+  },
+  "users": {
+    "subtitle": "Kelola pengguna dengan pagination server-side, seleksi baris, dan aksi.",
+    "editTitle": "Ubah Pengguna",
+    "editDescription": "Perbarui informasi pengguna",
+    "saveTitle": "Simpan Perubahan",
+    "saveMessage": "Apakah Anda yakin ingin menyimpan perubahan untuk {{name}}?",
+    "deleteTitle": "Hapus Pengguna",
+    "deleteDescription": "Tinjau detail pengguna sebelum menghapus",
+    "deleteMessage": "Apakah Anda yakin ingin menghapus {{name}}? Tindakan ini tidak dapat dibatalkan."
+  },
+  "table": {
+    "emptyTitle": "Tidak ada data",
+    "emptyDescription": "Tidak ada catatan untuk ditampilkan saat ini.",
+    "loadingData": "Memuat data...",
+    "rowsPerPage": "Baris per halaman",
+    "pageOf": "Halaman {{current}} dari {{total}}",
+    "selected": "{{count}} dipilih",
+    "selectRow": "Pilih baris",
+    "selectRowItem": "Pilih baris {{id}}"
+  },
+  "error": {
+    "boundaryTitle": "Kesalahan Tidak Terduga",
+    "boundaryDescription": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi atau hubungi dukungan jika masalah berlanjut.",
+    "reloadPage": "Muat Ulang Halaman",
+    "goHome": "Ke Beranda"
+  },
+  "validation": {
+    "required": "Field ini wajib diisi",
+    "email": "Masukkan alamat email yang valid",
+    "minLength": "Nilai terlalu pendek",
+    "pattern": "Format tidak valid"
+  },
+  "toast": {
+    "position": {
+      "top-left": "Kiri Atas",
+      "top-center": "Tengah Atas",
+      "top-right": "Kanan Atas",
+      "center": "Tengah",
+      "bottom-left": "Kiri Bawah",
+      "bottom-center": "Tengah Bawah",
+      "bottom-right": "Kanan Bawah"
+    }
+  },
+  "orders": {
+    "subtitle": "Kelola pesanan dengan mock data, pagination, dan layout halaman standar."
+  },
+  "footer": {
+    "copyright": "© {{year}} Teristimewa Dashboard. Hak cipta dilindungi.",
+    "version": "Versi {{version}}"
+  }
+}

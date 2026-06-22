@@ -1,0 +1,12 @@
+{
+  "title": "Tutorial",
+  "landingTitle": "Tutorial",
+  "landingSubtitle": "Full step-by-step documentation is hosted separately from this project.",
+  "landingDescription": "Use the button below to open the complete Tutorial, including clone the template repo, make generate, make feature, localization, mock data, and real API setup.",
+  "landingHint": "The documentation opens in a new browser tab on the template publisher's site.",
+  "landingLinkLabel": "Open full Tutorial documentation",
+  "landingUrlNote": "Documentation site: {{url}}",
+  "landingRepoNote": "Template repository (clone first): {{url}}",
+  "devBannerTitle": "Development mode only",
+  "devBannerDescription": "This menu appears when you run make dev. Production builds (make build) never include it. Don't want it in dev either? Set VITE_SHOW_DEV_FEATURES=false in .env or .env.development."
+}

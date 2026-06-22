@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "settings": "Settings",
+    "components": "Components",
+    "componentsOverview": "Overview",
+    "storybook": "Storybook",
+    "tutorial": "Tutorial",
+    "tutorialDocument": "Documentation",
+    "tutorialPreview": "Preview",
+    "login": "Login",
+    "register": "Register",
+    "orders": "Orders"
+  },
+  "auth": {
+    "loginTitle": "Sign In",
+    "loginSubtitle": "Enter your credentials to access your account",
+    "registerTitle": "Create Account",
+    "registerSubtitle": "Fill in the details to register a new account",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordLabel": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "loginButton": "Sign In",
+    "registerButton": "Create Account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUpLink": "Sign up",
+    "signInLink": "Sign in",
+    "invalidCredentials": "Invalid email or password",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordMismatch": "Passwords do not match",
+    "loginSuccess": "Login successful",
+    "logoutSuccess": "You have been logged out",
+    "demoCredentialsTitle": "Demo credentials",
+    "demoCredentialsHint": "admin@mail.com / password123"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your application",
+    "totalUsers": "Total Users",
+    "activeSessions": "Active Sessions",
+    "recentActivity": "Recent Activity",
+    "loadError": "Failed to load dashboard data",
+    "charts": {
+      "revenue": "Monthly Revenue",
+      "activity": "Weekly Activity",
+      "userDistribution": "User Distribution",
+      "totalUsers": "Total",
+      "admin": "Admin",
+      "moderator": "Moderator",
+      "user": "Users"
+    }
+  },
+  "users": {
+    "subtitle": "Manage users with server-side pagination, row selection, and actions.",
+    "editTitle": "Edit User",
+    "editDescription": "Update user information",
+    "saveTitle": "Save Changes",
+    "saveMessage": "Are you sure you want to save changes for {{name}}?",
+    "deleteTitle": "Delete User",
+    "deleteDescription": "Review user details before deleting",
+    "deleteMessage": "Are you sure you want to delete {{name}}? This action cannot be undone."
+  },
+  "table": {
+    "emptyTitle": "No data available",
+    "emptyDescription": "There are no records to display at this time.",
+    "loadingData": "Loading data...",
+    "rowsPerPage": "Rows per page",
+    "pageOf": "Page {{current}} of {{total}}",
+    "selected": "{{count}} selected",
+    "selectRow": "Select row",
+    "selectRowItem": "Select row {{id}}"
+  },
+  "error": {
+    "boundaryTitle": "Unexpected Error",
+    "boundaryDescription": "An unexpected error occurred. Please try again or contact support if the problem persists.",
+    "reloadPage": "Reload Page",
+    "goHome": "Go to Home"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "minLength": "Value is too short",
+    "pattern": "Invalid format"
+  },
+  "toast": {
+    "position": {
+      "top-left": "Top Left",
+      "top-center": "Top Center",
+      "top-right": "Top Right",
+      "center": "Center",
+      "bottom-left": "Bottom Left",
+      "bottom-center": "Bottom Center",
+      "bottom-right": "Bottom Right"
+    }
+  },
+  "orders": {
+    "subtitle": "Manage orders with mock data, pagination, and standard page layout."
+  },
+  "footer": {
+    "copyright": "© {{year}} Teristimewa Dashboard. All rights reserved.",
+    "version": "Version {{version}}"
+  }
+}

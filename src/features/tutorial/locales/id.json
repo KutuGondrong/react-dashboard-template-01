@@ -1,0 +1,12 @@
+{
+  "title": "Tutorial",
+  "landingTitle": "Tutorial",
+  "landingSubtitle": "Dokumentasi langkah demi langkah di-host terpisah dari project ini.",
+  "landingDescription": "Gunakan tombol di bawah untuk membuka Tutorial lengkap, termasuk clone repo template, make generate, make feature, lokalisasi, mock data, dan setup API nyata.",
+  "landingHint": "Dokumentasi akan terbuka di tab browser baru di situs publisher template.",
+  "landingLinkLabel": "Buka dokumentasi Tutorial lengkap",
+  "landingUrlNote": "Situs dokumentasi: {{url}}",
+  "landingRepoNote": "Repository template (clone dulu): {{url}}",
+  "devBannerTitle": "Hanya mode development",
+  "devBannerDescription": "Menu ini muncul saat menjalankan make dev. Build production (make build) tidak pernah menyertakannya. Tidak mau tampil di dev? Set VITE_SHOW_DEV_FEATURES=false di .env atau .env.development."
+}

@@ -1,0 +1,12 @@
+import type { ChartCardProps } from './chart.types';
+
+export function ChartCard({ title, children, className = '' }: ChartCardProps) {
+  return (
+    <div
+      className={`rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900 ${className}`}
+    >
+      <h3 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
+      {children}
+    </div>
+  );
+}

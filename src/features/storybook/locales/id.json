@@ -1,0 +1,10 @@
+{
+  "landingTitle": "Components",
+  "landingSubtitle": "Katalog komponen lengkap di-host terpisah dari project ini.",
+  "landingDescription": "Gunakan tombol di bawah untuk melihat semua komponen: preview live, props, state, dan contoh kode siap salin.",
+  "landingHint": "Katalog akan terbuka di tab browser baru di situs publisher template.",
+  "landingLinkLabel": "Buka katalog komponen",
+  "landingUrlNote": "Situs katalog: {{url}}",
+  "landingDevBannerTitle": "Hanya dev",
+  "landingDevBannerDescription": "Menu ini muncul saat menjalankan make dev. Build production (make build) tidak pernah menyertakannya. Tidak mau tampil di dev? Set VITE_SHOW_DEV_FEATURES=false di .env atau .env.development."
+}

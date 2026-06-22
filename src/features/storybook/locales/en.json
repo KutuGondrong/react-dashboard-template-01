@@ -1,0 +1,10 @@
+{
+  "landingTitle": "Components",
+  "landingSubtitle": "The full component catalog is hosted separately from this project.",
+  "landingDescription": "Use the button below to browse every component: live previews, props, states, and copy-pasteable code examples.",
+  "landingHint": "The catalog opens in a new browser tab on the template publisher's site.",
+  "landingLinkLabel": "Open component catalog",
+  "landingUrlNote": "Catalog site: {{url}}",
+  "landingDevBannerTitle": "Dev only",
+  "landingDevBannerDescription": "This menu appears when you run make dev. Production builds (make build) never include it. Don't want it in dev either? Set VITE_SHOW_DEV_FEATURES=false in .env or .env.development."
+}

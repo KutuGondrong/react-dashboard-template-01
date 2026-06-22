@@ -1,0 +1,35 @@
+export { ComboBox } from './ComboBox';
+export type {
+  ComboBoxProps,
+  ComboBoxSelectEvent,
+  ComboBoxAddOptionConfig,
+  ComboBoxAddFieldConfig,
+  ComboBoxAddRenderContext,
+  ComboBoxAddDataType,
+  ComboBoxAccessors,
+  ComboBoxChangeValue,
+  ComboBoxNormalizedOption,
+  ComboBoxPrimitive,
+  ComboBoxValueProp,
+} from './comboBox.types';
+export { ComboBoxAddInputMode, ComboBoxItemKind } from './comboBox.types';
+export {
+  createComboBoxAccessors,
+  createSelectOptionAccessors,
+  normalizeComboBoxOptions,
+  buildItemFromStringAdd,
+  buildItemFromObjectAdd,
+  buildItemFromFieldsAdd,
+  buildAddedItemFromFields,
+  buildItemFromJsonAdd,
+  getNestedValue,
+  hasNestedPath,
+  setNestedValue,
+  getFirstSelectableOption,
+  isComboBoxValueUnset,
+  matchesComboBoxValue,
+  resolveComboBoxItemKind,
+  resolveAddInputMode,
+  resolveAddInputModeFromConfig,
+  resolveAddFields,
+} from './comboBoxUtils';
