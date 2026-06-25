@@ -1,13 +1,13 @@
 export { LineChart } from './LineChart';
 export { BarChart } from './BarChart';
 export { DonutChart } from './DonutChart';
-export { ChartCard } from './ChartCard';
+export { MetricCard } from './MetricCard';
 export { ChartSkeleton, DonutChartSkeleton } from './ChartSkeleton';
 export type {
   LineChartProps,
   BarChartProps,
   DonutChartProps,
-  ChartCardProps,
+  MetricCardProps,
   ChartDimensions,
 } from './chart.types';
 export type { ChartColorToken } from '@/config/color.tokens';

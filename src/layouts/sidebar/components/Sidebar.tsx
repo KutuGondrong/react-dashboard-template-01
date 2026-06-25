@@ -5,6 +5,7 @@ interface SidebarProps {
   collapsed?: boolean;
   onCollapse?: (collapsed: boolean) => void;
   collapsible?: boolean;
+  embedded?: boolean;
   className?: string;
 }
 
@@ -12,6 +13,7 @@ export function Sidebar({
   collapsed = false,
   onCollapse,
   collapsible = true,
+  embedded = false,
   className,
 }: SidebarProps) {
   const { menuItems } = useSidebar();
@@ -22,9 +24,10 @@ export function Sidebar({
       collapsed={collapsible ? collapsed : false}
       onCollapse={onCollapse}
       collapsible={collapsible}
-      collapseTriggerPosition="top"
+      collapseTriggerPosition="top-peek"
       childConnector="tree"
-      className={className ?? 'h-full'}
+      embedded={embedded}
+      className={className ?? 'h-full min-h-0 w-full flex-1'}
     />
   );
 }

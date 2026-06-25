@@ -4,8 +4,25 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { ensureDownloadSamples } from './ensure-download-samples.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+function assertRsyncAvailable() {
+  try {
+    execSync('rsync --version', { stdio: 'ignore' });
+  } catch {
+    console.error('rsync is required but was not found in PATH.');
+    console.error('');
+    console.error('Install rsync:');
+    console.error('  macOS: included with macOS (or: brew install rsync)');
+    console.error('  Linux: sudo apt install rsync');
+    console.error('  Windows: use WSL — sudo apt install rsync');
+    console.error('');
+    console.error('See README Prerequisites: README.md#prerequisites');
+    process.exit(1);
+  }
+}
 
 function expandHome(input) {
   if (input.startsWith('~/')) {
@@ -63,6 +80,8 @@ function main() {
 
   fs.mkdirSync(outputDir, { recursive: true });
 
+  assertRsyncAvailable();
+
   const excludes = ['node_modules', 'dist', '.git', 'generate', '.pnpm-store'].map(
     (item) => `--exclude=${item}`,
   );
@@ -84,20 +103,22 @@ function main() {
 
   const cfgPath = path.join(outputDir, 'src/config/app.config.ts');
   let cfg = fs.readFileSync(cfgPath, 'utf8');
-  cfg = cfg.replace(/title: '[^']*'/, `title: '${name}'`);
-  cfg = cfg.replace(
-    /description: \{[\s\S]*?\},/,
-    `description: {\n    en: '',\n    id: '',\n  },`,
-  );
   cfg = cfg.replace(/isBoilerplate: true/, 'isBoilerplate: false');
   cfg = cfg.replace(/enableDevFeaturesInProduction: true/, 'enableDevFeaturesInProduction: false');
   fs.writeFileSync(cfgPath, cfg);
 
+  const envDestPath = path.join(outputDir, '.env.production');
   const envCopyPath = path.join(ROOT, '.env.production.copy');
-  if (!fs.existsSync(envCopyPath)) {
-    throw new Error('.env.production.copy not found — required for another-user output');
+  if (fs.existsSync(envCopyPath)) {
+    // Creator/boilerplate repo: another-user production env lives in .env.production.copy
+    fs.copyFileSync(envCopyPath, envDestPath);
+  } else if (!fs.existsSync(envDestPath)) {
+    // Template repo (make template): .env.production.copy is stripped; rsync should have copied .env.production
+    throw new Error('.env.production.copy or .env.production not found — required for generated app output');
   }
-  fs.copyFileSync(envCopyPath, path.join(outputDir, '.env.production'));
+
+  const samplesDir = ensureDownloadSamples(ROOT, outputDir);
+  console.log(`✓ Download samples → ${path.relative(outputDir, samplesDir)}/`);
 
   execSync('git init -q', { cwd: outputDir, stdio: 'inherit' });
 

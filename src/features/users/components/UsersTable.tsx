@@ -1,17 +1,21 @@
 import { useMemo, useState } from 'react';
 import { useLocale } from '@/context/LocaleContext';
 import type { TableColumn, User } from '@/models/model.type';
-import { DataTable, DataTableActionButton } from '@/components/DataTable';
+import { DataTable, DataTableGroup } from '@/components/DataTable';
+import { Pagination } from '@/components/Pagination';
+import { Button } from '@/components/Button';
 import { Badge } from '@/components/Badge';
 import { Avatar } from '@/components/Avatar';
 import { useUsersPage } from '@/features/users/hooks/useUsersPage';
 import { UserEditDrawer } from '@/features/users/components/UserEditDrawer';
 import { UserDeleteDrawer } from '@/features/users/components/UserDeleteDrawer';
+import { UserBulkDeleteDrawer } from '@/features/users/components/UserBulkDeleteDrawer';
 
 export function UsersTable() {
   const { t } = useLocale();
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deletingUser, setDeletingUser] = useState<User | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const {
     users,
     isLoading,
@@ -25,6 +29,7 @@ export function UsersTable() {
     onPageSizeChange,
     updateUser,
     deleteUser,
+    deleteUsers,
   } = useUsersPage();
 
   const columns = useMemo<TableColumn<User>[]>(
@@ -61,10 +66,29 @@ export function UsersTable() {
       {
         key: 'isActive',
         header: t('components.common.status'),
+        transform: (value) =>
+          value ? (
+            <Badge variant="success" dot>
+              {t('components.common.active')}
+            </Badge>
+          ) : (
+            <Badge variant="danger" dot>
+              {t('components.common.inactive')}
+            </Badge>
+          ),
+      },
+      {
+        key: 'actions',
+        header: t('components.common.actions'),
         render: (user) => (
-          <Badge variant={user.isActive ? 'success' : 'danger'} dot>
-            {user.isActive ? t('components.common.active') : t('components.common.inactive')}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setEditingUser(user)}>
+              {t('components.common.edit')}
+            </Button>
+            <Button variant="danger" size="sm" onClick={() => setDeletingUser(user)}>
+              {t('components.common.delete')}
+            </Button>
+          </div>
         ),
       },
     ],
@@ -73,30 +97,32 @@ export function UsersTable() {
 
   return (
     <>
-      <DataTable
-        data={users}
-        columns={columns}
-        isLoading={isLoading}
-        rowSelection="checkbox"
-        selectedIds={selectedIds}
-        onSelectionChange={setSelectedIds}
-        currentPage={page}
-        totalPages={totalPages}
-        pageSize={pageSize}
-        totalItems={totalItems}
-        onPageChange={setPage}
-        onPageSizeChange={onPageSizeChange}
-        renderActions={(user) => (
-          <>
-            <DataTableActionButton onClick={() => setEditingUser(user)}>
-              {t('components.common.edit')}
-            </DataTableActionButton>
-            <DataTableActionButton onClick={() => setDeletingUser(user)} variant="danger">
-              {t('components.common.delete')}
-            </DataTableActionButton>
-          </>
-        )}
-      />
+      <DataTableGroup>
+        <DataTable
+          unwrapped
+          data={users}
+          columns={columns}
+          isLoading={isLoading}
+          rowSelection="checkbox"
+          selectedIds={selectedIds}
+          onSelectionChange={setSelectedIds}
+          renderSelectionActions={({ selectedIds: ids }) => (
+            <Button variant="danger" size="sm" onClick={() => setBulkDeleteOpen(true)}>
+              {t('components.common.delete')} ({ids.length})
+            </Button>
+          )}
+        />
+        <DataTableGroup.Footer>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={totalItems}
+            onPageChange={setPage}
+            onPageSizeChange={onPageSizeChange}
+          />
+        </DataTableGroup.Footer>
+      </DataTableGroup>
 
       <UserEditDrawer
         isOpen={editingUser !== null}
@@ -114,6 +140,13 @@ export function UsersTable() {
         onDelete={() => {
           if (deletingUser) deleteUser(deletingUser.id);
         }}
+      />
+
+      <UserBulkDeleteDrawer
+        isOpen={bulkDeleteOpen}
+        users={users.filter((user) => selectedIds.includes(user.id))}
+        onClose={() => setBulkDeleteOpen(false)}
+        onDelete={() => deleteUsers(selectedIds)}
       />
     </>
   );

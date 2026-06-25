@@ -31,14 +31,22 @@ export interface NavMenuItem {
   parentClick?: 'expand' | 'navigate';
 }
 
+export type NavMenuScrollControls = 'top' | 'bottom' | 'all' | 'none';
+
 export interface NavMenuProps {
   items: NavMenuItem[];
+  /**
+   * Icons-only sidebar mode. When `collapsible` without `onCollapse`, NavMenu manages
+   * collapse state internally and this prop sets the initial value (updates when changed).
+   * When `onCollapse` is provided, parent controls this value (e.g. Layout.Sider sync).
+   */
   collapsed?: boolean;
   className?: string;
   /** Shows a button to collapse/expand the menu (icons-only mode). */
   collapsible?: boolean;
   /** Position of the collapse trigger button. */
-  collapseTriggerPosition?: 'top' | 'bottom';
+  collapseTriggerPosition?: 'top-peek' | 'top' | 'center' | 'bottom';
+  /** Called when the user toggles collapse. When provided, `collapsed` is controlled by the parent. */
   onCollapse?: (collapsed: boolean) => void;
   /** Default expanded (`always`) or collapsed (`collapsible`). Both modes can still be toggled. */
   childrenMode?: 'collapsible' | 'always';
@@ -54,6 +62,13 @@ export interface NavMenuProps {
   onNavigate?: (path: string) => void;
   /** When false (default), scrollbar is hidden but scrolling still works. */
   showScrollbar?: boolean;
+  /**
+   * Section scroll buttons when the menu overflows.
+   * `top` — up only; `bottom` — down only; `all` — both (default); `none` — hidden.
+   */
+  scrollControls?: NavMenuScrollControls;
+  /** Mobile drawer / embedded panel — defers horizontal padding to the parent container. */
+  embedded?: boolean;
 }
 
 function ChevronIcon({ expanded }: { expanded: boolean }) {
@@ -629,13 +644,145 @@ function NavMenuNode({ item, ctx }: { item: NavMenuItem; ctx: ItemContext }) {
   );
 }
 
+const NAV_SECTION_THRESHOLD = 8;
+const SCROLL_EDGE_THRESHOLD = 4;
+
+interface NavMenuScrollState {
+  canScroll: boolean;
+  canScrollUp: boolean;
+  canScrollDown: boolean;
+}
+
+function getNavMenuScrollState(nav: HTMLElement | null, collapsed: boolean): NavMenuScrollState {
+  if (!nav || collapsed) {
+    return { canScroll: false, canScrollUp: false, canScrollDown: false };
+  }
+
+  const { scrollTop, scrollHeight, clientHeight } = nav;
+  const maxScrollTop = Math.max(0, scrollHeight - clientHeight);
+  const canScroll = maxScrollTop > SCROLL_EDGE_THRESHOLD;
+
+  return {
+    canScroll,
+    canScrollUp: canScroll && scrollTop > SCROLL_EDGE_THRESHOLD,
+    canScrollDown: canScroll && scrollTop < maxScrollTop - SCROLL_EDGE_THRESHOLD,
+  };
+}
+
+function afterNavScroll(nav: HTMLElement, onComplete: () => void) {
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    onComplete();
+  };
+
+  nav.addEventListener('scrollend', finish, { once: true });
+  window.setTimeout(finish, 450);
+}
+
+function scrollNavMenuSection(nav: HTMLElement, direction: 'up' | 'down', onComplete?: () => void) {
+  const sections = Array.from(nav.querySelectorAll<HTMLElement>('[data-nav-section]'));
+  if (!sections.length) return;
+
+  const navTop = nav.getBoundingClientRect().top;
+  const maxScrollTop = Math.max(0, nav.scrollHeight - nav.clientHeight);
+
+  const scrollTo = (top: number) => {
+    const nextTop = Math.max(0, Math.min(top, maxScrollTop));
+    nav.scrollTo({ top: nextTop, behavior: 'smooth' });
+    if (onComplete) afterNavScroll(nav, onComplete);
+  };
+
+  if (direction === 'down') {
+    const next = sections.find(
+      (section) => section.getBoundingClientRect().top > navTop + NAV_SECTION_THRESHOLD,
+    );
+
+    if (next) {
+      const top =
+        nav.scrollTop + next.getBoundingClientRect().top - nav.getBoundingClientRect().top;
+      scrollTo(top);
+      return;
+    }
+
+    scrollTo(maxScrollTop);
+    return;
+  }
+
+  const previous = [...sections]
+    .reverse()
+    .find((section) => section.getBoundingClientRect().top < navTop - NAV_SECTION_THRESHOLD);
+
+  if (!previous) {
+    scrollTo(0);
+    return;
+  }
+
+  if (previous === sections[0]) {
+    scrollTo(0);
+    return;
+  }
+
+  const top =
+    nav.scrollTop + previous.getBoundingClientRect().top - nav.getBoundingClientRect().top;
+  scrollTo(top);
+}
+
+const ARROW_STROKE = {
+  stroke: 'currentColor',
+  strokeWidth: 2,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
+  fill: 'none',
+};
+
+function NavScrollUpIcon() {
+  return (
+    <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" aria-hidden="true">
+      <path {...ARROW_STROKE} d="M4.5 11 8 5.5 11.5 11" />
+    </svg>
+  );
+}
+
+function NavScrollDownIcon() {
+  return (
+    <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" aria-hidden="true">
+      <path {...ARROW_STROKE} d="M4.5 5 8 10.5 11.5 5" />
+    </svg>
+  );
+}
+
+function NavMenuScrollButton({
+  direction,
+  onClick,
+}: {
+  direction: 'up' | 'down';
+  onClick: () => void;
+}) {
+  const { t } = useLocale();
+  const label =
+    direction === 'up' ? t('components.common.navScrollUp') : t('components.common.navScrollDown');
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gray-300/80 bg-transparent text-gray-500 transition-[transform,background-color,color] duration-200 ease-out hover:scale-105 hover:border-gray-400 hover:bg-gray-100 hover:text-gray-700 active:scale-100 dark:border-gray-600 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+    >
+      {direction === 'up' ? <NavScrollUpIcon /> : <NavScrollDownIcon />}
+    </button>
+  );
+}
+
 function NavMenuCollapseTrigger({
   collapsed,
   position,
   onToggle,
 }: {
   collapsed: boolean;
-  position: 'top' | 'bottom';
+  position: 'top-peek' | 'top' | 'center' | 'bottom';
   onToggle: () => void;
 }) {
   const { t } = useLocale();
@@ -643,12 +790,17 @@ function NavMenuCollapseTrigger({
     ? t('components.common.expandMenu')
     : t('components.common.collapseMenu');
 
-  if (position === 'top') {
+  const chevronPath = collapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7';
+
+  const peekButtonClass =
+    'absolute -right-3 z-30 flex w-6 items-center justify-center rounded-md bg-white text-slate-500 shadow-md transition-colors hover:bg-slate-50 hover:text-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:hover:text-slate-200';
+
+  if (position === 'top-peek') {
     return (
       <button
         type="button"
         onClick={onToggle}
-        className="absolute -right-3 top-3 z-30 flex h-6 w-6 items-center justify-center rounded-md bg-white text-slate-500 shadow-md transition-colors hover:bg-slate-50 hover:text-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:hover:text-slate-200"
+        className={cn(peekButtonClass, 'top-3 h-6')}
         aria-label={menuToggleLabel}
       >
         <svg
@@ -658,12 +810,28 @@ function NavMenuCollapseTrigger({
           stroke="currentColor"
           aria-hidden="true"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d={collapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'}
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={chevronPath} />
+        </svg>
+      </button>
+    );
+  }
+
+  if (position === 'center') {
+    return (
+      <button
+        type="button"
+        onClick={onToggle}
+        className={cn(peekButtonClass, 'top-1/2 h-10 -translate-y-1/2')}
+        aria-label={menuToggleLabel}
+      >
+        <svg
+          className="h-3.5 w-3.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={chevronPath} />
         </svg>
       </button>
     );
@@ -674,8 +842,11 @@ function NavMenuCollapseTrigger({
       type="button"
       onClick={onToggle}
       className={cn(
-        'flex w-full items-center border-t border-gray-200 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-300',
-        collapsed ? 'justify-center px-2 py-2' : 'justify-end px-3 py-2',
+        'flex w-full shrink-0 items-center text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-300',
+        position === 'top'
+          ? 'border-b border-gray-200 dark:border-gray-700'
+          : 'border-t border-gray-200 dark:border-gray-700',
+        'justify-center px-2 py-2',
       )}
       aria-label={menuToggleLabel}
     >
@@ -686,12 +857,7 @@ function NavMenuCollapseTrigger({
         stroke="currentColor"
         aria-hidden="true"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d={collapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'}
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={chevronPath} />
       </svg>
     </button>
   );
@@ -710,10 +876,10 @@ function getInitialOpenKeys(
 
 export function NavMenu({
   items,
-  collapsed = false,
+  collapsed: collapsedProp = false,
   className,
   collapsible = false,
-  collapseTriggerPosition = 'top',
+  collapseTriggerPosition = 'top-peek',
   onCollapse,
   childrenMode = 'collapsible',
   childConnector = 'tree',
@@ -722,16 +888,36 @@ export function NavMenu({
   pathname: pathnameProp,
   onNavigate,
   showScrollbar = false,
+  scrollControls = 'all',
+  embedded = false,
 }: NavMenuProps) {
   const { t } = useLocale();
   const { pathname: routerPathname } = useLocation();
   const pathname = pathnameProp ?? routerPathname;
   const defaultExpandedSeededRef = useRef<Set<string>>(new Set());
+  const navRef = useRef<HTMLElement>(null);
+  const isCollapseControlled = onCollapse !== undefined;
+  const [internalCollapsed, setInternalCollapsed] = useState(collapsedProp);
+  const [scrollState, setScrollState] = useState<NavMenuScrollState>(() =>
+    getNavMenuScrollState(null, collapsedProp),
+  );
 
   const [openKeys, setOpenKeys] = useState<Set<string>>(() =>
     getInitialOpenKeys(items, pathname, childrenMode),
   );
   const [flyoutKey, setFlyoutKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isCollapseControlled) {
+      setInternalCollapsed(collapsedProp);
+    }
+  }, [collapsedProp, isCollapseControlled]);
+
+  const collapsed = collapsible
+    ? isCollapseControlled
+      ? collapsedProp
+      : internalCollapsed
+    : collapsedProp;
 
   useEffect(() => {
     setOpenKeys((prev) => {
@@ -745,6 +931,35 @@ export function NavMenu({
   useEffect(() => {
     if (!collapsed) setFlyoutKey(null);
   }, [collapsed]);
+
+  const refreshScrollState = useCallback(() => {
+    setScrollState(getNavMenuScrollState(navRef.current, collapsed));
+  }, [collapsed]);
+
+  useEffect(() => {
+    refreshScrollState();
+  }, [refreshScrollState, items, openKeys, collapsed]);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const handleScroll = () => refreshScrollState();
+    nav.addEventListener('scroll', handleScroll, { passive: true });
+    nav.addEventListener('scrollend', handleScroll);
+
+    const observer = new ResizeObserver(handleScroll);
+    observer.observe(nav);
+    for (const section of nav.querySelectorAll('[data-nav-section]')) {
+      observer.observe(section);
+    }
+
+    return () => {
+      nav.removeEventListener('scroll', handleScroll);
+      nav.removeEventListener('scrollend', handleScroll);
+      observer.disconnect();
+    };
+  }, [refreshScrollState, items, openKeys, collapsed]);
 
   const onToggle = useCallback(
     (key: string) => {
@@ -792,20 +1007,72 @@ export function NavMenu({
     onNavigate,
   };
 
-  const handleCollapseToggle = () => onCollapse?.(!collapsed);
+  const handleCollapseToggle = () => {
+    const next = !collapsed;
+    if (!isCollapseControlled) {
+      setInternalCollapsed(next);
+    }
+    onCollapse?.(next);
+  };
+
+  const scrollControlsEnabled = scrollControls !== 'none';
+  const showSectionScrollControls = !collapsed && scrollState.canScroll && scrollControlsEnabled;
+  const showScrollUp =
+    showSectionScrollControls &&
+    scrollState.canScrollUp &&
+    (scrollControls === 'top' || scrollControls === 'all');
+  const showScrollDown =
+    showSectionScrollControls &&
+    scrollState.canScrollDown &&
+    (scrollControls === 'bottom' || scrollControls === 'all');
+
+  const navScrollPadding = collapsed
+    ? 'px-2 pt-2 pb-6'
+    : cn(
+        embedded ? 'px-0' : 'px-4',
+        showSectionScrollControls
+          ? 'py-2'
+          : cn(
+              embedded ? 'pt-1 pb-4' : 'pt-4',
+              !embedded && (collapseTriggerPosition === 'bottom' ? 'pb-6' : 'pb-10'),
+            ),
+      );
+
+  const scrollUp = () => {
+    const nav = navRef.current;
+    if (nav) scrollNavMenuSection(nav, 'up', refreshScrollState);
+  };
+
+  const scrollDown = () => {
+    const nav = navRef.current;
+    if (nav) scrollNavMenuSection(nav, 'down', refreshScrollState);
+  };
+
+  const scrollUpButton = showScrollUp ? (
+    <div className={cn('w-full shrink-0', embedded ? 'pt-1' : 'pl-2 pt-1')}>
+      <NavMenuScrollButton direction="up" onClick={scrollUp} />
+    </div>
+  ) : null;
+
+  const scrollDownButton = showScrollDown ? (
+    <div className={cn('w-full shrink-0', embedded ? 'pb-1' : 'pb-1 pl-2')}>
+      <NavMenuScrollButton direction="down" onClick={scrollDown} />
+    </div>
+  ) : null;
 
   const menuNav = (
     <nav
+      ref={navRef}
       className={cn(
-        'relative flex-1 space-y-1.5',
-        collapsed ? 'overflow-visible p-2' : 'overflow-auto p-4',
+        'relative min-h-0 flex-1 space-y-1.5',
+        collapsed ? 'overflow-visible' : 'overflow-auto',
+        navScrollPadding,
         !collapsed && !showScrollbar && 'scrollbar-hide',
-        !collapsible && className,
       )}
       aria-label={t('components.common.navigation')}
     >
       {items.map((item) => (
-        <div key={item.key}>
+        <div key={item.key} data-nav-section>
           <NavMenuNode item={item} ctx={ctx} />
         </div>
       ))}
@@ -813,12 +1080,26 @@ export function NavMenu({
   );
 
   if (!collapsible) {
-    return menuNav;
+    return (
+      <div
+        className={cn(
+          'relative flex h-full min-h-0 w-full flex-1 flex-col overflow-visible',
+          className,
+        )}
+      >
+        {scrollUpButton}
+        {menuNav}
+        {scrollDownButton}
+      </div>
+    );
   }
 
   return (
     <div
-      className={cn('relative flex h-full flex-col overflow-visible', className)}
+      className={cn(
+        'relative flex h-full min-h-0 w-full flex-1 flex-col overflow-visible',
+        className,
+      )}
     >
       {collapsible && collapseTriggerPosition === 'top' && (
         <NavMenuCollapseTrigger
@@ -827,7 +1108,9 @@ export function NavMenu({
           onToggle={handleCollapseToggle}
         />
       )}
+      {scrollUpButton}
       {menuNav}
+      {scrollDownButton}
       {collapsible && collapseTriggerPosition === 'bottom' && (
         <NavMenuCollapseTrigger
           collapsed={collapsed}
@@ -835,6 +1118,14 @@ export function NavMenu({
           onToggle={handleCollapseToggle}
         />
       )}
+      {collapsible &&
+        (collapseTriggerPosition === 'top-peek' || collapseTriggerPosition === 'center') && (
+          <NavMenuCollapseTrigger
+            collapsed={collapsed}
+            position={collapseTriggerPosition}
+            onToggle={handleCollapseToggle}
+          />
+        )}
     </div>
   );
 }

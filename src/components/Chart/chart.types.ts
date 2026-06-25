@@ -39,7 +39,7 @@ export interface DonutChartProps {
   centerLabel?: string;
 }
 
-export interface ChartCardProps {
+export interface MetricCardProps {
   title: string;
   children: ReactNode;
   className?: string;

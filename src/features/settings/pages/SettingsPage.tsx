@@ -26,7 +26,13 @@ function OptionWithLeadingIcon({ leading, label }: { leading: ReactNode; label: 
 
 function SunIcon() {
   return (
-    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+    <svg
+      className="h-4 w-4"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -39,7 +45,13 @@ function SunIcon() {
 
 function MoonIcon() {
   return (
-    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+    <svg
+      className="h-4 w-4"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -52,7 +64,13 @@ function MoonIcon() {
 
 function SystemIcon() {
   return (
-    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+    <svg
+      className="h-4 w-4"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -80,10 +98,7 @@ function renderLocaleOption(option: SelectOption) {
 
 function renderThemeOption(option: SelectOption) {
   return (
-    <OptionWithLeadingIcon
-      leading={THEME_ICONS[option.value as ThemeMode]}
-      label={option.label}
-    />
+    <OptionWithLeadingIcon leading={THEME_ICONS[option.value as ThemeMode]} label={option.label} />
   );
 }
 

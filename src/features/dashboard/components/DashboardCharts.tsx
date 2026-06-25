@@ -1,6 +1,6 @@
 import {
   BarChart,
-  ChartCard,
+  MetricCard,
   ChartSkeleton,
   DonutChart,
   DonutChartSkeleton,
@@ -23,15 +23,15 @@ export function DashboardCharts({
 }: DashboardChartsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <ChartCard title={resolveLabel(revenueChart.titleKey)}>
+      <MetricCard title={resolveLabel(revenueChart.titleKey)}>
         <LineChart points={revenueChart.points} unit={revenueChart.unit} />
-      </ChartCard>
+      </MetricCard>
 
-      <ChartCard title={resolveLabel(activityChart.titleKey)}>
+      <MetricCard title={resolveLabel(activityChart.titleKey)}>
         <BarChart points={activityChart.points} colorToken="primary-light" />
-      </ChartCard>
+      </MetricCard>
 
-      <ChartCard title={resolveLabel(userDistribution.titleKey)} className="lg:col-span-2">
+      <MetricCard title={resolveLabel(userDistribution.titleKey)} className="lg:col-span-2">
         <DonutChart
           segments={userDistribution.segments.map((segment) => ({
             ...segment,
@@ -40,7 +40,7 @@ export function DashboardCharts({
           total={userDistribution.total}
           centerLabel={resolveLabel('dashboard.charts.totalUsers')}
         />
-      </ChartCard>
+      </MetricCard>
     </div>
   );
 }

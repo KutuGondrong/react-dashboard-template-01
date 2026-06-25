@@ -64,6 +64,24 @@ export function useUsersPage() {
     [pageSize],
   );
 
+  const deleteUsers = useCallback(
+    (userIds: string[]) => {
+      const idsToDelete = new Set(userIds);
+      const deleteCount = userIds.length;
+
+      setUsers((prev) => prev.filter((user) => !idsToDelete.has(user.id)));
+      setSelectedIds((prev) => prev.filter((id) => !idsToDelete.has(id)));
+      setTotalItems((prevTotal) => {
+        const nextTotal = Math.max(0, prevTotal - deleteCount);
+        const nextTotalPages = Math.max(1, Math.ceil(nextTotal / pageSize));
+        setTotalPages(nextTotalPages);
+        setPage((currentPage) => Math.min(currentPage, nextTotalPages));
+        return nextTotal;
+      });
+    },
+    [pageSize],
+  );
+
   return {
     users,
     isLoading,
@@ -77,5 +95,6 @@ export function useUsersPage() {
     onPageSizeChange: handlePageSizeChange,
     updateUser,
     deleteUser,
+    deleteUsers,
   };
 }

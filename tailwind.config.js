@@ -1,8 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  // Keep class-based dark mode for the whole app. Light preview islands in
-  // storybook use .theme-preview-light so dark: utilities skip them when html.dark.
+  // Creator storybook: .theme-preview-light isolates light previews when html.dark.
   darkMode: ['variant', '.dark &:not(.theme-preview-light *)'],
   theme: {
     extend: {

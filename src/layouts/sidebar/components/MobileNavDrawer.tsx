@@ -18,10 +18,10 @@ export function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
       title={t('components.common.menu')}
       placement="left"
       size="sm"
-      contentClassName="px-0 py-0"
+      contentClassName="!px-4 !pt-4 !pb-5"
       className="lg:hidden [&>div]:max-w-[85vw]"
     >
-      <Sidebar collapsible={false} className="min-h-full [&_nav]:px-3 [&_nav]:py-3" />
+      <Sidebar embedded collapsible={false} className="min-h-full" />
     </Drawer>
   );
 }

@@ -12,6 +12,7 @@ export interface CodeBlockProps {
   defaultExpanded?: boolean;
   /** Accordion: header title (required when variant is accordion). */
   title?: string;
+  /** Accordion: helper text shown when collapsed (hidden after expand). */
   hint?: string;
   defaultOpen?: boolean;
   compact?: boolean;
@@ -21,7 +22,11 @@ export interface CodeBlockProps {
 function ChevronIcon({ expanded, className }: { expanded: boolean; className?: string }) {
   return (
     <svg
-      className={cn('h-4 w-4 shrink-0 transition-transform duration-200', expanded && 'rotate-180', className)}
+      className={cn(
+        'h-4 w-4 shrink-0 transition-transform duration-200',
+        expanded && 'rotate-180',
+        className,
+      )}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -76,10 +81,13 @@ function InlineCodeBlock({
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(defaultExpanded);
 
+  useEffect(() => {
+    setExpanded(defaultExpanded);
+  }, [defaultExpanded]);
+
   const lines = getCodeLines(code);
   const isCollapsible = previewLines != null && lines.length > previewLines;
-  const displayedCode =
-    isCollapsible && !expanded ? lines.slice(0, previewLines).join('\n') : code;
+  const displayedCode = isCollapsible && !expanded ? lines.slice(0, previewLines).join('\n') : code;
   const toggleLabel = expanded
     ? t('components.common.codeBlockCollapse')
     : t('components.common.codeBlockExpand');
@@ -93,7 +101,7 @@ function InlineCodeBlock({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-lg border border-gray-200 bg-gray-950 dark:border-gray-700',
+        'relative w-full min-w-0 rounded-lg border border-gray-200 bg-gray-950 dark:border-gray-700',
         className,
       )}
     >
@@ -110,14 +118,14 @@ function InlineCodeBlock({
         </button>
       ) : null}
       <CopyButton copied={copied} onCopy={handleCopy} className="absolute right-2 top-2 z-10" />
-      <div className="relative">
+      <div className="relative min-w-0">
         <pre
           className={cn(
-            'overflow-x-auto p-4 pt-10 text-xs leading-relaxed text-gray-100',
+            'max-w-full overflow-x-auto whitespace-pre p-4 pt-10 font-mono text-xs leading-relaxed text-gray-100',
             isCollapsible && !expanded && 'pb-2',
           )}
         >
-          <code>{displayedCode}</code>
+          <code className="block whitespace-pre">{displayedCode}</code>
         </pre>
         {isCollapsible && !expanded ? (
           <div
@@ -141,6 +149,10 @@ function AccordionCodeBlock({
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [copied, setCopied] = useState(false);
   const preRef = useRef<HTMLPreElement>(null);
+
+  useEffect(() => {
+    setIsOpen(defaultOpen);
+  }, [defaultOpen]);
 
   const resizePre = useCallback(() => {
     const el = preRef.current;
@@ -166,41 +178,56 @@ function AccordionCodeBlock({
   };
 
   return (
-    <div className={cn('rounded-lg border border-gray-200 dark:border-gray-700', className)}>
+    <div
+      className={cn(
+        'w-full min-w-0 rounded-lg border border-gray-200 dark:border-gray-700',
+        className,
+      )}
+    >
       <button
         type="button"
         onClick={() => setIsOpen((open) => !open)}
         className={cn(
-          'flex w-full items-center justify-between text-left text-sm font-medium text-gray-700 dark:text-gray-300',
+          'flex w-full min-w-0 items-center justify-between gap-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300',
           compact ? 'px-3 py-2' : 'px-4 py-3',
         )}
         aria-expanded={isOpen}
       >
-        <span>{title}</span>
+        <span className="min-w-0 truncate">{title}</span>
         <ChevronIcon expanded={isOpen} />
       </button>
 
+      {hint && !isOpen ? (
+        <p
+          className={cn(
+            'text-xs text-gray-500 dark:text-gray-400',
+            compact ? 'px-3 pb-2' : 'px-4 pb-3',
+          )}
+        >
+          {hint}
+        </p>
+      ) : null}
+
       {isOpen ? (
-        <div className="border-t border-gray-200 dark:border-gray-700">
+        <div className="w-full min-w-0 border-t border-gray-200 dark:border-gray-700">
           <div
             className={cn(
-              'flex items-center justify-between gap-3',
+              'flex items-center justify-end gap-3',
               compact ? 'px-3 pt-2' : 'px-4 pt-3',
             )}
           >
-            {hint ? <p className="text-xs text-gray-500 dark:text-gray-400">{hint}</p> : <span />}
             <CopyButton
               copied={copied}
               onCopy={handleCopy}
               className="shrink-0 bg-gray-700 hover:bg-gray-600"
             />
           </div>
-          <div className={compact ? 'p-3 pt-0' : 'p-4'}>
+          <div className={cn('min-w-0', compact ? 'p-3 pt-0' : 'p-4')}>
             <pre
               ref={preRef}
-              className="overflow-hidden rounded-lg bg-gray-900 p-4 font-mono text-xs leading-relaxed text-green-400"
+              className="w-full min-w-0 max-w-full overflow-x-auto whitespace-pre rounded-lg bg-gray-900 p-4 font-mono text-xs leading-relaxed text-green-400"
             >
-              <code>{code}</code>
+              <code className="block whitespace-pre">{code}</code>
             </pre>
           </div>
         </div>

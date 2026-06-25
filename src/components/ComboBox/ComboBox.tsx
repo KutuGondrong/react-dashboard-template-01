@@ -52,7 +52,7 @@ export function ComboBox<T = SelectOption>(props: ComboBoxProps<T>) {
     placeholder,
     error,
     disabled = false,
-    searchable = true,
+    searchable = false,
     className = '',
     addOption,
   } = props;
@@ -354,7 +354,7 @@ export function ComboBox<T = SelectOption>(props: ComboBoxProps<T>) {
       <div className="relative">
         {showCustomClosed && (
           <div
-            className="pointer-events-none absolute inset-0 flex items-center px-3 py-2 pr-10"
+            className="pointer-events-none absolute inset-0 flex items-center px-3 py-1.5 pr-9"
             aria-hidden="true"
           >
             {closedDisplay!.node}
@@ -370,6 +370,7 @@ export function ComboBox<T = SelectOption>(props: ComboBoxProps<T>) {
           aria-invalid={!!error}
           aria-describedby={error ? errorId : undefined}
           disabled={disabled}
+          autoComplete="off"
           readOnly={!searchable}
           value={isOpen && searchable ? search : showCustomClosed ? '' : closedText}
           placeholder={showCustomClosed ? undefined : resolvedPlaceholder}
@@ -379,9 +380,9 @@ export function ComboBox<T = SelectOption>(props: ComboBoxProps<T>) {
           }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          className={`block w-full cursor-pointer rounded-lg border bg-white px-3 py-2.5 pr-10 text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800 dark:text-gray-100 ${showCustomClosed ? 'min-h-[3.25rem]' : ''} ${stateClasses}`}
+          className={`block w-full cursor-pointer rounded-lg border bg-white px-3 py-2 pr-9 text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800 dark:text-gray-100 ${showCustomClosed ? 'h-10' : ''} ${stateClasses}`}
         />
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+        <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400">
           <svg
             className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             fill="none"
@@ -400,7 +401,7 @@ export function ComboBox<T = SelectOption>(props: ComboBoxProps<T>) {
           className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
         >
           {filteredOptions.length === 0 ? (
-            <li className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+            <li className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400">
               {t('components.common.noOptionsFound')}
             </li>
           ) : (
@@ -411,7 +412,7 @@ export function ComboBox<T = SelectOption>(props: ComboBoxProps<T>) {
                 aria-selected={option.value === selectedKey}
                 onClick={() => handleSelect(option)}
                 onMouseEnter={() => setHighlightedIndex(index)}
-                className={`cursor-pointer px-3 py-2 text-sm transition-colors ${
+                className={`cursor-pointer px-3 py-1.5 text-sm transition-colors ${
                   option.disabled
                     ? 'cursor-not-allowed text-gray-400'
                     : highlightedIndex === index

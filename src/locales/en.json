@@ -67,17 +67,10 @@
     "saveMessage": "Are you sure you want to save changes for {{name}}?",
     "deleteTitle": "Delete User",
     "deleteDescription": "Review user details before deleting",
-    "deleteMessage": "Are you sure you want to delete {{name}}? This action cannot be undone."
-  },
-  "table": {
-    "emptyTitle": "No data available",
-    "emptyDescription": "There are no records to display at this time.",
-    "loadingData": "Loading data...",
-    "rowsPerPage": "Rows per page",
-    "pageOf": "Page {{current}} of {{total}}",
-    "selected": "{{count}} selected",
-    "selectRow": "Select row",
-    "selectRowItem": "Select row {{id}}"
+    "deleteMessage": "Are you sure you want to delete {{name}}? This action cannot be undone.",
+    "bulkDeleteTitle": "Delete Selected Users",
+    "bulkDeleteDescription": "Review {{count}} selected users before deleting",
+    "bulkDeleteMessage": "Are you sure you want to delete all {{count}} selected users? This action cannot be undone."
   },
   "error": {
     "boundaryTitle": "Unexpected Error",

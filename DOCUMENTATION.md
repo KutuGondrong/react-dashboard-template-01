@@ -6,6 +6,22 @@ This project is a **React dashboard template**. **Clone it from GitHub first**, 
 
 The clone URL is configured in `src/config/external-links.json` (`templateRepoUrl`).
 
+## Prerequisites
+
+Install tools before cloning. Full install guides for **macOS**, **Linux**, and **Windows** are in [README.md](./README.md#install-from-scratch) (Git, Node.js, pnpm, make, rsync).
+
+| Tool | Version | Required | Used for |
+|------|---------|----------|----------|
+| **Node.js** | 20.x (20.11.0 recommended) | Yes | Runtime & build |
+| **pnpm** | 8.x (8.15.4 recommended) | Yes* | Install dependencies & run scripts |
+| **Git** | any recent | Recommended | Clone repo, `make generate` init |
+| **make** | GNU Make | Optional | Makefile shortcuts (`make dev`, etc.) |
+| **rsync** | any | Optional | `make generate` only |
+
+\* npm works as a fallback but this project is tested with **pnpm**.
+
+Quick verify: `node --version` · `pnpm --version` · `git --version`
+
 ```bash
 git clone <templateRepoUrl>
 cd react-app-template   # folder name from the URL
@@ -51,7 +67,9 @@ make generate name=my-new-app
 make generate name=my-new-app out=~/projects/my-new-app
 ```
 
-Updates `package.json` name and `app.config.ts` title, then runs `git init` in the output folder.
+Updates `package.json` name, then runs `git init` in the output folder. Title and description in `app.config.ts` are copied as-is from the template.
+
+**FileDownload demo files:** `public/samples/` (`report.pdf`, `data.csv`, `readme.txt`) are copied automatically when you run `make template` or `make generate` so mock download / URL mode works out of the box in development.
 
 ## Scaffold a Feature
 

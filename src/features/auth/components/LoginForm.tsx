@@ -88,7 +88,9 @@ export function LoginForm() {
       </AuthFormFooter>
 
       <div className="mt-6 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-3 text-center text-xs text-gray-500 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-400">
-        <p className="font-medium text-gray-600 dark:text-gray-300">{t('auth.demoCredentialsTitle')}</p>
+        <p className="font-medium text-gray-600 dark:text-gray-300">
+          {t('auth.demoCredentialsTitle')}
+        </p>
         <p className="mt-1 font-mono text-[11px] tracking-wide">{t('auth.demoCredentialsHint')}</p>
       </div>
     </div>

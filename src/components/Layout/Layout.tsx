@@ -391,7 +391,9 @@ function LayoutSider({
       type="button"
       onClick={handleToggle}
       className="flex w-full items-center justify-center border-t border-gray-200 py-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-      aria-label={collapsed ? t('components.common.expandSidebar') : t('components.common.collapseSidebar')}
+      aria-label={
+        collapsed ? t('components.common.expandSidebar') : t('components.common.collapseSidebar')
+      }
     >
       <svg
         className="h-4 w-4"

@@ -1,7 +1,8 @@
 .PHONY: dev format lint build preview clean generate feature help
 
 PNPM := pnpm
-NODE := node
+# Prefer Volta (package.json pins node 20.x) over broken Homebrew node@14 in PATH
+NODE := $(shell command -v volta >/dev/null 2>&1 && volta which node 2>/dev/null || command -v node 2>/dev/null || echo node)
 
 help:
 	@echo "Available targets:"
@@ -13,7 +14,6 @@ help:
 	@echo "  make clean            - Remove dist, .turbo, node_modules/.vite"
 	@echo "  make generate name=X [out=PATH] - Scaffold your app from this template (default: ../X)"
 	@echo "  make feature name=X [scope=full|hook|page] [label=\"Name\"] [label-id=\"Nama\"] - Scaffold menu + page"
-	@[ -f Makefile.creator ] && $(MAKE) --no-print-directory template-help || true
 
 dev:
 	@if [ ! -d node_modules ]; then \

@@ -1,6 +1,6 @@
-import type { ChartCardProps } from './chart.types';
+import type { MetricCardProps } from './chart.types';
 
-export function ChartCard({ title, children, className = '' }: ChartCardProps) {
+export function MetricCard({ title, children, className = '' }: MetricCardProps) {
   return (
     <div
       className={`rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900 ${className}`}

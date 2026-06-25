@@ -28,7 +28,7 @@ export interface ApiPaginatedResponse<T> {
   total_pages: number;
 }
 
-export interface ApiUserListResponse extends ApiPaginatedResponse<ApiUserResponse> {}
+export type ApiUserListResponse = ApiPaginatedResponse<ApiUserResponse>;
 
 export interface ApiDashboardStatItemResponse {
   id: string;

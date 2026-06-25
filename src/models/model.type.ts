@@ -54,10 +54,13 @@ export interface SelectOption {
 }
 
 export interface TableColumn<T> {
+  /** Field path — supports dot notation for nested objects, e.g. "profile.department" or "a.a1". */
   key: keyof T | string;
   header: string;
   sortable?: boolean;
   render?: (item: T) => ReactNode;
+  /** Transform raw cell value before display — enum labels, formatting, custom UI, etc. */
+  transform?: (value: unknown, item: T) => ReactNode;
   className?: string;
 }
 
@@ -67,6 +70,8 @@ export interface FileUploadItem {
   progress: number;
   status: 'pending' | 'uploading' | 'success' | 'error';
   error?: string;
+  /** True setelah handler memanggil onProgress — kontrol tampilan progress bar */
+  reportsProgress?: boolean;
 }
 
 export type ToastPosition =

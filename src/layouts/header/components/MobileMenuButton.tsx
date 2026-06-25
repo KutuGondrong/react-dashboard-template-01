@@ -9,7 +9,7 @@ export function MobileMenuButton({ isOpen, onClick, label }: MobileMenuButtonPro
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-gray-100 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 lg:hidden dark:text-gray-300 dark:hover:bg-gray-800 dark:focus:ring-offset-gray-900"
+      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95 lg:hidden dark:text-gray-300 dark:hover:bg-gray-800 dark:focus:ring-offset-gray-900"
       aria-label={label}
       aria-expanded={isOpen}
       aria-controls="mobile-nav-drawer"

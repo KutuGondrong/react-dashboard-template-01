@@ -169,8 +169,8 @@ function patchFile(filePath, transform) {
 function subtitleForScope(scope, labelEn, labelId) {
   if (scope === 'page') {
     return {
-      en: `Empty page scaffold for ${labelEn.toLowerCase()} — add your own components.`,
-      id: `Halaman kosong untuk ${labelId.toLowerCase()} — tambahkan komponen sendiri.`,
+      en: `Empty page scaffold for ${labelEn.toLowerCase()}: add your own components.`,
+      id: `Halaman kosong untuk ${labelId.toLowerCase()}: tambahkan komponen sendiri.`,
     };
   }
   if (scope === 'hook') {

@@ -13,13 +13,8 @@ import { layoutSurfaces } from '@/layouts/main-layout/layoutSurfaces';
 import { ScrollProvider } from '@/context/ScrollContext';
 
 export function MainLayout() {
-  const {
-    sidebarCollapsed,
-    onSidebarCollapse,
-    mobileNavOpen,
-    toggleMobileNav,
-    closeMobileNav,
-  } = useMainLayout();
+  const { sidebarCollapsed, onSidebarCollapse, mobileNavOpen, toggleMobileNav, closeMobileNav } =
+    useMainLayout();
   const location = useLocation();
 
   useEffect(() => {
@@ -37,10 +32,7 @@ export function MainLayout() {
         <AnimatedBackground variant="dashboard" />
         <Layout.Header
           sticky
-          className={cn(
-            'relative z-40 !border-0 px-3 sm:px-4 lg:px-6',
-            layoutSurfaces.header,
-          )}
+          className={cn('relative z-40 !border-0 px-3 sm:px-4 lg:px-6', layoutSurfaces.header)}
         >
           <Header onMenuToggle={toggleMobileNav} isMobileNavOpen={mobileNavOpen} />
         </Layout.Header>
@@ -54,7 +46,7 @@ export function MainLayout() {
             className={cn(
               'hidden min-h-0 shrink-0 p-0 lg:z-30 lg:flex',
               layoutSurfaces.nav,
-              '[&>div]:flex [&>div]:min-h-0 [&>div]:flex-col [&>div]:!overflow-visible [&>div]:scrollbar-hide [&>div]:p-0',
+              '[&>div]:scrollbar-hide [&>div]:flex [&>div]:min-h-0 [&>div]:flex-col [&>div]:!overflow-visible [&>div]:p-0',
               '!overflow-visible !border-0',
             )}
           >
@@ -62,12 +54,12 @@ export function MainLayout() {
           </Layout.Sider>
           <ScrollContainer
             className={cn(
-              'relative min-h-0 min-w-0 flex-1 overflow-auto !p-0',
+              'relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden !p-0',
               layoutSurfaces.main,
             )}
           >
-            <div className="flex min-h-full flex-col">
-              <div className="flex-1 p-3 sm:p-4 lg:p-6">
+            <div className="flex h-full min-h-0 flex-col">
+              <div className="flex min-h-0 flex-1 flex-col overflow-auto p-3 sm:p-4 lg:p-6">
                 <Outlet />
               </div>
               <Layout.Footer
@@ -85,4 +77,3 @@ export function MainLayout() {
     </ScrollProvider>
   );
 }
-

@@ -67,17 +67,10 @@
     "saveMessage": "Apakah Anda yakin ingin menyimpan perubahan untuk {{name}}?",
     "deleteTitle": "Hapus Pengguna",
     "deleteDescription": "Tinjau detail pengguna sebelum menghapus",
-    "deleteMessage": "Apakah Anda yakin ingin menghapus {{name}}? Tindakan ini tidak dapat dibatalkan."
-  },
-  "table": {
-    "emptyTitle": "Tidak ada data",
-    "emptyDescription": "Tidak ada catatan untuk ditampilkan saat ini.",
-    "loadingData": "Memuat data...",
-    "rowsPerPage": "Baris per halaman",
-    "pageOf": "Halaman {{current}} dari {{total}}",
-    "selected": "{{count}} dipilih",
-    "selectRow": "Pilih baris",
-    "selectRowItem": "Pilih baris {{id}}"
+    "deleteMessage": "Apakah Anda yakin ingin menghapus {{name}}? Tindakan ini tidak dapat dibatalkan.",
+    "bulkDeleteTitle": "Hapus Pengguna Terpilih",
+    "bulkDeleteDescription": "Tinjau {{count}} pengguna terpilih sebelum menghapus",
+    "bulkDeleteMessage": "Apakah Anda yakin ingin menghapus semua {{count}} pengguna terpilih? Tindakan ini tidak dapat dibatalkan."
   },
   "error": {
     "boundaryTitle": "Kesalahan Tidak Terduga",

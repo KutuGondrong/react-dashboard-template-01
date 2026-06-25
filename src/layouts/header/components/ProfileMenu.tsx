@@ -96,7 +96,9 @@ export function ProfileMenu({
         onClick={onToggle}
         aria-expanded={isOpen}
         className={`rounded-full p-0.5 transition-colors hover:bg-gray-100 lg:rounded-lg lg:p-1.5 dark:hover:bg-gray-800 ${
-          isOpen ? 'ring-2 ring-primary-500/40 ring-offset-2 ring-offset-white dark:ring-offset-gray-900' : ''
+          isOpen
+            ? 'ring-2 ring-primary-500/40 ring-offset-2 ring-offset-white dark:ring-offset-gray-900'
+            : ''
         }`}
       >
         <Avatar name={user.fullName} src={user.avatarUrl} size="sm" presence="online" />

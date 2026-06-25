@@ -4,10 +4,11 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { localSource } from '@/datasource/local/localSource';
 import { setUnauthorizedHandler } from '@/datasource/network/services/backendService';
 import type { AuthSession, LoginCredentials, RegisterCredentials, User } from '@/models/model.type';
@@ -28,6 +29,9 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationRef = useRef(location);
+  locationRef.current = location;
   const [user, setUser] = useState<User | null>(() => localSource.getUser());
   const [token, setToken] = useState<string | null>(() => localSource.getToken());
   const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const handleUnauthorized = () => {
       clearSession();
-      navigate('/login', { replace: true });
+      navigate('/login', { replace: true, state: { from: locationRef.current } });
     };
 
     setUnauthorizedHandler(handleUnauthorized);

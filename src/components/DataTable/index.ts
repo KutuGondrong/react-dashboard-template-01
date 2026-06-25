@@ -1,2 +1,12 @@
-export { DataTable, DataTableActionButton } from './DataTable';
-export type { DataTableProps, DataTableEmptyState, RowSelectionMode } from './DataTable';
+export { DataTable } from './DataTable';
+export { DataTableGroup } from './DataTableGroup';
+export { getNestedValue, getTableColumnRawValue, resolveTableColumnCell } from './tableColumnUtils';
+export type {
+  DataTableProps,
+  DataTableStatusContent,
+  DataTableStatusIconVariant,
+  DataTableEmptyState,
+  DataTableSelectionContext,
+  RowSelectionMode,
+} from './DataTable';
+export type { DataTableGroupProps } from './DataTableGroup';

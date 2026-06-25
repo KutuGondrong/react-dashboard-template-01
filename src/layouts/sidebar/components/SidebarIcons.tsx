@@ -69,7 +69,6 @@ export function OrdersIcon() {
   );
 }
 
-
 export function TutorialIcon() {
   return (
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">

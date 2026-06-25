@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, type Location } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLocale } from '@/context/LocaleContext';
 import { ValidationError } from '@/datasource/network/apiRepository';
@@ -20,7 +20,12 @@ export function useAuthForm(mode: 'login' | 'register') {
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/dashboard';
+  const redirectTarget = (location.state as { from?: Location })?.from ?? null;
+
+  const buildRedirectPath = (target: Location | null) => {
+    if (!target) return '/dashboard';
+    return `${target.pathname}${target.search}${target.hash}`;
+  };
 
   const validateLogin = useCallback(
     (credentials: LoginCredentials): FormErrors => {
@@ -66,7 +71,7 @@ export function useAuthForm(mode: 'login' | 'register') {
       setErrors({});
       try {
         await login(credentials);
-        navigate(from, { replace: true });
+        navigate(buildRedirectPath(redirectTarget), { replace: true });
         return true;
       } catch (error) {
         if (error instanceof ValidationError) {
@@ -81,7 +86,7 @@ export function useAuthForm(mode: 'login' | 'register') {
         return false;
       }
     },
-    [validateLogin, login, navigate, from, t],
+    [validateLogin, login, navigate, redirectTarget, t],
   );
 
   const handleRegister = useCallback(
