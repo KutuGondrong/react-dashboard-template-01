@@ -11,9 +11,7 @@
     "documentationTutorial": "Tutorial",
     "documentationPreview": "Preview",
     "login": "Login",
-    "register": "Register",
-    "orders": "Orders",
-    "inventory": "Inventory"
+    "register": "Register"
   },
   "auth": {
     "loginTitle": "Sign In",
@@ -96,12 +94,6 @@
       "bottom-center": "Bottom Center",
       "bottom-right": "Bottom Right"
     }
-  },
-  "orders": {
-    "subtitle": "Manage orders with mock data, pagination, and standard page layout."
-  },
-  "inventory": {
-    "subtitle": "Manage inventory with mock data, pagination, and standard page layout."
   },
   "footer": {
     "copyright": "© {{year}} Teristimewa Dashboard. All rights reserved.",

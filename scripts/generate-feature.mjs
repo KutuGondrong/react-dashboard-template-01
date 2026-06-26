@@ -1,10 +1,15 @@
 #!/usr/bin/env node
+import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const VALID_SCOPES = ['full', 'hook', 'page'];
+const ROUTES_GEN = 'src/router/featureRoutes.generated.tsx';
+const MENU_GEN = 'src/layouts/sidebar/featureMenuItems.generated.tsx';
+const GENERATED_FEATURE_ICON_PATH =
+  'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z';
 
 function parseArgs(argv) {
   const args = {};
@@ -40,39 +45,60 @@ function parseName(raw) {
   const parts = kebab.split('-').filter(Boolean);
   const pascal = parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join('');
   const camel = parts[0] + parts.slice(1).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join('');
-  const localeKey = parts.length === 1 ? parts[0] : camel;
-
-  return { kebab, pascal, camel, localeKey, parts };
+  return { kebab, pascal, camel, parts };
 }
 
-function escapeJsonString(value) {
-  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+function readLocaleData(relativePath) {
+  const absolute = path.join(ROOT, relativePath);
+  if (!fs.existsSync(absolute)) return null;
+  return JSON.parse(fs.readFileSync(absolute, 'utf8'));
 }
 
-function appendNavLocaleEntry(content, key, label) {
-  if (new RegExp(`"nav"[\\s\\S]*?"${key}"\\s*:`).test(content)) {
-    throw new Error(`Nav key "${key}" already exists`);
+function detectExistingLocaleKey(kebab) {
+  const found = [];
+  for (const localeFile of ['src/locales/en.json', 'src/locales/id.json']) {
+    const data = readLocaleData(localeFile);
+    if (!data) continue;
+    if (data.nav?.[kebab] !== undefined) {
+      found.push(`nav.${kebab} in ${localeFile}`);
+    }
+    if (data[kebab] !== undefined) {
+      found.push(`"${kebab}" section in ${localeFile}`);
+    }
   }
-
-  return content.replace(/(  "nav": \{[\s\S]*?)(  \},)/, (_, navInner, navClose) => {
-    let inner = navInner.replace(/\s+$/, '');
-    inner = inner.replace(/(\n    "[^"]+": "(?:[^"\\]|\\.)*")(\s*)$/, '$1,$2');
-    return `${inner}\n    "${key}": "${escapeJsonString(label)}"\n${navClose}`;
-  });
+  return found;
 }
 
-function appendFeatureLocaleSection(content, key, subtitle) {
-  if (content.includes(`"${key}": {`)) {
-    throw new Error(`Locale key ${key} already exists`);
+function patchLocales(meta, templates) {
+  for (const [localeFile, labels] of [
+    ['src/locales/en.json', templates.localeEn],
+    ['src/locales/id.json', templates.localeId],
+  ]) {
+    const absolute = path.join(ROOT, localeFile);
+    if (!fs.existsSync(absolute)) {
+      throw new Error(`File not found: ${localeFile}`);
+    }
+
+    const data = JSON.parse(fs.readFileSync(absolute, 'utf8'));
+    if (!data.nav || typeof data.nav !== 'object') {
+      data.nav = {};
+    }
+
+    data.nav[meta.kebab] = labels.nav;
+
+    const existingSection =
+      typeof data[meta.kebab] === 'object' && data[meta.kebab] !== null ? data[meta.kebab] : {};
+    data[meta.kebab] = { ...existingSection, subtitle: labels.subtitle };
+
+    if (data.nav.generatedFeature && Object.keys(data.nav.generatedFeature).length === 0) {
+      delete data.nav.generatedFeature;
+    }
+    if (data.generatedFeature && Object.keys(data.generatedFeature).length === 0) {
+      delete data.generatedFeature;
+    }
+
+    fs.writeFileSync(absolute, `${JSON.stringify(data, null, 2)}\n`);
   }
-
-  const block = `  "${key}": {\n    "subtitle": "${escapeJsonString(subtitle)}"\n  },`;
-
-  if (content.includes('\n  "footer": {')) {
-    return content.replace(/\n  "footer": \{/, `\n${block}\n  "footer": {`);
-  }
-
-  return content.replace(/(\n)\}$/, `$1${block}\n}$`);
 }
 
 function readRootFile(relativePath) {
@@ -84,40 +110,28 @@ function readRootFile(relativePath) {
 function detectExistingFeature(meta) {
   const found = [];
   const featureRoot = path.join(ROOT, 'src/features', meta.kebab);
+  const hasFolder = fs.existsSync(featureRoot);
 
-  if (fs.existsSync(featureRoot)) {
+  const routesGen = readRootFile(ROUTES_GEN);
+  const hasRoute = Boolean(
+    routesGen &&
+      (routesGen.includes(`path: '${meta.kebab}'`) || routesGen.includes(`features/${meta.kebab}/`)),
+  );
+
+  const menuGen = readRootFile(MENU_GEN);
+  const hasSidebar = Boolean(
+    menuGen &&
+      (menuGen.includes(`key: '${meta.kebab}'`) || menuGen.includes(`path: '/${meta.kebab}'`)),
+  );
+
+  if (hasFolder) {
     found.push(`src/features/${meta.kebab}/`);
   }
-
-  const router = readRootFile('src/router/AppRouter.tsx');
-  if (router) {
-    if (router.includes(`path: '${meta.kebab}'`) || router.includes(`features/${meta.kebab}/`)) {
-      found.push(`Route /${meta.kebab} in src/router/AppRouter.tsx`);
-    }
+  if (hasRoute) {
+    found.push(`Route /${meta.kebab} in ${ROUTES_GEN}`);
   }
-
-  const sidebar = readRootFile('src/layouts/sidebar/hooks/useSidebar.tsx');
-  if (sidebar) {
-    if (
-      sidebar.includes(`key: '${meta.kebab}'`) ||
-      sidebar.includes(`path: '/${meta.kebab}'`) ||
-      sidebar.includes(`nav.${meta.localeKey}`)
-    ) {
-      found.push(`Sidebar menu in src/layouts/sidebar/hooks/useSidebar.tsx`);
-    }
-  }
-
-  const icons = readRootFile('src/layouts/sidebar/components/SidebarIcons.tsx');
-  if (icons?.includes(`export function ${meta.pascal}Icon(`)) {
-    found.push(`${meta.pascal}Icon in src/layouts/sidebar/components/SidebarIcons.tsx`);
-  }
-
-  for (const localeFile of ['src/locales/en.json', 'src/locales/id.json']) {
-    const locale = readRootFile(localeFile);
-    if (locale && (locale.includes(`"${meta.localeKey}":`) || locale.includes(`"nav.${meta.localeKey}"`))) {
-      found.push(`Locale key "${meta.localeKey}" in ${localeFile}`);
-      break;
-    }
+  if (hasSidebar) {
+    found.push(`Sidebar menu in ${MENU_GEN}`);
   }
 
   return [...new Set(found)];
@@ -134,10 +148,13 @@ function suggestFeatureNames(meta) {
 
 function exitFeatureAlreadyExists(meta, found) {
   console.error('');
-  console.error(`✗ Feature "${meta.kebab}" already exists — create a different one.`);
+  console.error(`✗ Feature name "${meta.kebab}" is already in use — choose a different name.`);
   console.error('');
   console.error('  Found:');
   found.forEach((item) => console.error(`    - ${item}`));
+  console.error('');
+  console.error('  Locale keys use the feature name directly (nav.<name>, <name>.subtitle).');
+  console.error('  Each name must be unique across features and locale files.');
   console.error('');
   console.error('  Examples:');
   suggestFeatureNames(meta).forEach((example) => console.error(`    ${example}`));
@@ -147,10 +164,49 @@ function exitFeatureAlreadyExists(meta, found) {
 
 function writeFileIfMissing(filePath, content) {
   if (fs.existsSync(filePath)) {
-    throw new Error(`File already exists: ${path.relative(ROOT, filePath)}`);
+    return false;
   }
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, content);
+  return true;
+}
+
+function resolveLocalBin(name) {
+  const local = path.join(ROOT, 'node_modules', '.bin', name);
+  return fs.existsSync(local) ? local : name;
+}
+
+function formatGeneratedFiles(relativePaths) {
+  const absolutePaths = [...new Set(relativePaths)]
+    .map((rel) => path.join(ROOT, rel))
+    .filter((abs) => fs.existsSync(abs));
+
+  if (absolutePaths.length === 0) {
+    return false;
+  }
+
+  if (!fs.existsSync(path.join(ROOT, 'node_modules', 'prettier'))) {
+    return false;
+  }
+
+  const prettier = resolveLocalBin('prettier');
+  const eslint = resolveLocalBin('eslint');
+  const quote = (filePath) => `"${filePath}"`;
+
+  execSync(`${prettier} --write ${absolutePaths.map(quote).join(' ')}`, {
+    cwd: ROOT,
+    stdio: 'pipe',
+  });
+
+  const lintTargets = absolutePaths.filter((filePath) => /\.tsx?$/.test(filePath));
+  if (lintTargets.length > 0) {
+    execSync(`${eslint} ${lintTargets.map(quote).join(' ')} --fix`, {
+      cwd: ROOT,
+      stdio: 'pipe',
+    });
+  }
+
+  return true;
 }
 
 function patchFile(filePath, transform) {
@@ -164,6 +220,128 @@ function patchFile(filePath, transform) {
     throw new Error(`Could not patch ${filePath} — anchor not found or already patched`);
   }
   fs.writeFileSync(absolute, updated);
+}
+
+const GENERATED_FEATURE_ICON_BLOCK = `function GeneratedFeatureIcon() {
+  return (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="${GENERATED_FEATURE_ICON_PATH}"
+      />
+    </svg>
+  );
+}
+`;
+
+function ensureGeneratedFeatureIcon(content) {
+  if (content.includes('function GeneratedFeatureIcon(')) {
+    return content;
+  }
+
+  return content.replace(
+    'export function buildGeneratedFeatureMenuItems',
+    `${GENERATED_FEATURE_ICON_BLOCK}\nexport function buildGeneratedFeatureMenuItems`,
+  );
+}
+
+const ROUTES_FILE_HEADER = `/**
+ * AUTO-GENERATED by \`make feature\` — do not edit manually.
+ * Spread into protectedChildren in AppRouter.tsx.
+ */
+import { lazy, Suspense, type ReactNode } from 'react';
+import { SkeletonLoader } from '@/components/SkeletonLoader';
+
+function FeatureLazyPage({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<SkeletonLoader />}>{children}</Suspense>;
+}
+
+`;
+
+function ensureRoutesFileHeader(content) {
+  if (content.includes('function FeatureLazyPage(')) {
+    return content;
+  }
+
+  return ROUTES_FILE_HEADER + content.replace(/^\/\*\*[\s\S]*?\*\/\s*/, '');
+}
+
+export function appendArrayEntry(inner, entry) {
+  const trimmed = inner.trim();
+  if (!trimmed) {
+    return `\n${entry},\n`;
+  }
+  const withoutTrailingComma = trimmed.replace(/,\s*$/, '');
+  const leadingWhitespace = inner.match(/^\s*/)?.[0] ?? '';
+  return `${leadingWhitespace}${withoutTrailingComma},\n${entry},\n`;
+}
+
+function appendGeneratedRoute(meta) {
+  patchFile(ROUTES_GEN, (content) => {
+    if (content.includes(`features/${meta.kebab}/`)) {
+      return content;
+    }
+
+    let updated = ensureRoutesFileHeader(content);
+    const lazyDecl = `const ${meta.pascal}Page = lazy(() => import('@/features/${meta.kebab}/pages/${meta.pascal}Page'));\n\n`;
+    if (!updated.includes(`const ${meta.pascal}Page = lazy`)) {
+      updated = updated.replace('export const generatedFeatureRoutes', `${lazyDecl}export const generatedFeatureRoutes`);
+    }
+
+    const routeEntry = `  {
+    path: '${meta.kebab}',
+    element: (
+      <FeatureLazyPage>
+        <${meta.pascal}Page />
+      </FeatureLazyPage>
+    ),
+  }`;
+
+    if (updated.includes('export const generatedFeatureRoutes = [];')) {
+      return updated.replace(
+        'export const generatedFeatureRoutes = [];',
+        `export const generatedFeatureRoutes = [\n${routeEntry},\n];`,
+      );
+    }
+
+    return updated.replace(
+      /(export const generatedFeatureRoutes = \[)([\s\S]*?)(\n\];)/,
+      (_, open, inner, close) => `${open}${appendArrayEntry(inner, routeEntry)}${close}`,
+    );
+  });
+}
+
+function appendGeneratedMenuItem(meta) {
+  patchFile(MENU_GEN, (content) => {
+    if (content.includes(`key: '${meta.kebab}'`)) {
+      return content;
+    }
+
+    let updated = ensureGeneratedFeatureIcon(content);
+
+    const menuEntry = `    {
+      key: '${meta.kebab}',
+      label: t('nav.${meta.kebab}'),
+      path: '/${meta.kebab}',
+      icon: <GeneratedFeatureIcon />,
+    }`;
+
+    updated = updated.replace(
+      'buildGeneratedFeatureMenuItems(_t:',
+      'buildGeneratedFeatureMenuItems(t:',
+    );
+
+    if (updated.includes('return [];')) {
+      return updated.replace('return [];', `return [\n${menuEntry},\n  ];`);
+    }
+
+    return updated.replace(
+      /(export function buildGeneratedFeatureMenuItems\(t: \(key: string\) => string\): NavMenuItem\[\] \{\n  return \[)([\s\S]*?)(\n  \];\n\})/,
+      (_, open, inner, close) => `${open}${appendArrayEntry(inner, menuEntry)}${close}`,
+    );
+  });
 }
 
 function subtitleForScope(scope, labelEn, labelId) {
@@ -186,7 +364,7 @@ function subtitleForScope(scope, labelEn, labelId) {
 }
 
 function buildTemplates(meta, labels, scope) {
-  const { kebab, pascal, camel, localeKey } = meta;
+  const { kebab, pascal, camel } = meta;
   const { labelEn, labelId } = labels;
   const subtitles = subtitleForScope(scope, labelEn, labelId);
 
@@ -199,9 +377,9 @@ export default function ${pascal}Page() {
   return (
     <div className="space-y-6">
       <div>
-        <Typography.Title level={2}>{t('nav.${localeKey}')}</Typography.Title>
+        <Typography.Title level={2}>{t('nav.${kebab}')}</Typography.Title>
         <Typography.Text color="muted" className="mt-1 block">
-          {t('${localeKey}.subtitle')}
+          {t('${kebab}.subtitle')}
         </Typography.Text>
       </div>
     </div>
@@ -219,9 +397,9 @@ export default function ${pascal}Page() {
   return (
     <div className="space-y-6">
       <div>
-        <Typography.Title level={2}>{t('nav.${localeKey}')}</Typography.Title>
+        <Typography.Title level={2}>{t('nav.${kebab}')}</Typography.Title>
         <Typography.Text color="muted" className="mt-1 block">
-          {t('${localeKey}.subtitle')}
+          {t('${kebab}.subtitle')}
         </Typography.Text>
       </div>
 
@@ -235,7 +413,8 @@ export default function ${pascal}Page() {
 import { useLocale } from '@/context/LocaleContext';
 import type { TableColumn } from '@/models/model.type';
 import type { ${pascal}Item } from '@/features/${kebab}/hooks/use${pascal}Page';
-import { DataTable } from '@/components/DataTable';
+import { DataTable, DataTableGroup } from '@/components/DataTable';
+import { Pagination } from '@/components/Pagination';
 import { Badge } from '@/components/Badge';
 import { use${pascal}Page } from '@/features/${kebab}/hooks/use${pascal}Page';
 
@@ -248,15 +427,15 @@ export function ${pascal}Table() {
     () => [
       {
         key: 'name',
-        header: t('common.name'),
+        header: t('components.common.name'),
         sortable: true,
       },
       {
         key: 'isActive',
-        header: t('common.status'),
+        header: t('components.common.status'),
         render: (item) => (
           <Badge variant={item.isActive ? 'success' : 'danger'} dot>
-            {item.isActive ? t('common.active') : t('common.inactive')}
+            {item.isActive ? t('components.common.active') : t('components.common.inactive')}
           </Badge>
         ),
       },
@@ -265,17 +444,19 @@ export function ${pascal}Table() {
   );
 
   return (
-    <DataTable
-      data={items}
-      columns={columns}
-      isLoading={isLoading}
-      currentPage={page}
-      totalPages={totalPages}
-      pageSize={pageSize}
-      totalItems={totalItems}
-      onPageChange={setPage}
-      onPageSizeChange={onPageSizeChange}
-    />
+    <DataTableGroup>
+      <DataTable unwrapped data={items} columns={columns} isLoading={isLoading} />
+      <DataTableGroup.Footer>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          totalItems={totalItems}
+          onPageChange={setPage}
+          onPageSizeChange={onPageSizeChange}
+        />
+      </DataTableGroup.Footer>
+    </DataTableGroup>
   );
 }
 `;
@@ -448,106 +629,14 @@ export const ${camel}Usecase = {
 };
 `;
 
-  const icon = `export function ${pascal}Icon() {
-  return (
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-      />
-    </svg>
-  );
-}
-`;
-
   return {
     page: scope === 'page' ? pageEmpty : pageWithTable,
     table: scope === 'page' ? null : table,
     hook: scope === 'full' ? hookWithUsecase : scope === 'hook' ? hookWithInlineMock : null,
     usecase: scope === 'full' ? usecase : null,
-    icon,
     localeEn: { nav: labelEn, subtitle: subtitles.en },
     localeId: { nav: labelId, subtitle: subtitles.id },
   };
-}
-
-function patchSidebar(meta, templates) {
-  patchFile('src/layouts/sidebar/components/SidebarIcons.tsx', (content) => {
-    const marker = `export function TutorialIcon()`;
-    if (content.includes(`export function ${meta.pascal}Icon()`)) {
-      throw new Error(`Icon ${meta.pascal}Icon already exists`);
-    }
-    return content.replace(marker, `${templates.icon}\n\n${marker}`);
-  });
-
-  patchFile('src/layouts/sidebar/hooks/useSidebar.tsx', (content) => {
-    let updated = content;
-    if (!updated.includes(`${meta.pascal}Icon`)) {
-      updated = updated.replace(
-        `} from '@/layouts/sidebar/components/SidebarIcons';`,
-        `  ${meta.pascal}Icon,\n} from '@/layouts/sidebar/components/SidebarIcons';`,
-      );
-    }
-
-    const sidebarNeedle = /\n    \];\n\n    if \(isDev\)/;
-    if (!sidebarNeedle.test(updated)) {
-      throw new Error('Could not patch useSidebar.tsx — items array anchor not found');
-    }
-
-    const menuItem = `      {
-        key: '${meta.kebab}',
-        label: t('nav.${meta.localeKey}'),
-        path: '/${meta.kebab}',
-        icon: <${meta.pascal}Icon />,
-      },`;
-
-    return updated.replace(sidebarNeedle, `\n${menuItem}\n    ];\n\n    if (isDev)`);
-  });
-}
-
-function patchRouter(meta) {
-  patchFile('src/router/AppRouter.tsx', (content) => {
-    if (content.includes(`features/${meta.kebab}/`)) {
-      throw new Error(`Route for ${meta.kebab} already exists in AppRouter.tsx`);
-    }
-
-    let updated = content.replace(
-      '\nfunction LazyPage',
-      `\nconst ${meta.pascal}Page = lazy(() => import('@/features/${meta.kebab}/pages/${meta.pascal}Page'));\n\nfunction LazyPage`,
-    );
-
-    const routeSpreadNeedle = '  ...tutorialRoutes,';
-    if (!updated.includes(routeSpreadNeedle)) {
-      throw new Error('Could not patch AppRouter.tsx — tutorialRoutes spread anchor not found');
-    }
-
-    const routeBlock = `  {
-    path: '${meta.kebab}',
-    element: (
-      <LazyPage>
-        <${meta.pascal}Page />
-      </LazyPage>
-    ),
-  },
-  ...tutorialRoutes,`;
-
-    return updated.replace(routeSpreadNeedle, routeBlock);
-  });
-}
-
-function patchLocales(meta, templates) {
-  for (const [localeFile, labels] of [
-    ['src/locales/en.json', templates.localeEn],
-    ['src/locales/id.json', templates.localeId],
-  ]) {
-    patchFile(localeFile, (content) => {
-      let updated = appendNavLocaleEntry(content, meta.localeKey, labels.nav);
-      updated = appendFeatureLocaleSection(updated, meta.localeKey, labels.subtitle);
-      return updated;
-    });
-  }
 }
 
 function main() {
@@ -578,7 +667,9 @@ function main() {
     labelId: args.labelId || args.label || meta.pascal,
   };
 
-  const existing = detectExistingFeature(meta);
+  const existing = [
+    ...new Set([...detectExistingFeature(meta), ...detectExistingLocaleKey(meta.kebab)]),
+  ];
   if (existing.length > 0) {
     exitFeatureAlreadyExists(meta, existing);
   }
@@ -605,9 +696,18 @@ function main() {
     created.push(`src/features/${meta.kebab}/usecase/${meta.camel}Usecase.ts`);
   }
 
-  patchSidebar(meta, templates);
-  patchRouter(meta);
+  appendGeneratedRoute(meta);
+  appendGeneratedMenuItem(meta);
   patchLocales(meta, templates);
+
+  const touchedFiles = [
+    ...created,
+    ROUTES_GEN,
+    MENU_GEN,
+    'src/locales/en.json',
+    'src/locales/id.json',
+  ];
+  const formatted = formatGeneratedFiles(touchedFiles);
 
   const scopeLabels = { full: 'full (page + table + hook + usecase)', hook: 'hook (page + table + hook)', page: 'page (empty page only)' };
 
@@ -615,12 +715,24 @@ function main() {
   console.log('Created:');
   created.forEach((file) => console.log(`  ${file}`));
   console.log('\nUpdated:');
-  console.log('  src/router/AppRouter.tsx');
-  console.log('  src/layouts/sidebar/hooks/useSidebar.tsx');
-  console.log('  src/layouts/sidebar/components/SidebarIcons.tsx');
+  console.log(`  ${ROUTES_GEN}`);
+  console.log(`  ${MENU_GEN}`);
   console.log('  src/locales/en.json');
   console.log('  src/locales/id.json');
+  if (formatted) {
+    console.log('\nFormatted (Prettier + ESLint --fix):');
+    touchedFiles.forEach((file) => console.log(`  ${file}`));
+  } else {
+    console.log('\nFormat skipped (node_modules not found — run pnpm install, then make format)');
+  }
+  console.log('\nCustom sidebar icon (optional):');
+  console.log('  1. Add your icon in src/layouts/sidebar/components/SidebarIcons.tsx');
+  console.log(`  2. In ${MENU_GEN}, replace <GeneratedFeatureIcon /> for key '${meta.kebab}'`);
   console.log(`\nOpen http://localhost:5173/${meta.kebab} after make dev\n`);
 }
 
-main();
+const isMain =
+  process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+if (isMain) {
+  main();
+}

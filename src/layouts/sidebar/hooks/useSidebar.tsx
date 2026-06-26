@@ -9,6 +9,7 @@ import {
   TutorialIcon,
   UsersIcon,
 } from '@/layouts/sidebar/components/SidebarIcons';
+import { buildGeneratedFeatureMenuItems } from '@/layouts/sidebar/featureMenuItems.generated';
 
 const COMPONENTS_PATH = '/components';
 
@@ -30,12 +31,7 @@ export function useSidebar() {
         path: '/users',
         icon: <UsersIcon />,
       },
-      {
-        key: 'settings',
-        label: t('nav.settings'),
-        path: '/settings',
-        icon: <SettingsIcon />,
-      },
+      ...buildGeneratedFeatureMenuItems(t),
     ];
 
     if (isDev) {
@@ -55,6 +51,13 @@ export function useSidebar() {
         devBadge: true,
       });
     }
+
+    items.push({
+      key: 'settings',
+      label: t('nav.settings'),
+      path: '/settings',
+      icon: <SettingsIcon />,
+    });
 
     return items;
   }, [t, isDev]);

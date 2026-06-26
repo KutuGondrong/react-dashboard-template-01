@@ -1,4 +1,4 @@
-.PHONY: dev format lint build preview clean generate feature help
+.PHONY: dev format lint build preview clean generate feature test-feature help
 
 PNPM := pnpm
 # Prefer Volta (package.json pins node 20.x) over broken Homebrew node@14 in PATH
@@ -13,7 +13,8 @@ help:
 	@echo "  make preview          - Serve production build locally"
 	@echo "  make clean            - Remove dist, .turbo, node_modules/.vite"
 	@echo "  make generate name=X [out=PATH] - Scaffold your app from this template (default: ../X)"
-	@echo "  make feature name=X [scope=full|hook|page] [label=\"Name\"] [label-id=\"Nama\"] - Scaffold menu + page"
+	@echo "  make feature name=X [scope=full|hook|page] [label=\"Name\"] [label-id=\"Nama\"] - Scaffold menu + page (auto Prettier + ESLint)"
+	@echo "  make test-feature       - Run generate-feature script tests (all scopes, sequential)"
 
 dev:
 	@if [ ! -d node_modules ]; then \
@@ -53,3 +54,6 @@ ifndef name
 	$(error Usage: make feature name=<feature-name> [scope=full|hook|page] [label="Display Name"] [label-id="Nama Tampilan"])
 endif
 	@$(NODE) scripts/generate-feature.mjs --name=$(name) $(if $(scope),--scope=$(scope),) $(if $(label),--label=$(label),) $(if $(label-id),--label-id=$(label-id),)
+
+test-feature:
+	@$(NODE) --test scripts/generate-feature.test.mjs

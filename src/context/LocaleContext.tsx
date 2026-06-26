@@ -14,7 +14,16 @@ interface LocaleContextValue {
   t: (key: string, params?: LocaleParams) => string;
 }
 
-const LocaleContext = createContext<LocaleContextValue | null>(null);
+function createLocaleContext() {
+  return createContext<LocaleContextValue | null>(null);
+}
+
+const LocaleContext =
+  import.meta.hot?.data?.LocaleContext ?? createLocaleContext();
+
+if (import.meta.hot) {
+  import.meta.hot.data.LocaleContext = LocaleContext;
+}
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<SupportedLocale>(

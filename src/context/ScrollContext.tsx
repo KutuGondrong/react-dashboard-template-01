@@ -11,7 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { isScrollToTopEnabled } from '@/config/scrollToTop';
 import { ScrollToTop } from '@/components/ScrollToTop/ScrollToTop';
-import { getScrollContainer } from '@/utils/scrollContainer';
+import { getScrollContainer, resetScrollPosition } from '@/utils/scrollContainer';
 
 interface ScrollContextValue {
   scrollContainerRef: (node: HTMLElement | null) => void;
@@ -25,6 +25,7 @@ export function ScrollProvider({ children }: { children: ReactNode }) {
   const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(null);
   const modeRef = useRef<'direct' | 'anchor'>('direct');
   const anchorRef = useRef<HTMLElement | null>(null);
+  const previousPathnameRef = useRef<string | null>(null);
 
   const scrollContainerRef = useCallback((node: HTMLElement | null) => {
     modeRef.current = 'direct';
@@ -42,6 +43,18 @@ export function ScrollProvider({ children }: { children: ReactNode }) {
     if (modeRef.current !== 'anchor' || !anchorRef.current) return;
     setScrollContainer(getScrollContainer(anchorRef.current));
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!scrollContainer) return;
+
+    const isNavigation =
+      previousPathnameRef.current !== null && previousPathnameRef.current !== location.pathname;
+    previousPathnameRef.current = location.pathname;
+
+    if (!isNavigation || location.hash) return;
+
+    resetScrollPosition(scrollContainer);
+  }, [location.pathname, location.hash, scrollContainer]);
 
   const value = useMemo(
     () => ({ scrollContainerRef, scrollAnchorRef }),

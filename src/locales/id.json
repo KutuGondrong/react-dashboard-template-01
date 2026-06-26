@@ -11,9 +11,7 @@
     "documentationTutorial": "Tutorial",
     "documentationPreview": "Preview",
     "login": "Masuk",
-    "register": "Daftar",
-    "orders": "Pesanan",
-    "inventory": "Inventaris"
+    "register": "Daftar"
   },
   "auth": {
     "loginTitle": "Masuk",
@@ -96,12 +94,6 @@
       "bottom-center": "Tengah Bawah",
       "bottom-right": "Kanan Bawah"
     }
-  },
-  "orders": {
-    "subtitle": "Kelola pesanan dengan mock data, pagination, dan layout halaman standar."
-  },
-  "inventory": {
-    "subtitle": "Kelola inventaris dengan mock data, pagination, dan layout halaman standar."
   },
   "footer": {
     "copyright": "© {{year}} Teristimewa Dashboard. Hak cipta dilindungi.",

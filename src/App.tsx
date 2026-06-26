@@ -1,23 +1,17 @@
-import { RouterProvider } from 'react-router-dom';
-import { ThemeProvider } from '@/context/ThemeContext';
-import { LocaleProvider } from '@/context/LocaleContext';
-import { ToastProvider } from '@/components/Toast';
-import { ModalProvider } from '@/components/Modal';
-import { ErrorBoundary } from '@/components/ErrorBoundary/ErrorBoundary';
-import { appRouter } from '@/router/AppRouter';
+import { AppShell } from '@/AppShell';
+import { AppDevelopment } from '@/App.development';
+import { useStableAppRouter } from '@/router/useStableAppRouter';
+
+function AppProduction() {
+  const { router } = useStableAppRouter();
+
+  return <AppShell router={router} />;
+}
 
 export function App() {
-  return (
-    <ErrorBoundary>
-      <LocaleProvider>
-        <ThemeProvider>
-          <ToastProvider>
-            <ModalProvider>
-              <RouterProvider router={appRouter} future={{ v7_startTransition: true }} />
-            </ModalProvider>
-          </ToastProvider>
-        </ThemeProvider>
-      </LocaleProvider>
-    </ErrorBoundary>
-  );
+  if (import.meta.env.DEV) {
+    return <AppDevelopment />;
+  }
+
+  return <AppProduction />;
 }

@@ -6,6 +6,7 @@ import { MainLayout, AuthLayout } from '@/layouts';
 import { ProtectedRoute, PublicRoute } from '@/router/RouteGuards';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { AuthShell } from '@/router/AuthShell';
+import { generatedFeatureRoutes } from '@/router/featureRoutes.generated';
 
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'));
@@ -80,11 +81,13 @@ const protectedChildren = [
       </LazyPage>
     ),
   },
+  ...generatedFeatureRoutes,
   ...documentationRoutes,
   ...componentsRoutes,
 ];
 
-export const appRouter = createBrowserRouter(
+export function createAppRouter() {
+  return createBrowserRouter(
   [
     {
       element: <AuthShell />,
@@ -132,4 +135,5 @@ export const appRouter = createBrowserRouter(
     },
   ],
   { basename: routerBasename },
-);
+  );
+}
