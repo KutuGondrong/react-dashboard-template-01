@@ -4,28 +4,23 @@ import { createAppRouter } from '@/router/AppRouter';
 type RevisionListener = () => void;
 
 let routerRevision = 0;
-let localeRevision = 0;
 const routerListeners = new Set<RevisionListener>();
-const localeListeners = new Set<RevisionListener>();
 
 function subscribeRouter(listener: RevisionListener) {
   routerListeners.add(listener);
   return () => routerListeners.delete(listener);
 }
 
-function subscribeLocale(listener: RevisionListener) {
-  localeListeners.add(listener);
-  return () => localeListeners.delete(listener);
-}
+let routerBumpQueued = false;
 
 function bumpRouterRevision() {
-  routerRevision += 1;
-  routerListeners.forEach((listener) => listener());
-}
-
-function bumpLocaleRevision() {
-  localeRevision += 1;
-  localeListeners.forEach((listener) => listener());
+  if (routerBumpQueued) return;
+  routerBumpQueued = true;
+  queueMicrotask(() => {
+    routerBumpQueued = false;
+    routerRevision += 1;
+    routerListeners.forEach((listener) => listener());
+  });
 }
 
 if (import.meta.hot) {
@@ -34,41 +29,23 @@ if (import.meta.hot) {
       bumpRouterRevision();
     }
   });
+  // Only remount the router when generated routes change (`make feature`).
+  // Menu items, locale files, and feature pages hot-reload on their own.
   import.meta.hot.accept('@/router/featureRoutes.generated', bumpRouterRevision);
-  import.meta.hot.accept('@/layouts/sidebar/featureMenuItems.generated', bumpRouterRevision);
-
-  import.meta.hot.accept('@/locales/messages.ts', bumpLocaleRevision);
-  import.meta.hot.accept('@/locales/en.json', bumpLocaleRevision);
-  import.meta.hot.accept('@/locales/id.json', bumpLocaleRevision);
-
-  import.meta.hot.on('vite:afterUpdate', (payload) => {
-    const scaffoldedFeatureChanged = payload.updates.some(({ path: filePath }) =>
-      /\/src\/features\/[^/]+\/(pages|components|hooks|usecase)\//.test(filePath),
-    );
-    if (scaffoldedFeatureChanged) {
-      bumpRouterRevision();
-    }
-  });
 }
 
 /**
- * Dev-only: recreates router and locale when `make feature` updates generated files.
+ * Dev-only: recreates router when `make feature` updates generated routes.
  * Imported from App.development.tsx only — not used in production builds.
  */
 export function useFeatureScaffoldHotReload(): {
   router: ReturnType<typeof createAppRouter>;
-  localeKey: number;
   routerKey: number;
 } {
   const routerRevisionSnapshot = useSyncExternalStore(
     subscribeRouter,
     () => routerRevision,
     () => routerRevision,
-  );
-  const localeRevisionSnapshot = useSyncExternalStore(
-    subscribeLocale,
-    () => localeRevision,
-    () => localeRevision,
   );
 
   // routerRevisionSnapshot is an intentional HMR trigger, not used inside the factory.
@@ -77,7 +54,6 @@ export function useFeatureScaffoldHotReload(): {
 
   return {
     router,
-    localeKey: localeRevisionSnapshot,
     routerKey: routerRevisionSnapshot,
   };
 }

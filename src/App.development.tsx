@@ -1,9 +1,9 @@
 import { AppShell } from '@/AppShell';
 import { useFeatureScaffoldHotReload } from '@/router/useFeatureScaffoldHotReload';
 
-/** Dev-only entry: hot-reloads routes/menu/locale after `make feature`. */
+/** Dev-only entry: hot-reloads routes after `make feature`. */
 export function AppDevelopment() {
-  const { router, localeKey, routerKey } = useFeatureScaffoldHotReload();
+  const { router, routerKey } = useFeatureScaffoldHotReload();
 
-  return <AppShell router={router} localeKey={localeKey} routerKey={routerKey} />;
+  return <AppShell router={router} routerKey={routerKey} />;
 }

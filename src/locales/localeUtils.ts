@@ -39,10 +39,12 @@ export function createFeatureLocaleHook<T extends Record<SupportedLocale, Record
   return function useFeatureLocale() {
     const { locale } = useLocale();
 
+    const localeMessages = messages[locale];
+
     const t = useCallback(
       (key: string, params?: LocaleParams) =>
-        translateMessage(messages[locale] as Record<string, unknown>, key, params),
-      [locale],
+        translateMessage(localeMessages as Record<string, unknown>, key, params),
+      [localeMessages],
     );
 
     return { locale, t };

@@ -10,14 +10,14 @@ type AppRouter = ReturnType<typeof createAppRouter>;
 
 interface AppShellProps {
   router: AppRouter;
-  localeKey?: number;
+  /** Dev-only: remount router after `make feature` adds routes. */
   routerKey?: number;
 }
 
-export function AppShell({ router, localeKey, routerKey }: AppShellProps) {
+export function AppShell({ router, routerKey }: AppShellProps) {
   return (
     <ErrorBoundary>
-      <LocaleProvider key={localeKey}>
+      <LocaleProvider>
         <ThemeProvider>
           <ToastProvider>
             <ModalProvider>
