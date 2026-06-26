@@ -612,6 +612,13 @@ function parsePanelSize(value: number | string | undefined, fallback: number): n
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function getPanelDefaultSizeSignature(children: ReactNode): string {
+  return Children.toArray(children)
+    .filter(isValidElement)
+    .map((child) => String((child as ReactElement<SplitterPanelProps>).props.defaultSize ?? ''))
+    .join('|');
+}
+
 function SplitterRoot({
   direction = 'horizontal',
   onResize,
@@ -624,20 +631,29 @@ function SplitterRoot({
     isValidElement,
   ) as ReactElement<SplitterPanelProps>[];
   const panelCount = panels.length;
+  const defaultSizeSignature = getPanelDefaultSizeSignature(children);
 
   const defaultSizes = useMemo(() => {
     if (panelCount === 0) return [];
     const equal = 100 / panelCount;
-    return panels.map((panel, index) =>
-      parsePanelSize(panel.props.defaultSize, index === panelCount - 1 ? equal : equal),
-    );
-  }, [panelCount, panels]);
+    return panels.map((panel) => parsePanelSize(panel.props.defaultSize, equal));
+    // panels is derived from children each render; signature + count capture meaningful changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- avoid unstable `panels` / `children` refs
+  }, [panelCount, defaultSizeSignature]);
 
   const [sizes, setSizes] = useState<number[]>(defaultSizes);
   const dragState = useRef<{ index: number; startPos: number; startSizes: number[] } | null>(null);
 
   useEffect(() => {
-    setSizes(defaultSizes);
+    setSizes((prev) => {
+      if (
+        prev.length === defaultSizes.length &&
+        prev.every((size, index) => size === defaultSizes[index])
+      ) {
+        return prev;
+      }
+      return defaultSizes;
+    });
   }, [defaultSizes]);
 
   const notifyResize = useCallback(

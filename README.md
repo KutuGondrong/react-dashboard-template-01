@@ -1,294 +1,294 @@
-# React App Boilerplate
+# React + TypeScript + Vite Application
 
-Production-ready React starter with Vite, TypeScript, Tailwind CSS, and Clean Layered Architecture.
+**Production-ready React starter** with Vite, TypeScript, Tailwind CSS, and **Clean Layered Architecture**.
 
-**Live template preview:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01) (deployed Tutorial & Components documentation from the creator production build).
+**Live template preview:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01)
 
-## Prerequisites
+Choose Language / Pilih Bahasa:
 
-Install these **before** cloning or running the app. Versions match [package.json](./package.json) (Volta-pinned).
-
-> **Already have everything?** If `node`, `pnpm`, and `git` work in your terminal, skip to [Quick Start](#quick-start). You only need `make` (optional shortcuts) and `rsync` (only for `make generate`).
-
-| Tool | Version | Required | Used for |
-|------|---------|----------|----------|
-| **Node.js** | 20.x (20.11.0 recommended) | Yes | Runtime & build |
-| **pnpm** | 8.x (8.15.4 recommended) | Yes* | Install dependencies & run scripts |
-| **Git** | any recent | Recommended | Clone repo, `make generate` init |
-| **make** | any (GNU Make) | Optional | Makefile shortcuts (`make dev`, etc.) |
-| **rsync** | any | Optional | `make generate` only (Mac/Linux usually pre-installed) |
-
-\* npm works as a fallback (`npm install`, `npm run dev`) but this project is tested with **pnpm**.
-
-### Verify installation
-
-Run these in a terminal. If a command is missing, install it using the guides below.
-
-```bash
-node --version    # expect v20.x (e.g. v20.11.0)
-pnpm --version    # expect 8.x (e.g. 8.15.4)
-git --version     # any recent version
-make --version    # optional — skip if you use pnpm scripts directly
-rsync --version   # optional — only needed for make generate
-```
+- English (this document)
+- [Bahasa Indonesia](./README.id.md)
 
 ---
 
-### Install from scratch
+## Table of Contents
 
-Pick your operating system. Follow the steps **in order** if nothing is installed yet.
+1. [Prerequisites](#1-prerequisites)
+2. [Installation & Getting Started](#2-installation--getting-started)
+3. [Tech Stack & Architecture](#3-tech-stack--architecture)
+4. [Project Structure](#4-project-structure)
+5. [Development Commands](#5-development-commands)
+6. [Routing & Auth](#6-routing--auth)
+7. [Data Layer](#7-data-layer)
+8. [i18n & Theming](#8-i18n--theming)
+9. [UI Components](#9-ui-components)
+10. [Deployment](#10-deployment)
+11. [Makefile & Scaffolding](#11-makefile--scaffolding)
+12. [Troubleshooting](#12-troubleshooting)
 
-| OS | Section |
-|----|---------|
-| **macOS** | [macOS](#macos) |
-| **Linux** | [Linux (Debian / Ubuntu)](#linux-debian--ubuntu) · [Fedora / RHEL](#linux-fedora--rhel) · [Arch](#linux-arch) |
-| **Windows** | [WSL (recommended)](#windows-wsl-recommended) · [Native PowerShell](#windows-native-powershell) |
+---
 
-#### macOS
+### 1. Prerequisites
 
-Install **Git**, **make**, **rsync**, **Node.js 20**, and **pnpm**:
+This project pins **Node.js** and **pnpm** with [Volta](https://volta.sh) for consistent tooling across machines.
+
+```json
+"volta": {
+  "node": "20.11.0",
+  "pnpm": "8.15.4"
+}
+```
+
+| Tool | Version | Role |
+|------|---------|------|
+| **Node.js** | `v20.11.0` | Runtime, build scripts, Vite dev server |
+| **pnpm** | `v8.15.4` | Dependency management and npm scripts |
+| **Git** | latest | Clone, branch, commit, `make generate` |
+| **GNU Make** | optional | Dev shortcuts (`make dev`, `make build`, etc.) |
+| **rsync** | optional | Required for `make generate` only |
+
+**Install Volta**
 
 ```bash
-# 1. Git + make (Xcode Command Line Tools — includes both)
-xcode-select --install
-# If already installed, the command prints a message and does nothing.
+# macOS
+brew install volta
 
-# 2. Homebrew (recommended package manager — skip if already installed)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# 3. Node.js 20 + pnpm (pick one method)
-
-# Option A — Homebrew (simple)
-brew install node pnpm
-
-# Option B — Volta (exact pinned versions, recommended)
+# Linux / macOS (curl)
 curl https://get.volta.sh | bash
-# Restart terminal, then:
-volta install node@20.11.0 pnpm@8.15.4
 
-# 4. rsync — included with macOS (no install needed)
-# 5. make — included with Xcode CLT above
-#    Or install a newer GNU Make: brew install make
-
-# Verify
-node --version && pnpm --version && git --version && make --version && rsync --version
+# Windows
+winget install Volta.Volta
 ```
 
-#### Linux (Debian / Ubuntu)
-
-Install **Git**, **Node.js 20**, **pnpm**, **make**, and **rsync**:
+After installation, restart your terminal and verify:
 
 ```bash
-# 1. Git
-sudo apt update
-sudo apt install -y git
-
-# 2. Node.js 20
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# 3. pnpm
-npm install -g pnpm@8.15.4
-
-# 4. make + rsync (needed for make generate)
-sudo apt install -y build-essential rsync
-# build-essential includes make, gcc, and other build tools
-
-# Optional: Volta for exact versions
-curl https://get.volta.sh | bash
-# Restart terminal, then:
-volta install node@20.11.0 pnpm@8.15.4
-
-# Verify
-node --version && pnpm --version && git --version && make --version && rsync --version
+cd react-app
+volta pin node@20.11.0
+volta pin pnpm@8.15.4
+node --version   # v20.11.0
+pnpm --version   # 8.15.4
 ```
 
-#### Linux (Fedora / RHEL)
-
-```bash
-sudo dnf install -y git make rsync
-curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
-sudo dnf install -y nodejs
-npm install -g pnpm@8.15.4
-
-# Verify
-node --version && pnpm --version && git --version && make --version && rsync --version
-```
-
-#### Linux (Arch)
-
-```bash
-sudo pacman -S --needed git make rsync nodejs npm
-npm install -g pnpm@8.15.4
-
-# Verify
-node --version && pnpm --version && git --version && make --version && rsync --version
-```
-
-#### Windows (WSL — recommended)
-
-Full support for `make`, `rsync`, and `make generate`. Install WSL, then use the Linux steps inside Ubuntu.
-
-```powershell
-# 1. Install WSL + Ubuntu (PowerShell as Administrator)
-wsl --install
-# Restart PC if prompted, then open "Ubuntu" from Start menu
-```
-
-Inside the **Ubuntu** terminal, follow [Linux (Debian / Ubuntu)](#linux-debian--ubuntu) above.
-
-```bash
-# After Linux steps complete, clone and run from WSL:
-git clone https://github.com/KutuGondrong/react-dashboard-template-01.git
-cd react-dashboard-template-01
-pnpm install
-make dev
-```
-
-#### Windows (native — PowerShell)
-
-Works for daily dev (`pnpm dev`). For `make generate`, use [WSL](#windows-wsl-recommended) (needs `rsync`).
-
-```powershell
-# 1. Git
-winget install Git.Git
-# Or download: https://git-scm.com/download/win
-
-# 2. Node.js 20 LTS
-winget install OpenJS.NodeJS.LTS
-# Or download: https://nodejs.org/
-
-# 3. pnpm (open a NEW terminal after Node is installed)
-npm install -g pnpm@8.15.4
-
-# 4. make (optional — or use pnpm scripts, see Without Make)
-winget install GnuWin32.Make
-# Or Chocolatey (admin PowerShell): choco install make
-# Or Scoop: scoop install make
-
-# 5. rsync — not included on native Windows; use WSL for make generate
-#    Optional native rsync: choco install rsync  (Chocolatey)
-
-# Verify (PowerShell or Git Bash)
-node --version
-pnpm --version
-git --version
-make --version
-```
-
-| Windows setup | make | rsync | make generate |
-|---------------|------|-------|---------------|
-| **WSL + Ubuntu** | yes | yes | yes |
-| **Native + pnpm only** | no | no | use WSL or `node scripts/generate-app.mjs` in WSL |
-| **Native + make (Chocolatey/Scoop)** | yes | no* | use WSL for rsync |
-
-\* `choco install rsync` may work on some setups; WSL is still the most reliable option.
+> **Windows note:** Use **WSL** for `make generate` — native Windows does not include `rsync` by default.
 
 ---
 
-## Quick Start
-
-### 1. Clone the template
+### 2. Installation & Getting Started
 
 ```bash
-git clone https://github.com/KutuGondrong/react-dashboard-template-01.git
-cd react-dashboard-template-01
-```
-
-### 2. Install & run
-
-```bash
+git clone https://github.com/KutuGondrong/react-dashboard-template-01.git react-app
+cd react-app
 pnpm install
-make dev
+pnpm run dev
 ```
 
-Open **http://localhost:5173**. Demo login: `admin@mail.com` / `password123`
+| Step | Command | Result |
+|------|---------|--------|
+| Install deps | `pnpm install` | Resolves `pnpm-lock.yaml` |
+| Dev server | `pnpm run dev` | Vite on `http://localhost:5173` |
+| Lint | `pnpm run lint` | ESLint + `tsc --noEmit` |
+| Format | `pnpm run format` | Prettier + ESLint auto-fix |
+| Build | `pnpm run build` | Type-check → production bundle in `dist/` |
+| Preview | `pnpm run preview` | Serve `dist/` locally |
 
-### 3. Scaffold your own app (optional)
-
-From inside the cloned template:
-
-```bash
-make generate name=my-new-app
-cd ../my-new-app
-rm -rf ../react-dashboard-template-01
-pnpm install
-make dev
-```
+**Demo login:** `admin@mail.com` / `password123`
 
 ---
 
-## Without Make
+### 3. Tech Stack & Architecture
 
-If you **don't have `make`**, use **pnpm scripts** directly. Same result for daily development:
+| Category | Package | Version |
+|----------|---------|---------|
+| UI | `react` + `react-dom` | 18.3.1 |
+| Language | `typescript` | 5.7.2 |
+| Bundler | `vite` | 5.4.11 |
+| Styling | `tailwindcss` | 3.4.16 |
+| HTTP | `axios` | 1.7.9 |
+| Routing | `react-router-dom` | 6.28.0 |
 
-| Instead of | Run |
-|------------|-----|
-| `make dev` | `pnpm dev` |
-| `make build` | `pnpm format && pnpm build` |
-| `make lint` | `pnpm lint` |
-| `make format` | `pnpm format` |
-| `make preview` | `pnpm preview` |
-| `make clean` | delete `dist`, `.turbo`, `node_modules/.vite` manually |
-| `make feature name=X label="Name"` | see [Scaffolding without Make](#scaffolding-without-make) |
-| `make generate name=X` | see [Scaffolding without Make](#scaffolding-without-make) |
+**Clean Layered Architecture** with domain-driven `features/` modules:
 
-**Minimal run (no make at all):**
-
-```bash
-pnpm install
-pnpm dev
+```
+Presentation   → pages, layouts, shared components
+Application    → hooks, usecases, React context
+Domain         → model types, mappers, payloads
+Infrastructure → Axios, localStorage, config, router
 ```
 
-**npm equivalent:**
+**Data flow:** Page → Hook → Usecase → Repository → API Source → Axios
 
-```bash
-npm install
-npm run dev
-```
+API responses are mapped via `model.map.ts` (snake_case JSON → camelCase UI types) before reaching components.
 
-### Scaffolding without Make
-
-```bash
-# Add menu + page (works on Windows, Mac, Linux)
-# label     = English sidebar text (en.json)
-# label-id  = Indonesian sidebar text (id.json)
-node scripts/generate-feature.mjs --name=orders --label="Orders" --label-id="Pesanan"
-node scripts/generate-feature.mjs --name=reports --scope=hook --label="Reports" --label-id="Laporan"
-node scripts/generate-feature.mjs --name=inventory --scope=page --label="Inventory" --label-id="Inventaris"
-
-# Clone boilerplate outside this repo (needs rsync; use WSL on Windows)
-make generate name=my-app                    # → ../my-app
-node scripts/generate-app.mjs --name=my-app   # same, without make
-node scripts/generate-app.mjs --name=my-app --out=~/projects/my-app
-```
+**Dependency rules:**
+- Presentation may import Application, Domain, Infrastructure
+- Application may import Domain, Infrastructure
+- Domain must not import Presentation or Application
 
 ---
 
-## Commands (Makefile)
+### 4. Project Structure
+
+```
+src/
+├── config/           # App config, color tokens, base path
+├── context/          # Auth, Locale, Theme, Scroll
+├── router/           # Routes and guards
+├── locales/          # en.json, id.json
+├── models/           # API response, UI types, mappers
+├── datasource/       # network (Axios) + local (localStorage)
+├── components/       # Shared UI library (23+ components)
+├── layouts/          # MainLayout, AuthLayout, Header, Sidebar
+├── features/         # Domain modules (auth, users, dashboard, …)
+└── utils/            # Pure helpers
+```
+
+**Path alias:** `@/*` → `src/*` (configured in `tsconfig.json` and `vite.config.ts`)
+
+**Color tokens:** Use `src/config/color.tokens.ts` + `tailwind.config.js` — do not hardcode hex values in components.
+
+---
+
+### 5. Development Commands
 
 | Command | Description |
 |---------|-------------|
-| `make dev` | Start Vite dev server (development mode) |
-| `make build` | Format, type-check, and production build |
-| `make lint` | ESLint + TypeScript check (no file writes) |
-| `make format` | Prettier + ESLint auto-fix |
-| `make preview` | Serve production build locally |
-| `make clean` | Remove `dist`, `.turbo`, `node_modules/.vite` |
-| `make generate name=my-app [out=PATH]` | Scaffold micro-app outside boilerplate (default: `../my-app`) |
-| `make feature name=X [scope=full\|hook\|page] label="English" [label-id="Indonesia"]` | Scaffold menu + page (bilingual sidebar labels) |
+| `pnpm run dev` / `make dev` | Start Vite dev server (port 5173) |
+| `pnpm run lint` / `make lint` | ESLint + TypeScript check |
+| `pnpm run format` / `make format` | Prettier + ESLint auto-fix |
+| `pnpm run build` / `make build` | Format → type-check → production build |
+| `pnpm run preview` / `make preview` | Serve `dist/` locally |
+| `make clean` | Remove `dist/`, `.turbo`, `node_modules/.vite` |
+| `make generate name=my-app` | Scaffold micro-app outside this repo |
+| `make feature name=X label="Name" label-id="Nama"` | Scaffold sidebar menu + page |
 
-Open **Tutorial** in the sidebar (DEV badge, development mode only) for a step-by-step guide from `make generate` to adding features.
+**Pre-commit checklist:**
 
-## Documentation
+```bash
+pnpm run format
+pnpm run lint    # must be zero errors
+pnpm run build   # recommended
+```
 
-See [DOCUMENTATION.md](./DOCUMENTATION.md) for architecture, routing, localization, and Storybook details.
+---
 
-## Stack
+### 6. Routing & Auth
 
-- React 18 + TypeScript
-- Vite 5
-- Tailwind CSS 3
-- React Router v6
-- Axios with interceptors
-- Volta-pinned Node 20.11.0 / pnpm 8.15.4
+| Path | Layout | Guard | Page |
+|------|--------|-------|------|
+| `/dashboard` | MainLayout | Protected | DashboardPage |
+| `/users` | MainLayout | Protected | UsersPage |
+| `/settings` | MainLayout | Protected | SettingsPage |
+| `/login` | AuthLayout | Public | LoginPage |
+| `/register` | AuthLayout | Public | RegisterPage |
+| `*` | — | — | Redirect → `/dashboard` |
+
+- **ProtectedRoute** — requires authentication; redirects to `/login`
+- **PublicRoute** — guest only; redirects to `/dashboard` if logged in
+- All pages use `React.lazy()` + `Suspense` for code splitting
+
+---
+
+### 7. Data Layer
+
+Three network layers:
+
+| Layer | File | Responsibility |
+|-------|------|----------------|
+| Transport | `backendService.ts` | Axios instance, interceptors, base URL |
+| Endpoint | `apiSource.ts` | REST endpoint calls |
+| Repository | `apiRepository.ts` | Business logic, mock data, mappers |
+
+**Rules:**
+- Do not call `axios` or `fetch` directly from components/hooks
+- Do not use `localStorage` directly — use `localSource`
+- Do not expose API snake_case fields in UI — use mappers
+
+Mock auth (development): `admin@mail.com` / `password123` with ~800ms simulated delay.
+
+---
+
+### 8. i18n & Theming
+
+**Supported locales:** `en` (English), `id` (Bahasa Indonesia)
+
+```tsx
+import { useLocale } from '@/context/LocaleContext';
+
+const { t, locale, setLocale } = useLocale();
+t('users.title');
+t('users.deleteMessage', { name: 'John Doe' });
+```
+
+**Theme modes:** `light` · `dark` · `system` (via `useTheme()`)
+
+Default locale: `'en'` in `app.config.ts`. Both locale and theme persist in localStorage.
+
+---
+
+### 9. UI Components
+
+Shared components in `src/components/` — built with Tailwind and design tokens:
+
+Button · Input · ComboBox · DataTable · Pagination · Modal · Drawer · Toast · Badge · Card · Avatar · Toggle · Typography · Chart · FileManagement · Layout · NavMenu · SkeletonLoader · ErrorBoundary · ScrollToTop · CodeBlock
+
+Run `pnpm run dev` and open **Components** (DEV badge) for the in-app catalog and playground.
+
+---
+
+### 10. Deployment
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `VITE_API_BASE_URL` | `/api` | Backend API base URL |
+| `VITE_BASE_PATH` | `/` | Subpath deploy (e.g. `/react-dashboard-template-01/`) |
+| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Show Tutorial & Storybook |
+
+Set `VITE_BASE_PATH` before `pnpm run build` when the app is served under a subpath (not domain root). The `dist/` output must be served with **SPA fallback** so deep links (e.g. `/dashboard`) resolve to `index.html`. Configure fallback in your hosting provider's docs.
+
+```bash
+pnpm run build
+pnpm run preview   # optional — verify dist/ locally
+```
+
+For deeper deployment notes, see [DOCUMENTATION.md](./DOCUMENTATION.md) and [DOCUMENTATION.id.md](./DOCUMENTATION.id.md).
+
+---
+
+### 11. Makefile & Scaffolding
+
+**Scaffold a feature:**
+
+```bash
+make feature name=reports label="Reports" label-id="Laporan"
+```
+
+**Scaffold a micro-app:**
+
+```bash
+make generate name=my-new-app
+make generate name=my-new-app out=~/projects/my-new-app
+```
+
+---
+
+### 12. Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| `node_modules not found` | Run `pnpm install` |
+| Wrong Node version | `volta pin node@20.11.0 && volta pin pnpm@8.15.4`, restart terminal |
+| `pnpm: command not found` | `volta install pnpm@8.15.4` |
+| ESLint `no-explicit-any` | Replace `any` with a specific type or `unknown` |
+| Blank page after subpath deploy | Match `VITE_BASE_PATH` with your hosting path; enable SPA fallback on the server |
+| `make generate` fails on Windows | Use WSL (requires `rsync`) |
+| Login not working | Use demo credentials; clear localStorage in DevTools |
+
+---
+
+### Further Reading
+
+- [README.id.md](./README.id.md) — full documentation in Bahasa Indonesia
+- [DOCUMENTATION.md](./DOCUMENTATION.md) — deep developer documentation (English)
+- [DOCUMENTATION.id.md](./DOCUMENTATION.id.md) — deep developer documentation (Bahasa Indonesia)
+- In-app **Tutorial** (DEV badge) during `pnpm run dev` — links to published docs
