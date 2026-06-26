@@ -11,7 +11,7 @@ Choose Language / Pilih Bahasa:
 
 ---
 
-## ID — Bahasa Indonesia
+## ID: Bahasa Indonesia
 
 ### Daftar Isi
 
@@ -34,7 +34,7 @@ Choose Language / Pilih Bahasa:
 
 #### 1.1 Filosofi Toolchain: Volta sebagai Single Source of Truth
 
-Project ini **mengunci versi runtime dan package manager** menggunakan [**Volta**](https://volta.sh) demi konsistensi antar tim. Volta bekerja sebagai *version manager* yang otomatis mengaktifkan versi Node.js dan pnpm yang tepat **setiap kali Anda masuk ke direktori project** — tanpa perlu `nvm use`, `fnm use`, atau konfigurasi manual lainnya.
+Project ini **mengunci versi runtime dan package manager** menggunakan [**Volta**](https://volta.sh) demi konsistensi antar tim. Volta bekerja sebagai *version manager* yang otomatis mengaktifkan versi Node.js dan pnpm yang tepat **setiap kali Anda masuk ke direktori project**, tanpa perlu `nvm use`, `fnm use`, atau konfigurasi manual lainnya.
 
 Konfigurasi pin tercatat eksplisit di `package.json`:
 
@@ -58,10 +58,10 @@ Konfigurasi pin tercatat eksplisit di `package.json`:
 ##### Windows
 
 ```powershell
-# Opsi A — winget (disarankan)
+# Opsi A: winget (disarankan)
 winget install Volta.Volta
 
-# Opsi B — installer manual
+# Opsi B: installer manual
 # Unduh dari https://volta.sh → jalankan installer → restart terminal
 ```
 
@@ -80,10 +80,10 @@ pnpm --version    # harus: 8.15.4
 ##### macOS
 
 ```bash
-# Opsi A — Homebrew (disarankan)
+# Opsi A: Homebrew (disarankan)
 brew install volta
 
-# Opsi B — curl script resmi
+# Opsi B: curl script resmi
 curl https://get.volta.sh | bash
 ```
 
@@ -99,7 +99,7 @@ Prasyarat tambahan macOS (untuk `make generate`):
 
 ```bash
 xcode-select --install   # Git + make (Command Line Tools)
-# rsync sudah termasuk di macOS — tidak perlu instalasi terpisah
+# rsync sudah termasuk di macOS, tidak perlu instalasi terpisah
 ```
 
 ##### Linux
@@ -113,7 +113,7 @@ volta pin node@20.11.0
 volta pin pnpm@8.15.4
 ```
 
-Debian/Ubuntu — prasyarat build tools:
+Debian/Ubuntu: prasyarat build tools:
 
 ```bash
 sudo apt update
@@ -147,18 +147,18 @@ rsync --version         # opsional (wajib untuk make generate)
 
 #### 1.4 Catatan Penting Setelah Instalasi Volta
 
-1. **Restart terminal** setelah instalasi Volta pertama kali — PATH belum ter-update sebelum restart.
+1. **Restart terminal** setelah instalasi Volta pertama kali; PATH belum ter-update sebelum restart.
 2. Jalankan `volta pin node@20.11.0` dan `volta pin pnpm@8.15.4` jika:
    - Anda fork/clone repo tanpa blok `volta` di `package.json`
    - Versi yang aktif tidak sesuai saat `node --version`
-3. **Jangan campur version manager** — hindari `nvm`, `fnm`, atau `asdf` bersamaan dengan Volta di project yang sama; konflik PATH dapat menyebabkan versi Node yang salah terpakai.
+3. **Jangan campur version manager**; hindari `nvm`, `fnm`, atau `asdf` bersamaan dengan Volta di project yang sama; konflik PATH dapat menyebabkan versi Node yang salah terpakai.
 4. Makefile secara otomatis memprioritaskan Volta: `NODE := $(shell volta which node 2>/dev/null || command -v node)`.
 
 ---
 
 ### 2. Panduan Instalasi & Memulai Project (Step-by-Step)
 
-#### 2.1 Langkah 1 — Cloning Repository
+#### 2.1 Langkah 1: Cloning Repository
 
 ```bash
 git clone https://github.com/KutuGondrong/react-dashboard-template-01.git react-app
@@ -171,7 +171,7 @@ cd react-app
 | Clone branch tertentu | `git clone -b <branch> <url>` |
 | Update setelah clone | `git pull origin main` |
 
-#### 2.2 Langkah 2 — Instalasi Dependency
+#### 2.2 Langkah 2: Instalasi Dependency
 
 ```bash
 pnpm install
@@ -181,10 +181,10 @@ pnpm install
 
 | Aspek | Penjelasan |
 |-------|------------|
-| **Efisiensi disk** | pnpm menyimpan satu salinan setiap versi package di store global (`~/.pnpm-store`). Project hanya membuat hard link/symlink — tidak ada duplikasi ribuan file antar project. |
+| **Efisiensi disk** | pnpm menyimpan satu salinan setiap versi package di store global (`~/.pnpm-store`). Project hanya membuat hard link/symlink; tidak ada duplikasi ribuan file antar project. |
 | **Kecepatan** | Instalasi paralel dan deduplikasi agresif. Pada project dengan ratusan transitive dependency, `pnpm install` konsisten lebih cepat. |
 | **Determinisme** | `pnpm-lock.yaml` mengunci dependency tree secara ketat. Cocok dengan filosofi Volta: **reproducible builds** di semua mesin developer. |
-| **Strict `node_modules`** | Package hanya bisa mengakses dependency yang dideklarasikan — mencegah *phantom dependency* yang sering terjadi di npm. |
+| **Strict `node_modules`** | Package hanya bisa mengakses dependency yang dideklarasikan; mencegah *phantom dependency* yang sering terjadi di npm. |
 
 Struktur lock file:
 
@@ -196,7 +196,7 @@ node_modules/      → symlink tree (jangan edit manual)
 
 > Fallback `npm install` tetap berfungsi, namun project ini **diuji resmi hanya dengan pnpm 8.15.4**.
 
-#### 2.3 Langkah 3 — Development Mode
+#### 2.3 Langkah 3: Development Mode
 
 ```bash
 pnpm run dev
@@ -209,7 +209,7 @@ pnpm run dev
 | Mode | `development` (`vite --mode development`) |
 | Port | `5173` (konfigurasi di `vite.config.ts`) |
 | Auto-open browser | `true` |
-| HMR | Aktif — perubahan TSX/CSS langsung di browser tanpa full reload |
+| HMR | Aktif; perubahan TSX/CSS langsung di browser tanpa full reload |
 | Demo login | `admin@mail.com` / `password123` |
 
 Apa yang terjadi saat `pnpm run dev`:
@@ -223,14 +223,14 @@ Apa yang terjadi saat `pnpm run dev`:
 6. Perubahan file → HMR push ke browser via WebSocket
 ```
 
-#### 2.4 Langkah 4 — Code Quality Check
+#### 2.4 Langkah 4: Code Quality Check
 
 ```bash
 pnpm run lint
 # setara: make lint
 ```
 
-Pipeline lint **tidak menulis file apapun** — hanya validasi:
+Pipeline lint **tidak menulis file apapun**; hanya validasi:
 
 ```
 eslint src --ext .ts,.tsx
@@ -248,12 +248,12 @@ tsc --noEmit
 
 | Aturan ESLint Kunci | Efek |
 |---------------------|------|
-| `@typescript-eslint/no-explicit-any` | `any` dilarang — wajib type eksplisit |
+| `@typescript-eslint/no-explicit-any` | `any` dilarang; wajib type eksplisit |
 | `@typescript-eslint/no-unused-vars` | Variabel tidak terpakai = error |
 | `react-hooks/rules-of-hooks` | Hooks hanya di top-level function component |
 | `react/react-in-jsx-scope` | Off (React 17+ JSX transform) |
 
-#### 2.5 Langkah 5 — Auto-Formatting
+#### 2.5 Langkah 5: Auto-Formatting
 
 ```bash
 pnpm run format
@@ -284,7 +284,7 @@ Urutan eksekusi (berurutan, tidak paralel):
 <div className="flex items-center rounded-lg bg-primary-500 p-4 text-white" />
 ```
 
-#### 2.6 Langkah 6 — Production Build
+#### 2.6 Langkah 6: Production Build
 
 ```bash
 pnpm run build
@@ -316,7 +316,7 @@ pnpm run preview
 # serve dist/ di port default Vite preview
 ```
 
-#### 2.7 Tanpa Make — Alternatif Pnpm Murni
+#### 2.7 Tanpa Make: Alternatif Pnpm Murni
 
 | Makefile | Pnpm setara |
 |----------|-------------|
@@ -349,19 +349,19 @@ pnpm run preview
 | Formatting | `prettier` + `prettier-plugin-tailwindcss` | 3.4 / 0.6 | Code style + Tailwind sort |
 | Runtime Pin | `volta` (via package.json) | node 20.11.0, pnpm 8.15.4 | Toolchain consistency |
 
-#### 3.2 React 18.3 + TypeScript 5.7 + Vite 5.4 — Kombinasi Mutakhir
+#### 3.2 React 18.3 + TypeScript 5.7 + Vite 5.4: Kombinasi Mutakhir
 
-**React 18.3 — mengapa bukan versi lebih lama?**
+**React 18.3: mengapa bukan versi lebih lama?**
 
-- **Concurrent Rendering** — React dapat menginterupsi, menunda, atau membatalkan render untuk menjaga UI responsif saat data berat dimuat.
-- **Suspense untuk data fetching** — semua halaman di project ini di-`lazy()` import; `Suspense` boundary menampilkan `SkeletonLoader` saat chunk JS sedang diunduh.
-- **`startTransition`** — RouterProvider dikonfigurasi dengan `future={{ v7_startTransition: true }}` untuk navigasi non-blocking.
-- **StrictMode** — diaktifkan di `main.tsx` untuk mendeteksi side effect ganda saat development.
+- **Concurrent Rendering**: React dapat menginterupsi, menunda, atau membatalkan render untuk menjaga UI responsif saat data berat dimuat.
+- **Suspense untuk data fetching**: semua halaman di project ini di-`lazy()` import; `Suspense` boundary menampilkan `SkeletonLoader` saat chunk JS sedang diunduh.
+- **`startTransition`**: RouterProvider dikonfigurasi dengan `future={{ v7_startTransition: true }}` untuk navigasi non-blocking.
+- **StrictMode**: diaktifkan di `main.tsx` untuk mendeteksi side effect ganda saat development.
 
-**TypeScript 5.7 — strict mode penuh:**
+**TypeScript 5.7: strict mode penuh:**
 
 ```json
-// tsconfig.json — aturan ketat yang WAJIB dipatuhi
+// tsconfig.json: aturan ketat yang WAJIB dipatuhi
 "strict": true,
 "noUnusedLocals": true,
 "noUnusedParameters": true,
@@ -374,7 +374,7 @@ Implikasi praktis:
 - Import yang tidak terpakai = compile error
 - `any` dilarang oleh ESLint (`@typescript-eslint/no-explicit-any: error`)
 
-**Vite 5.4 — mengapa bukan webpack/CRA?**
+**Vite 5.4: mengapa bukan webpack/CRA?**
 
 | Aspek | Vite | Webpack (CRA) |
 |-------|------|---------------|
@@ -386,21 +386,21 @@ Implikasi praktis:
 
 #### 3.3 Tailwind CSS v3.4 & PostCSS
 
-**Utility-first styling** — setiap class utilitas adalah building block atomik:
+**Utility-first styling**: setiap class utilitas adalah building block atomik:
 
 ```tsx
 // Satu elemen, styling lengkap tanpa file CSS terpisah
 <button className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50" />
 ```
 
-**Purging production** — hanya class yang muncul di file berikut yang masuk bundle CSS final:
+**Purging production**: hanya class yang muncul di file berikut yang masuk bundle CSS final:
 
 ```js
 // tailwind.config.js
 content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}']
 ```
 
-**Dark mode** — custom variant untuk isolasi preview tema di Storybook:
+**Dark mode**: custom variant untuk isolasi preview tema di Storybook:
 
 ```js
 darkMode: ['variant', '.dark &:not(.theme-preview-light *)']
@@ -408,14 +408,14 @@ darkMode: ['variant', '.dark &:not(.theme-preview-light *)']
 
 Artinya: class `dark:*` aktif saat ancestor memiliki class `.dark`, kecuali di dalam `.theme-preview-light`.
 
-**Global styles** — `src/index.css` mendefinisikan:
+**Global styles**: `src/index.css` mendefinisikan:
 - Scrollbar styling (light/dark)
 - `body` background (`bg-gray-50` / `dark:bg-gray-950`)
-- Utility `.focus-ring` — focus ring konsisten memakai `ring-primary-500`
+- Utility `.focus-ring`: focus ring konsisten memakai `ring-primary-500`
 - Utility `.scrollbar-hide`
 - Keyframe animasi chart
 
-#### 3.4 Axios v1.7 — HTTP Client Terpusat
+#### 3.4 Axios v1.7: HTTP Client Terpusat
 
 **Mengapa Axios, bukan `fetch` bawaan?**
 
@@ -451,7 +451,7 @@ apiRepository.ts      → Business logic + mock data (development)
 | Auth shell | `AuthShell` membungkus `AuthProvider` di luar layout |
 | 404 handling | `path: '*'` → `NotFoundPage` (404 + tombol kembali ke dashboard) |
 
-#### 3.6 ESLint v8 + Prettier v3 — Standar Ketat
+#### 3.6 ESLint v8 + Prettier v3: Standar Ketat
 
 Konfigurasi di `.eslintrc.json` dan `.prettierrc` dirancang agar **seluruh tim menulis kode dengan gaya identik** tanpa diskusi formatting di code review.
 
@@ -461,7 +461,7 @@ Konfigurasi di `.eslintrc.json` dan `.prettierrc` dirancang agar **seluruh tim m
 
 **Prinsip:** Prettier untuk formatting, ESLint untuk correctness. Keduanya dijalankan berurutan via `pnpm run format`.
 
-#### 3.7 Clean Layered Architecture — Diagram Lengkap
+#### 3.7 Clean Layered Architecture: Diagram Lengkap
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -504,7 +504,7 @@ Domain        →  TIDAK boleh import Presentation atau Application
 Infrastructure →  boleh import Domain (types), config
 ```
 
-#### 3.8 Alur Data End-to-End — Contoh Halaman Users
+#### 3.8 Alur Data End-to-End: Contoh Halaman Users
 
 ```mermaid
 sequenceDiagram
@@ -534,13 +534,13 @@ sequenceDiagram
 
 ### 4. Cetak Biru Struktur Folder & Tata Kelola Kode
 
-#### 4.1 Pohon Direktori `src/` — Lengkap
+#### 4.1 Pohon Direktori `src/`: Lengkap
 
 ```
 src/
 ├── config/
 │   ├── app.config.ts              # Judul, locale, API URL, storage keys, flags
-│   ├── color.tokens.ts            # ★ TOKEN WARNA — primary, accent, semantic
+│   ├── color.tokens.ts            # ★ TOKEN WARNA: primary, accent, semantic
 │   ├── basePath.ts                # routerBasename + assetUrl()
 │   ├── externalLinks.ts           # Type-safe accessor external-links.json
 │   ├── external-links.json        # URL template, tutorial, components
@@ -553,7 +553,7 @@ src/
 │   └── ScrollContext.tsx          # Scroll container ref untuk ScrollToTop
 │
 ├── router/
-│   ├── AppRouter.tsx              # createBrowserRouter — route inti + spread featureRoutes
+│   ├── AppRouter.tsx              # createBrowserRouter: route inti + spread featureRoutes
 │   ├── featureRoutes.tsx          # registry route feature (make feature)
 │   ├── RouteGuards.tsx            # ProtectedRoute, PublicRoute
 │   └── AuthShell.tsx              # AuthProvider wrapper
@@ -655,7 +655,7 @@ src/
 └── vite-env.d.ts                  # ImportMetaEnv types
 ```
 
-#### 4.2 Direktori `public/` — Aset Statis
+#### 4.2 Direktori `public/`: Aset Statis
 
 ```
 public/
@@ -675,11 +675,11 @@ import { assetUrl } from '@/config/basePath';
 // Hasil: /logo-light.svg (atau /subpath/logo-light.svg jika VITE_BASE_PATH diset)
 ```
 
-> Project ini **tidak memakai `src/assets/`**. Semua aset statis di `public/` agar tidak melalui bundler — cocok untuk file yang perlu URL absolut atau diakses dari luar React.
+> Project ini **tidak memakai `src/assets/`**. Semua aset statis di `public/` agar tidak melalui bundler: cocok untuk file yang perlu URL absolut atau diakses dari luar React.
 
 #### 4.3 Aturan Tata Kelola per Folder
 
-##### `src/config/` — Konstanta & Design Tokens
+##### `src/config/`: Konstanta & Design Tokens
 
 | File | Isi | Larangan |
 |------|-----|----------|
@@ -688,7 +688,7 @@ import { assetUrl } from '@/config/basePath';
 | `basePath.ts` | `routerBasename`, `assetUrl()` | Jangan construct URL manual |
 | `external-links.json` | URL publik tutorial & katalog komponen | Jangan hardcode URL di komponen |
 
-##### `src/context/` — State Global React
+##### `src/context/`: State Global React
 
 Satu concern per context. Setiap context **wajib** mengekspor custom hook:
 
@@ -699,26 +699,26 @@ Satu concern per context. Setiap context **wajib** mengekspor custom hook:
 | `ThemeContext` | `useTheme()` | mode, resolvedTheme, setMode, toggleTheme |
 | `ScrollContext` | `useScroll()` | scroll container ref |
 
-##### `src/models/` — Anti-Corruption Layer
+##### `src/models/`: Anti-Corruption Layer
 
 Pemisahan ketat antara kontrak API dan tipe UI:
 
 ```typescript
-// model.response.ts — APA ADANYA dari API (snake_case, string dates)
+// model.response.ts: APA ADANYA dari API (snake_case, string dates)
 interface ApiUserResponse {
   full_name: string;
   created_at: string;   // ISO string
   is_active: boolean;
 }
 
-// model.type.ts — OPTIMAL untuk UI (camelCase, Date objects)
+// model.type.ts: OPTIMAL untuk UI (camelCase, Date objects)
 interface User {
   fullName: string;
   createdAt: Date;
   isActive: boolean;
 }
 
-// model.map.ts — JEMBATAN transformasi
+// model.map.ts: JEMBATAN transformasi
 function toUser(api: ApiUserResponse): User {
   return {
     fullName: api.full_name,
@@ -730,11 +730,11 @@ function toUser(api: ApiUserResponse): User {
 ```
 
 **Mengapa layer ini penting?**
-- Backend bisa ganti field name tanpa merusak seluruh UI — cukup update mapper.
+- Backend bisa ganti field name tanpa merusak seluruh UI; cukup update mapper.
 - UI tidak perlu tahu format snake_case API.
 - Type safety terjaga di kedua sisi kontrak.
 
-##### `src/datasource/` — Satu-satunya Gerbang Data
+##### `src/datasource/`: Satu-satunya Gerbang Data
 
 | Larangan | Alasan |
 |----------|--------|
@@ -742,23 +742,23 @@ function toUser(api: ApiUserResponse): User {
 | `localStorage.setItem()` langsung di komponen | Gunakan `localSource` abstraction |
 | `fetch()` untuk API calls | Gunakan `apiSource` / `apiRepository` |
 
-##### `src/components/` — Shared UI tanpa Business Logic
+##### `src/components/`: Shared UI tanpa Business Logic
 
 - **Satu folder per komponen** dengan `index.ts` barrel export.
-- **Tidak boleh** import dari `features/` — arah dependensi: feature → component, bukan sebaliknya.
+- **Tidak boleh** import dari `features/`; arah dependensi: feature → component, bukan sebaliknya.
 - String default komponen dari `src/components/locales/` namespace `components.common.*`.
 - Props opsional yang punya default text → fallback ke `t('components.common.xxx')`.
 
-##### `src/layouts/` — Shell Aplikasi
+##### `src/layouts/`: Shell Aplikasi
 
-Layout hanya mengatur **struktur visual** — tidak berisi fetch data atau business rule.
+Layout hanya mengatur **struktur visual**; tidak berisi fetch data atau business rule.
 
 | Layout | Route | Fungsi |
 |--------|-------|--------|
 | `MainLayout` | `/dashboard`, `/users`, … | Header + Sidebar + Footer + `<Outlet />` |
 | `AuthLayout` | `/login`, `/register` | Card centered, branding, toolbar |
 
-##### `src/features/` — Modul Domain Terisolasi
+##### `src/features/`: Modul Domain Terisolasi
 
 Setiap feature adalah **bounded context** mandiri:
 
@@ -772,7 +772,7 @@ features/<nama>/
 
 **Feature tidak boleh import dari feature lain secara langsung.** Jika ada kebutuhan shared, ekstrak ke `components/`, `context/`, atau `utils/`.
 
-#### 4.4 ★ Sistem Token Warna — Bagian Krusial
+#### 4.4 ★ Sistem Token Warna: Bagian Krusial
 
 ##### Sumber Kebenaran Ganda (Wajib Sinkron)
 
@@ -783,7 +783,7 @@ features/<nama>/
 
 ##### Palet Lengkap
 
-**Primary (Brand — Indigo)**
+**Primary (Brand: Indigo)**
 
 | Token | Hex | Penggunaan Umum |
 |-------|-----|-----------------|
@@ -794,7 +794,7 @@ features/<nama>/
 | `primary-600` | `#4f46e5` | Button primary default |
 | `primary-700`–`950` | gradasi gelap | Text on light, dark mode |
 
-**Accent (Secondary — Amber)**
+**Accent (Secondary: Amber)**
 
 | Token | Hex | Penggunaan Umum |
 |-------|-----|-----------------|
@@ -816,29 +816,29 @@ features/<nama>/
 | `surface-light` | `#ffffff` | Card background light mode |
 | `surface-dark` | `#0f172a` | Card background dark mode |
 
-##### Aturan Keras — Contoh Lengkap
+##### Aturan Keras: Contoh Lengkap
 
 ```tsx
-// ❌ DILARANG KERAS — hardcoded hex di komponen
+// ❌ DILARANG KERAS: hardcoded hex di komponen
 <div style={{ backgroundColor: '#6366f1' }} />
 <div className="bg-[#6366f1]" />
 <svg fill="#4f46e5" />
 
-// ❌ DILARANG — warna Tailwind bawaan untuk brand (inkonsisten dengan design system)
+// ❌ DILARANG: warna Tailwind bawaan untuk brand (inkonsisten dengan design system)
 <button className="bg-indigo-600" />   // pakai primary-600
 <span className="text-blue-500" />     // pakai info-500 jika semantic info
 
-// ✅ BENAR — token Tailwind dari design system
+// ✅ BENAR: token Tailwind dari design system
 <button className="bg-primary-600 hover:bg-primary-700" />
 <span className="text-success-500" />
 <div className="border-danger-500 bg-danger-50" />
 
-// ✅ BENAR — runtime color untuk SVG chart
+// ✅ BENAR: runtime color untuk SVG chart
 import { resolveChartColor, type ChartColorToken } from '@/config/color.tokens';
 const color = resolveChartColor('primary');  // → '#6366f1'
 <circle fill={color} />
 
-// ✅ BENAR — semantic surface
+// ✅ BENAR: semantic surface
 <div className="bg-surface-light dark:bg-surface-dark" />
 ```
 
@@ -848,7 +848,7 @@ const color = resolveChartColor('primary');  // → '#6366f1'
 2. Tambahkan token yang **identik** di `tailwind.config.js` → `theme.extend.colors`
 3. Jalankan `pnpm run format`
 4. Gunakan class Tailwind baru di komponen
-5. **Jangan** commit jika hanya satu file yang diupdate — keduanya WAJIB sinkron
+5. **Jangan** commit jika hanya satu file yang diupdate; keduanya WAJIB sinkron
 
 #### 4.5 Provider Tree & Boot Sequence
 
@@ -888,9 +888,9 @@ main.tsx
 
 ```
 src/components/MyComponent/
-├── MyComponent.tsx           # Implementasi utama — export function MyComponent
+├── MyComponent.tsx           # Implementasi utama: export function MyComponent
 ├── myComponent.types.ts      # (opsional) Props interface, variant types
-├── myComponent.utils.ts      # (opsional) Pure helpers — TIDAK boleh panggil useLocale
+├── myComponent.utils.ts      # (opsional) Pure helpers: TIDAK boleh panggil useLocale
 ├── index.ts                  # export { MyComponent } from './MyComponent'
 └── locales/                  # (opsional) jika komponen punya default text
     ├── en.json               # { "components": { "common": { "myKey": "..." } } }
@@ -904,7 +904,7 @@ export { MyComponent } from './MyComponent';
 export type { MyComponentProps } from './myComponent.types';
 ```
 
-#### 5.3 Template Komponen Baru — Contoh Lengkap
+#### 5.3 Template Komponen Baru: Contoh Lengkap
 
 ```tsx
 // src/components/StatusTag/StatusTag.tsx
@@ -913,9 +913,9 @@ import { useLocale } from '@/context/LocaleContext';
 export type StatusTagVariant = 'success' | 'danger' | 'info' | 'neutral';
 
 export interface StatusTagProps {
-  variant?: StatusTagVariant;
-  label?: string;
-  className?: string;
+  variant? StatusTagVariant;
+  label? string;
+  className? string;
 }
 
 const variantClasses: Record<StatusTagVariant, string> = {
@@ -946,17 +946,17 @@ export function StatusTag({
 Checklist yang dipenuhi template di atas:
 - ✅ PascalCase nama file dan function
 - ✅ Props di-type dengan `interface`
-- ✅ Warna dari token Tailwind (`success-*`, `danger-*`) — bukan hex
+- ✅ Warna dari token Tailwind (`success-*`, `danger-*`); bukan hex
 - ✅ Default text dari locale (`t('components.common.status')`)
 - ✅ `className` prop untuk override styling dari parent
 - ✅ Dark mode variant untuk setiap status
 
-#### 5.4 Standar Feature Baru — Contoh Lengkap
+#### 5.4 Standar Feature Baru: Contoh Lengkap
 
 ```
 src/features/inventory/
 ├── pages/
-│   └── InventoryPage.tsx       # Screen utama — hanya compose hook + components
+│   └── InventoryPage.tsx       # Screen utama: hanya compose hook + components
 ├── components/
 │   └── InventoryTable.tsx      # Tabel spesifik domain
 ├── hooks/
@@ -1009,7 +1009,7 @@ export function useInventoryPage() {
 # 1. Format seluruh kode
 pnpm run format
 
-# 2. Validasi — HARUS zero error, zero warning
+# 2. Validasi: HARUS zero error, zero warning
 pnpm run lint
 
 # 3. (Opsional tapi disarankan) Pastikan build sukses
@@ -1026,7 +1026,7 @@ pnpm run build
 | `any` type | **0** |
 | String UI hardcoded di `components/` | **0** |
 
-#### 5.6 Anti-Patterns — Yang Dilarang
+#### 5.6 Anti-Patterns: Yang Dilarang
 
 | Anti-Pattern | Mengapa Salah | Solusi Benar |
 |--------------|---------------|--------------|
@@ -1071,7 +1071,7 @@ resolve: { alias: { '@': path.resolve(__dirname, './src') } }
 
 | Path | Layout | Guard | Halaman | Lazy |
 |------|--------|-------|---------|------|
-| `/` | MainLayout | Protected | Redirect → `/dashboard` | — |
+| `/` | MainLayout | Protected | Redirect → `/dashboard` | - |
 | `/dashboard` | MainLayout | Protected | DashboardPage | ✅ |
 | `/users` | MainLayout | Protected | UsersPage | ✅ |
 | `/settings` | MainLayout | Protected | SettingsPage | ✅ |
@@ -1081,9 +1081,9 @@ resolve: { alias: { '@': path.resolve(__dirname, './src') } }
 | `/components/*` | MainLayout | Protected | Components landing (dev) | ✅ |
 | `*` | MainLayout | Protected | NotFoundPage (404) | ✅ |
 
-#### 6.2 Route Guards — Implementasi
+#### 6.2 Route Guards: Implementasi
 
-**`ProtectedRoute`** — wajib autentikasi:
+**`ProtectedRoute`**: wajib autentikasi:
 
 ```
 User akses /users
@@ -1092,7 +1092,7 @@ User akses /users
   → authenticated → render children (MainLayout)
 ```
 
-**`PublicRoute`** — hanya untuk guest:
+**`PublicRoute`**: hanya untuk guest:
 
 ```
 User akses /login
@@ -1150,7 +1150,7 @@ sequenceDiagram
 | **Endpoint** | `apiSource.ts` | Mapping 1:1 ke REST endpoint (`POST /auth/login`) |
 | **Repository** | `apiRepository.ts` | Business validation, mock data, panggil mapper |
 
-#### 7.2 `backendService` — Interceptor Detail
+#### 7.2 `backendService`: Interceptor Detail
 
 **Request interceptor:**
 
@@ -1170,7 +1170,7 @@ if (error.response?.status === 401) {
 }
 ```
 
-#### 7.3 `localSource` — Abstraksi localStorage
+#### 7.3 `localSource`: Abstraksi localStorage
 
 | Method | Key (dari app.config) | Tipe |
 |--------|----------------------|------|
@@ -1179,9 +1179,9 @@ if (error.response?.status === 401) {
 | `getTheme()` / `setTheme()` | `app_theme` | `'light' \| 'dark' \| 'system'` |
 | `getLocale()` / `setLocale()` | `app_locale` | `'en' \| 'id'` |
 | `getToastPosition()` / `setToastPosition()` | `app_toast_position` | `ToastPosition` |
-| `clearAuth()` | hapus token + user | — |
+| `clearAuth()` | hapus token + user | - |
 
-Semua operasi localStorage dibungkus `safeGetItem` / `safeSetItem` — tidak crash di private browsing atau saat quota penuh.
+Semua operasi localStorage dibungkus `safeGetItem` / `safeSetItem`: tidak crash di private browsing atau saat quota penuh.
 
 #### 7.4 Mock Auth (Development)
 
@@ -1191,7 +1191,7 @@ Semua operasi localStorage dibungkus `safeGetItem` / `safeSetItem` — tidak cra
 | Token | `mock_jwt_token_admin_session_2024` |
 | Delay simulasi | 800ms per request |
 
-Mock ada di `apiRepository.ts` — saat backend nyata tersedia, cukup ganti implementasi repository tanpa mengubah usecase atau UI.
+Mock ada di `apiRepository.ts`: saat backend nyata tersedia, cukup ganti implementasi repository tanpa mengubah usecase atau UI.
 
 ---
 
@@ -1242,7 +1242,7 @@ function UsersPage() {
   }
 }
 
-// id.json — key HARUS identik, urutan kata boleh berbeda
+// id.json: key HARUS identik, urutan kata boleh berbeda
 {
   "users": {
     "title": "Pengguna",
@@ -1256,7 +1256,7 @@ function UsersPage() {
 ```
 
 **Aturan:**
-- Parameter interpolasi `{{param}}` — nama param **harus sama** di en dan id.
+- Parameter interpolasi `{{param}}`: nama param **harus sama** di en dan id.
 - `defaultLocale` di `app.config.ts` (default: `'en'`).
 - Locale persisten di localStorage via `localSource`.
 
@@ -1265,7 +1265,7 @@ function UsersPage() {
 | Mode | Perilaku |
 |------|----------|
 | `light` | Force light mode |
-| `dark` | Force dark mode — tambah class `.dark` di `<html>` |
+| `dark` | Force dark mode: tambah class `.dark` di `<html>` |
 | `system` | Ikuti `prefers-color-scheme` OS |
 
 ```tsx
@@ -1333,13 +1333,13 @@ VITE_BASE_PATH=/my-app/
 
 ```bash
 pnpm run build
-pnpm run preview   # opsional — cek dist/ secara lokal
+pnpm run preview   # opsional, cek dist/ secara lokal
 ```
 
 **Penting:**
 - `VITE_BASE_PATH` harus sama dengan path hosting Anda.
 - `assetUrl()` dan `routerBasename` otomatis resolve dari `import.meta.env.BASE_URL`.
-- Deep link (mis. `/dashboard`) membutuhkan **SPA fallback** di web server — tanpa itu, refresh di URL dalam aplikasi bisa menampilkan halaman kosong atau 404. Ikuti dokumentasi provider hosting Anda.
+- Deep link (mis. `/dashboard`) membutuhkan **SPA fallback** di web server: tanpa itu, refresh di URL dalam aplikasi bisa menampilkan halaman kosong atau 404. Ikuti dokumentasi provider hosting Anda.
 
 Penjelasan lebih lengkap: [DOCUMENTATION.id.md](./DOCUMENTATION.id.md).
 
@@ -1370,7 +1370,7 @@ make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 
 | Parameter | Wajib? | Deskripsi |
 |-----------|--------|-----------|
-| `name` | ✅ | Key feature — folder, route (`/name`), locale key (`nav.name`). Kebab-case. |
+| `name` | ✅ | Key feature: folder, route (`/name`), locale key (`nav.name`). Kebab-case. |
 | `label` | Direkomendasikan | Label menu bahasa Inggris |
 | `label-id` | Direkomendasikan | Label menu bahasa Indonesia |
 | `scope` | Opsional | `full` (default), `hook`, `page` |
@@ -1447,7 +1447,7 @@ pnpm run lint   # lihat error TypeScript detail
 
 #### `make generate` gagal di Windows
 
-Gunakan WSL — native Windows tidak punya `rsync`:
+Gunakan WSL: native Windows tidak punya `rsync`:
 ```bash
 # Di WSL Ubuntu
 node scripts/generate-app.mjs --name=my-app
@@ -1456,7 +1456,7 @@ node scripts/generate-app.mjs --name=my-app
 #### Login tidak berfungsi
 
 - Pastikan kredensial demo: `admin@mail.com` / `password123`
-- Cek `apiRepository.ts` — mock auth aktif di development
+- Cek `apiRepository.ts`: mock auth aktif di development
 - Clear localStorage: DevTools → Application → Local Storage → Clear
 
 ---

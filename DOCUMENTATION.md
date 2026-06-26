@@ -5,7 +5,7 @@
 - English (this document)
 - [Bahasa Indonesia](./DOCUMENTATION.id.md)
 
-> Documentation to help you build — clearer and more detailed than [README.md](./README.md). Covers bootstrap flow, providers, components, hooks, API wiring, and step-by-step page creation.
+> Documentation to help you build, clearer and more detailed than [README.md](./README.md). Covers bootstrap flow, providers, components, hooks, API wiring, and step-by-step page creation.
 
 ---
 
@@ -24,8 +24,8 @@
 11. [Hooks](#11-hooks)
 12. [Data Layer & API Implementation](#12-data-layer--api-implementation)
 13. [i18n & Theming](#13-i18n--theming)
-14. [Create a New Page — Shortcut (`make feature`)](#14-create-a-new-page--shortcut-make-feature)
-15. [Create a New Page — Manual Walkthrough](#15-create-a-new-page--manual-walkthrough)
+14. [Create a New Page: Shortcut (`make feature`)](#14-create-a-new-page--shortcut-make-feature)
+15. [Create a New Page: Manual Walkthrough](#15-create-a-new-page--manual-walkthrough)
 16. [Scaffolding Your Own App (`make generate`)](#16-scaffolding-your-own-app-make-generate)
 17. [Deployment](#17-deployment)
 18. [Makefile Reference](#18-makefile-reference)
@@ -131,9 +131,9 @@ Pinned via [Volta](https://volta.sh) in `package.json`:
 | `vite` | 5.4.11 | Dev server & production bundler |
 | `@vitejs/plugin-react` | 4.3.4 | React Fast Refresh |
 | `tailwindcss` | 3.4.16 | Utility-first CSS |
-| `postcss` + `autoprefixer` | — | CSS pipeline |
-| `eslint` + plugins | — | Linting |
-| `prettier` + `prettier-plugin-tailwindcss` | — | Formatting |
+| `postcss` + `autoprefixer` | - | CSS pipeline |
+| `eslint` + plugins | - | Linting |
+| `prettier` + `prettier-plugin-tailwindcss` | - | Formatting |
 
 **Path alias:** `@/*` → `src/*` (configured in `tsconfig.json` and `vite.config.ts`).
 
@@ -141,7 +141,7 @@ Pinned via [Volta](https://volta.sh) in `package.json`:
 
 ## 4. Clone & Install (Step by Step)
 
-### Step 1 — Install prerequisites
+### Step 1: Install prerequisites
 
 | Tool | Required | Notes |
 |------|----------|-------|
@@ -172,14 +172,14 @@ node --version   # v20.11.0
 pnpm --version   # 8.15.4
 ```
 
-### Step 2 — Clone the template repository
+### Step 2: Clone the template repository
 
 ```bash
 git clone https://github.com/KutuGondrong/react-dashboard-template-01.git react-app
 cd react-app
 ```
 
-### Step 3 — Install dependencies
+### Step 3: Install dependencies
 
 ```bash
 pnpm install
@@ -187,7 +187,7 @@ pnpm install
 
 This resolves `pnpm-lock.yaml` and installs all packages listed in `package.json`.
 
-### Step 4 — Start the development server
+### Step 4: Start the development server
 
 ```bash
 pnpm run dev
@@ -197,7 +197,7 @@ make dev
 
 Open [http://localhost:5173](http://localhost:5173). Log in with `admin@mail.com` / `password123`.
 
-### Step 5 — Verify tooling
+### Step 5: Verify tooling
 
 ```bash
 pnpm run lint    # ESLint + tsc --noEmit (must be zero errors)
@@ -205,7 +205,7 @@ pnpm run format  # Prettier + ESLint auto-fix
 pnpm run build   # Type-check → production bundle in dist/
 ```
 
-### Step 6 — Environment variables (optional)
+### Step 6: Environment variables (optional)
 
 Create `.env` or `.env.local` at the project root:
 
@@ -228,7 +228,7 @@ VITE_SHOW_DEV_FEATURES=true
 
 The React tree is mounted in two files:
 
-### `src/main.tsx` — entry point
+### `src/main.tsx`: entry point
 
 ```tsx
 createRoot(rootElement).render(
@@ -240,7 +240,7 @@ createRoot(rootElement).render(
 
 Loads global styles (`index.css`) and renders `<App />` inside React 18 `StrictMode`.
 
-### `src/App.tsx` — global providers + router
+### `src/App.tsx`: global providers + router
 
 ```tsx
 export function App() {
@@ -262,7 +262,7 @@ export function App() {
 
 **Order matters:** `LocaleProvider` wraps everything so error screens and toasts can be translated. `ThemeProvider` applies `dark` class on `<html>`. `ToastProvider` and `ModalProvider` expose imperative UI APIs. `RouterProvider` renders the matched route.
 
-`AuthProvider` is **not** in `App.tsx` — it lives inside `AuthShell` (see [Routing](#7-routing-architecture)) so it can use `useNavigate()` for 401 redirects.
+`AuthProvider` is **not** in `App.tsx`: it lives inside `AuthShell` (see [Routing](#7-routing-architecture)) so it can use `useNavigate()` for 401 redirects.
 
 ---
 
@@ -289,7 +289,7 @@ ErrorBoundary
 
 | Provider | File | Hook | Responsibility |
 |----------|------|------|----------------|
-| `ErrorBoundary` | `components/ErrorBoundary/` | — | Catches render errors; localized recovery UI |
+| `ErrorBoundary` | `components/ErrorBoundary/` | - | Catches render errors; localized recovery UI |
 | `LocaleProvider` | `context/LocaleContext.tsx` | `useLocale()` | `t(key, params)`, `locale`, `setLocale` |
 | `ThemeProvider` | `context/ThemeContext.tsx` | `useTheme()` | `mode`, `resolvedTheme`, `setMode`, `toggleTheme` |
 | `ToastProvider` | `components/Toast/` | `useToast()` | Show success/error/info toasts |
@@ -355,8 +355,8 @@ Routes are defined in `src/router/AppRouter.tsx` using `createBrowserRouter`. Fe
 ├── /dashboard
 ├── /users
 ├── /settings
-├── /documentation         (dev only — landing → external docs)
-└── /components            (dev only — landing → external catalog)
+├── /documentation         (dev only, landing → external docs)
+└── /components            (dev only, landing → external catalog)
 
 /  (PublicRoute + AuthLayout)
 ├── /login
@@ -391,8 +391,8 @@ const UsersPage = lazy(() => import('@/features/users/pages/UsersPage'));
 
 ### `MainLayout` vs `AuthLayout`
 
-- **`MainLayout`** — sidebar, header, footer, scroll container. Renders child routes via `<Outlet />`.
-- **`AuthLayout`** — centered card for login/register forms.
+- **`MainLayout`**: sidebar, header, footer, scroll container. Renders child routes via `<Outlet />`.
+- **`AuthLayout`**: centered card for login/register forms.
 
 ### Basename (subpath deploy)
 
@@ -503,7 +503,7 @@ react-app/
 
 ```
 src/features/<name>/
-├── pages/<Name>Page.tsx       # Route entry — layout + title only
+├── pages/<Name>Page.tsx       # Route entry: layout + title only
 ├── components/                # Feature-specific UI (tables, forms)
 ├── hooks/use<Name>Page.ts     # State, fetch, pagination, handlers
 └── usecase/<name>Usecase.ts   # Business logic → repository / apiSource
@@ -591,7 +591,7 @@ All shared UI lives in `src/components/`. Built with Tailwind CSS and design tok
 
 The live catalog shows props, state matrix (default / loading / error / disabled), and copy-paste code samples for every shared component.
 
-### Usage example — Button
+### Usage example: Button
 
 ```tsx
 import { Button } from '@/components/Button';
@@ -604,7 +604,7 @@ import { Button } from '@/components/Button';
 Variants: `primary` · `secondary` · `outline` · `ghost` · `danger`  
 Sizes: `sm` · `md` · `lg`
 
-### Usage example — DataTable + Pagination
+### Usage example: DataTable + Pagination
 
 ```tsx
 import { DataTable, DataTableGroup } from '@/components/DataTable';
@@ -648,7 +648,7 @@ Hooks are the **Application layer** bridge between UI and business logic.
 | Layout hooks | `layouts/**/hooks/` | `useMainLayout`, `useSidebar` |
 | Component hooks | `components/**/hooks/` | `useFileDownload` |
 
-### Feature hook pattern — `useUsersPage`
+### Feature hook pattern: `useUsersPage`
 
 A feature hook owns **UI state** and **data fetching**:
 
@@ -684,7 +684,7 @@ export function useUsersPage() {
 - Return a flat object consumed by the page/table component
 - Export item types from the hook file when they are feature-specific
 
-### `useUsersPage` — optimistic updates
+### `useUsersPage`: optimistic updates
 
 The Users hook adds local state updates after delete/edit without re-fetching:
 
@@ -700,7 +700,7 @@ const deleteUser = useCallback((userId: string) => {
 | Do | Don't |
 |----|-------|
 | Call usecase from feature hooks | Call `axios` or `fetch` in hooks |
-| Keep pages thin — delegate to hooks | Put business rules in components |
+| Keep pages thin, delegate to hooks | Put business rules in components |
 | Use context hooks for global state | Duplicate auth/locale logic per feature |
 | Memoize callbacks passed to children | Create new inline functions on every render for heavy tables |
 
@@ -718,7 +718,7 @@ apiRepository.ts    → Business logic, validation, mock data, calls mappers
 
 Feature usecases call `apiRepository` (or `apiSource` + mappers when wiring a real backend).
 
-### Models — anti-corruption layer
+### Models: anti-corruption layer
 
 | File | Format | Example field |
 |------|--------|---------------|
@@ -747,7 +747,7 @@ export function toUser(api: ApiUserResponse): User {
 
 **Rule:** Components and hooks never see `snake_case` API fields.
 
-### `backendService.ts` — Axios setup
+### `backendService.ts`: Axios setup
 
 ```tsx
 export const backendService = axios.create({
@@ -759,7 +759,7 @@ export const backendService = axios.create({
 // Response interceptor: on 401 → clear auth → redirect to /login
 ```
 
-### `apiSource.ts` — endpoint functions
+### `apiSource.ts`: endpoint functions
 
 ```tsx
 export const apiSource = {
@@ -772,7 +772,7 @@ export const apiSource = {
 };
 ```
 
-### `localSource.ts` — storage abstraction
+### `localSource.ts`: storage abstraction
 
 Never use `localStorage` directly. Use `localSource`:
 
@@ -799,14 +799,14 @@ localSource.clearAuth();
 
 The Users feature already has API types (`ApiUserResponse`), mappers (`toUser`, `toPaginatedUsers`), and `getUsers()` in `apiSource.ts`. When your backend is ready:
 
-**Step 1 — Set environment variable**
+**Step 1: Set environment variable**
 
 ```bash
 # .env
 VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
-**Step 2 — Replace mock in `apiRepository.ts`**
+**Step 2: Replace mock in `apiRepository.ts`**
 
 ```tsx
 async getUsers(page: number, pageSize: number): Promise<PaginatedResult<User>> {
@@ -815,11 +815,11 @@ async getUsers(page: number, pageSize: number): Promise<PaginatedResult<User>> {
 },
 ```
 
-**Step 3 — No changes needed in usecase, hook, or page**
+**Step 3: No changes needed in usecase, hook, or page**
 
 `useUsersPage` still calls `usersUsecase.getUsers()`. The UI layer is unaware of mock vs real.
 
-For a **new page you create from scratch** (e.g. Inventory from the Tutorial), add response types, domain types, mappers, and endpoints following [Section 15 — Step 11](#step-11--connect-real-api-when-backend-is-ready) or the in-app Tutorial step 7.
+For a **new page you create from scratch** (e.g. Inventory from the Tutorial), add response types, domain types, mappers, and endpoints following [Section 15: Step 11](#step-11--connect-real-api-when-backend-is-ready) or the in-app Tutorial step 7.
 
 ### Error handling
 
@@ -856,7 +856,7 @@ Default locale: `'en'` in `src/config/app.config.ts`.
 
 ---
 
-## 14. Create a New Page — Shortcut (`make feature`)
+## 14. Create a New Page: Shortcut (`make feature`)
 
 The fastest way to add a sidebar menu item, route, locale keys, icon, and feature folder:
 
@@ -900,20 +900,20 @@ make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 2. `src/features/<name>/components/<Name>Table.tsx` *(full / hook)*
 3. `src/features/<name>/hooks/use<Name>Page.ts` *(full / hook)*
 4. `src/features/<name>/usecase/<name>Usecase.ts` *(full only)*
-5. `src/router/featureRoutes.tsx` — lazy route (spread into `AppRouter.tsx`)
-6. `src/layouts/sidebar/featureMenuItems.tsx` — menu item (merged via `buildFeatureMenuItems()`)
-7. `src/layouts/sidebar/components/SidebarIcons.tsx` — icon component *(optional custom icon)*
-8. `src/locales/en.json` + `id.json` — `nav.*` and `<name>.subtitle`
+5. `src/router/featureRoutes.tsx`, lazy route (spread into `AppRouter.tsx`)
+6. `src/layouts/sidebar/featureMenuItems.tsx`, menu item (merged via `buildFeatureMenuItems()`)
+7. `src/layouts/sidebar/components/SidebarIcons.tsx`, icon component *(optional custom icon)*
+8. `src/locales/en.json` + `id.json`, `nav.*` and `<name>.subtitle`
 
 After scaffolding, run `pnpm run dev` and open `/<name>`.
 
 ---
 
-## 15. Create a New Page — Manual Walkthrough
+## 15. Create a New Page: Manual Walkthrough
 
 Use this when you need full control or want to understand what `make feature` does under the hood. We will create a **Products** page from scratch through to a working API.
 
-### Step 1 — Create feature folder structure
+### Step 1: Create feature folder structure
 
 ```
 src/features/products/
@@ -923,10 +923,10 @@ src/features/products/
 └── usecase/productsUsecase.ts
 ```
 
-### Step 2 — Add locale keys
+### Step 2: Add locale keys
 
 ```json
-// src/locales/en.json — under "nav"
+// src/locales/en.json, under "nav"
 "products": "Products"
 
 // new section
@@ -936,7 +936,7 @@ src/features/products/
 ```
 
 ```json
-// src/locales/id.json — under "nav"
+// src/locales/id.json, under "nav"
 "products": "Produk"
 
 "products": {
@@ -944,7 +944,7 @@ src/features/products/
 }
 ```
 
-### Step 3 — Create the page
+### Step 3: Create the page
 
 ```tsx
 // src/features/products/pages/ProductsPage.tsx
@@ -967,7 +967,7 @@ export default function ProductsPage() {
 }
 ```
 
-### Step 4 — Create the hook
+### Step 4: Create the hook
 
 ```tsx
 // src/features/products/hooks/useProductsPage.ts
@@ -1012,7 +1012,7 @@ export function useProductsPage() {
 }
 ```
 
-### Step 5 — Create the usecase (mock first)
+### Step 5: Create the usecase (mock first)
 
 ```tsx
 // src/features/products/usecase/productsUsecase.ts
@@ -1043,7 +1043,7 @@ export const productsUsecase = {
 };
 ```
 
-### Step 6 — Create the table component
+### Step 6: Create the table component
 
 ```tsx
 // src/features/products/components/ProductsTable.tsx
@@ -1095,7 +1095,7 @@ export function ProductsTable() {
 }
 ```
 
-### Step 7 — Register the route
+### Step 7: Register the route
 
 Append to `src/router/featureRoutes.tsx` (spread into `protectedChildren` via `...featureRoutes` in `AppRouter.tsx`):
 
@@ -1113,7 +1113,7 @@ const ProductsPage = lazy(() => import('@/features/products/pages/ProductsPage')
 },
 ```
 
-### Step 8 — Add sidebar menu item
+### Step 8: Add sidebar menu item
 
 Append to the return value of `buildFeatureMenuItems()` in `src/layouts/sidebar/featureMenuItems.tsx`:
 
@@ -1128,7 +1128,7 @@ import { ProductsIcon } from '@/layouts/sidebar/components/SidebarIcons';
 },
 ```
 
-### Step 9 — Add sidebar icon
+### Step 9: Add sidebar icon
 
 ```tsx
 // src/layouts/sidebar/components/SidebarIcons.tsx
@@ -1142,7 +1142,7 @@ export function ProductsIcon() {
 }
 ```
 
-### Step 10 — Verify in browser
+### Step 10: Verify in browser
 
 ```bash
 pnpm run dev
@@ -1150,11 +1150,11 @@ pnpm run dev
 
 Navigate to `/products`. You should see the table with mock data and working pagination.
 
-### Step 11 — Connect real API (optional, when backend is ready)
+### Step 11: Connect real API (optional, when backend is ready)
 
 Skip this step if you are still using mock data from Step 6. When your backend is ready, wire the **Inventory** feature end-to-end:
 
-**Step 1 — Set API base URL**
+**Step 1: Set API base URL**
 
 ```bash
 # .env
@@ -1163,7 +1163,7 @@ VITE_API_BASE_URL=http://localhost:3000/api
 
 `backendService` reads `appConfig.apiBaseUrl` (defaults to `/api`).
 
-**Step 2 — Add API response type** (`model.response.ts`, snake_case)
+**Step 2: Add API response type** (`model.response.ts`, snake_case)
 
 ```tsx
 export interface ApiInventoryItemResponse {
@@ -1175,7 +1175,7 @@ export interface ApiInventoryItemResponse {
 export type ApiInventoryListResponse = ApiPaginatedResponse<ApiInventoryItemResponse>;
 ```
 
-**Step 3 — Add domain type** (`model.type.ts`, camelCase)
+**Step 3: Add domain type** (`model.type.ts`, camelCase)
 
 ```tsx
 export interface InventoryItem {
@@ -1185,7 +1185,7 @@ export interface InventoryItem {
 }
 ```
 
-**Step 4 — Add mapper** (`model.map.ts`)
+**Step 4: Add mapper** (`model.map.ts`)
 
 ```tsx
 export function toInventoryItem(api: ApiInventoryItemResponse): InventoryItem {
@@ -1209,7 +1209,7 @@ export function toPaginatedInventory(
 }
 ```
 
-**Step 5 — Add endpoint** (`apiSource.ts`)
+**Step 5: Add endpoint** (`apiSource.ts`)
 
 ```tsx
 async getInventory(page: number, pageSize: number): Promise<ApiInventoryListResponse> {
@@ -1220,7 +1220,7 @@ async getInventory(page: number, pageSize: number): Promise<ApiInventoryListResp
 },
 ```
 
-**Step 6 — Replace mock in usecase**
+**Step 6: Replace mock in usecase**
 
 ```tsx
 // inventoryUsecase.ts
@@ -1253,7 +1253,7 @@ make generate name=my-new-app out=~/projects/my-new-app
 | Output | New folder with a full copy of this template |
 | `package.json` | `name` updated to your app name |
 | Git | `git init` in the output folder |
-| Config | `app.config.ts` title/description copied as-is — customize after generate |
+| Config | `app.config.ts` title/description copied as-is, customize after generate |
 
 **FileDownload demo files:** `public/samples/` (`report.pdf`, `data.csv`, `readme.txt`) is included so mock download works out of the box.
 
@@ -1297,8 +1297,8 @@ pnpm run preview  # optional local check of dist/
 
 ## Further Reading
 
-- [README.md](./README.md) — concise overview (English)
-- [DOCUMENTATION.id.md](./DOCUMENTATION.id.md) — this document in Bahasa Indonesia
-- [README.id.md](./README.id.md) — concise overview (Bahasa Indonesia)
+- [README.md](./README.md): concise overview (English)
+- [DOCUMENTATION.id.md](./DOCUMENTATION.id.md): this document in Bahasa Indonesia
+- [README.id.md](./README.id.md): concise overview (Bahasa Indonesia)
 - [Component catalog (live)](https://template.teristimewa.com/react-dashboard-template-01/components)
 - [Documentation (live)](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview)

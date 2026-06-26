@@ -9,9 +9,11 @@ export default function TutorialLandingPage() {
   const repoUrl = externalLinksConfig.templateRepoUrl;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 pb-10">
+    <div className="mx-auto w-full min-w-0 max-w-2xl space-y-6 pb-10">
       <div className="space-y-3">
-        <Typography.Title level={2}>{t('landingTitle')}</Typography.Title>
+        <Typography.Title level={2} className="!text-2xl sm:!text-3xl">
+          {t('landingTitle')}
+        </Typography.Title>
         <Typography.Text color="muted">{t('landingSubtitle')}</Typography.Text>
       </div>
 

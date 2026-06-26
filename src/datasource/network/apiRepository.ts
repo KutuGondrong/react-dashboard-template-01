@@ -147,8 +147,8 @@ export const apiRepository = {
       },
       {
         id: 'usr_006',
-        email: 'test@mail.com',
-        full_name: 'Test Brown',
+        email: 'teristimewa@mail.com',
+        full_name: 'Hedy Simamora',
         role: 'user',
         avatar_url: null,
         created_at: '2023-05-12T16:45:00.000Z',

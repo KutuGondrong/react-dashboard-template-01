@@ -70,7 +70,7 @@ node --version   # v20.11.0
 pnpm --version   # 8.15.4
 ```
 
-> **Windows note:** Use **WSL** for `make generate` — native Windows does not include `rsync` by default.
+> **Windows note:** Use **WSL** for `make generate`. Native Windows does not include `rsync` by default.
 
 ---
 
@@ -145,7 +145,7 @@ src/
 
 **Path alias:** `@/*` → `src/*` (configured in `tsconfig.json` and `vite.config.ts`)
 
-**Color tokens:** Use `src/config/color.tokens.ts` + `tailwind.config.js` — do not hardcode hex values in components.
+**Color tokens:** Use `src/config/color.tokens.ts` + `tailwind.config.js`. Do not hardcode hex values in components.
 
 ---
 
@@ -183,8 +183,8 @@ pnpm run build   # recommended
 | `/register` | AuthLayout | Public | RegisterPage |
 | `*` | MainLayout | Protected | NotFoundPage (404) |
 
-- **ProtectedRoute** — requires authentication; redirects to `/login`
-- **PublicRoute** — guest only; redirects to `/dashboard` if logged in
+- **ProtectedRoute**: requires authentication; redirects to `/login`
+- **PublicRoute**: guest only; redirects to `/dashboard` if logged in
 - All pages use `React.lazy()` + `Suspense` for code splitting
 
 ---
@@ -201,8 +201,8 @@ Three network layers:
 
 **Rules:**
 - Do not call `axios` or `fetch` directly from components/hooks
-- Do not use `localStorage` directly — use `localSource`
-- Do not expose API snake_case fields in UI — use mappers
+- Do not use `localStorage` directly; use `localSource`
+- Do not expose API snake_case fields in UI; use mappers
 
 Mock auth (development): `admin@mail.com` / `password123` with ~800ms simulated delay.
 
@@ -228,7 +228,7 @@ Default locale: `'en'` in `app.config.ts`. Both locale and theme persist in loca
 
 ### 9. UI Components
 
-Shared components in `src/components/` — built with Tailwind and design tokens:
+Shared components in `src/components/`, built with Tailwind and design tokens:
 
 Button · Input · ComboBox · DataTable · Pagination · Modal · Drawer · Toast · Badge · Card · Avatar · Toggle · Typography · Chart · FileManagement · Layout · NavMenu · SkeletonLoader · ErrorBoundary · ScrollToTop · CodeBlock
 
@@ -248,7 +248,7 @@ Set `VITE_BASE_PATH` before `pnpm run build` when the app is served under a subp
 
 ```bash
 pnpm run build
-pnpm run preview   # optional — verify dist/ locally
+pnpm run preview   # optional, verify dist/ locally
 ```
 
 For deeper deployment notes, see [DOCUMENTATION.md](./DOCUMENTATION.md) and [DOCUMENTATION.id.md](./DOCUMENTATION.id.md).
@@ -288,7 +288,7 @@ make generate name=my-new-app out=~/projects/my-new-app
 
 ### Further Reading
 
-- [README.id.md](./README.id.md) — full documentation in Bahasa Indonesia
-- [DOCUMENTATION.md](./DOCUMENTATION.md) — deep developer documentation (English)
-- [DOCUMENTATION.id.md](./DOCUMENTATION.id.md) — deep developer documentation (Bahasa Indonesia)
-- In-app **Tutorial** (DEV badge) during `pnpm run dev` — links to published docs
+- [README.id.md](./README.id.md): full documentation in Bahasa Indonesia
+- [DOCUMENTATION.md](./DOCUMENTATION.md): deep developer documentation (English)
+- [DOCUMENTATION.id.md](./DOCUMENTATION.id.md): deep developer documentation (Bahasa Indonesia)
+- In-app **Tutorial** (DEV badge) during `pnpm run dev`, links to published docs

@@ -9,7 +9,7 @@ Choose Language / Pilih Bahasa:
 - [English](./DOCUMENTATION.md)
 - Bahasa Indonesia (dokumen ini)
 
-> Dokumentasi untuk membantu pengembangan — lebih jelas dan mendalam daripada [README.id.md](./README.id.md). Mencakup alur bootstrap, provider, komponen, hooks, integrasi API, dan panduan membuat halaman baru langkah demi langkah.
+> Dokumentasi untuk membantu pengembangan, lebih jelas dan mendalam daripada [README.id.md](./README.id.md). Mencakup alur bootstrap, provider, komponen, hooks, integrasi API, dan panduan membuat halaman baru langkah demi langkah.
 
 ---
 
@@ -28,8 +28,8 @@ Choose Language / Pilih Bahasa:
 11. [Hooks](#id-11-hooks)
 12. [Lapisan Data & Implementasi API](#id-12-lapisan-data--implementasi-api)
 13. [i18n & Tema](#id-13-i18n--tema)
-14. [Buat Halaman Baru — Shortcut (`make feature`)](#id-14-buat-halaman-baru--shortcut-make-feature)
-15. [Buat Halaman Baru — Manual](#id-15-buat-halaman-baru--manual)
+14. [Buat Halaman Baru: Shortcut (`make feature`)](#id-14-buat-halaman-baru--shortcut-make-feature)
+15. [Buat Halaman Baru: Manual](#id-15-buat-halaman-baru--manual)
 16. [Scaffold Aplikasi Sendiri (`make generate`)](#id-16-scaffold-aplikikasi-sendiri-make-generate)
 17. [Deployment](#id-17-deployment)
 18. [Referensi Makefile](#id-18-referensi-makefile)
@@ -140,7 +140,7 @@ Versi dipin via [Volta](https://volta.sh) di `package.json`:
 | `typescript` | 5.7.2 | Static typing |
 | `vite` | 5.4.11 | Dev server & bundler produksi |
 | `tailwindcss` | 3.4.16 | Utility-first CSS |
-| `eslint` + `prettier` | — | Linting & formatting |
+| `eslint` + `prettier` | - | Linting & formatting |
 
 **Path alias:** `@/*` → `src/*`
 
@@ -150,7 +150,7 @@ Versi dipin via [Volta](https://volta.sh) di `package.json`:
 
 ## 4. Clone & Instalasi (Langkah demi Langkah)
 
-### Langkah 1 — Instal prasyarat
+### Langkah 1: Instal prasyarat
 
 | Tool | Wajib | Catatan |
 |------|-------|---------|
@@ -164,20 +164,20 @@ volta pin node@20.11.0
 volta pin pnpm@8.15.4
 ```
 
-### Langkah 2 — Clone repositori template
+### Langkah 2: Clone repositori template
 
 ```bash
 git clone https://github.com/KutuGondrong/react-dashboard-template-01.git react-app
 cd react-app
 ```
 
-### Langkah 3 — Instal dependensi
+### Langkah 3: Instal dependensi
 
 ```bash
 pnpm install
 ```
 
-### Langkah 4 — Jalankan dev server
+### Langkah 4: Jalankan dev server
 
 ```bash
 pnpm run dev
@@ -187,7 +187,7 @@ make dev
 
 Buka [http://localhost:5173](http://localhost:5173). Login: `admin@mail.com` / `password123`.
 
-### Langkah 5 — Verifikasi tooling
+### Langkah 5: Verifikasi tooling
 
 ```bash
 pnpm run lint
@@ -195,7 +195,7 @@ pnpm run format
 pnpm run build
 ```
 
-### Langkah 6 — Variabel environment (opsional)
+### Langkah 6: Variabel environment (opsional)
 
 ```bash
 VITE_API_BASE_URL=http://localhost:3000/api
@@ -209,11 +209,11 @@ VITE_SHOW_DEV_FEATURES=true
 
 ## 5. Bootstrap Aplikasi
 
-### `src/main.tsx` — titik masuk
+### `src/main.tsx`: titik masuk
 
 Memuat `index.css` dan merender `<App />` di dalam `StrictMode`.
 
-### `src/App.tsx` — provider global + router
+### `src/App.tsx`: provider global + router
 
 ```
 ErrorBoundary
@@ -234,7 +234,7 @@ ErrorBoundary
 
 | Provider | File | Hook | Tanggung jawab |
 |----------|------|------|----------------|
-| `ErrorBoundary` | `components/ErrorBoundary/` | — | Tangkap error render |
+| `ErrorBoundary` | `components/ErrorBoundary/` | - | Tangkap error render |
 | `LocaleProvider` | `context/LocaleContext.tsx` | `useLocale()` | Terjemahan `t()`, ganti bahasa |
 | `ThemeProvider` | `context/ThemeContext.tsx` | `useTheme()` | Mode light/dark/system |
 | `ToastProvider` | `components/Toast/` | `useToast()` | Notifikasi toast |
@@ -267,8 +267,8 @@ Setiap halaman memakai `React.lazy()` + `Suspense` dengan fallback `SkeletonLoad
 
 Route fitur baru didaftarkan di `src/router/featureRoutes.tsx` (di-spread ke `AppRouter.tsx`). Route tidak dikenal (`path: '*'`) menampilkan `NotFoundPage` (404).
 
-- **`MainLayout`** — sidebar, header, footer, `<Outlet />` untuk halaman anak
-- **`AuthLayout`** — kartu terpusat untuk login/register
+- **`MainLayout`**: sidebar, header, footer, `<Outlet />` untuk halaman anak
+- **`AuthLayout`**: kartu terpusat untuk login/register
 
 ---
 
@@ -412,7 +412,7 @@ apiSource.ts        → Satu fungsi per endpoint REST (return JSON mentah)
 apiRepository.ts    → Logika bisnis, validasi, mock data, mapper
 ```
 
-### Model — lapisan anti-korupsi
+### Model: lapisan anti-korupsi
 
 | File | Format | Contoh field |
 |------|--------|--------------|
@@ -430,7 +430,7 @@ Fitur Users sudah punya tipe API, mapper (`toUser`, `toPaginatedUsers`), dan `ge
 2. Ganti mock di `apiRepository.getUsers()` dengan `apiSource.getUsers()` + `toPaginatedUsers()`
 3. Usecase, hook, dan page **tidak perlu diubah**
 
-Untuk **halaman baru** (mis. Inventaris dari Tutorial), tambahkan tipe response, tipe domain, mapper, dan endpoint — lihat [Bagian 15 — Langkah 7](#id-15-buat-halaman-baru--manual) atau langkah 7 di Tutorial dalam aplikasi.
+Untuk **halaman baru** (mis. Inventaris dari Tutorial), tambahkan tipe response, tipe domain, mapper, dan endpoint. Lihat [Bagian 15: Langkah 7](#id-15-buat-halaman-baru--manual) atau langkah 7 di Tutorial dalam aplikasi.
 
 ### Penyimpanan lokal
 
@@ -461,7 +461,7 @@ Tema: `light` · `dark` · `system`. Disimpan di localStorage. Default locale: `
 
 <a id="id-14-buat-halaman-baru--shortcut-make-feature"></a>
 
-## 14. Buat Halaman Baru — Shortcut (`make feature`)
+## 14. Buat Halaman Baru: Shortcut (`make feature`)
 
 Cara tercepat menambah menu sidebar, route, locale, ikon, dan folder fitur:
 
@@ -500,11 +500,11 @@ File yang diubah otomatis: feature folder, `featureRoutes.tsx`, `featureMenuItem
 
 <a id="id-15-buat-halaman-baru--manual"></a>
 
-## 15. Buat Halaman Baru — Manual
+## 15. Buat Halaman Baru: Manual
 
 Gunakan ini untuk kontrol penuh atau memahami apa yang dilakukan `make feature`. Kita buat halaman **Products** dari nol sampai API jalan.
 
-### Langkah 1 — Buat struktur folder
+### Langkah 1: Buat struktur folder
 
 ```
 src/features/products/
@@ -514,7 +514,7 @@ src/features/products/
 └── usecase/productsUsecase.ts
 ```
 
-### Langkah 2 — Tambah locale
+### Langkah 2: Tambah locale
 
 ```json
 // en.json
@@ -526,43 +526,43 @@ src/features/products/
 "products": { "subtitle": "Kelola katalog produk Anda" }
 ```
 
-### Langkah 3 — Buat page, hook, usecase, table
+### Langkah 3: Buat page, hook, usecase, table
 
 Lihat [Bagian 15 English](./DOCUMENTATION.md#15-create-a-new-page--manual-walkthrough) untuk kode lengkap halaman **Products**.
 
-### Langkah 4 — Daftarkan route di `featureRoutes.tsx`
+### Langkah 4: Daftarkan route di `featureRoutes.tsx`
 
 Tambahkan entry ke array `featureRoutes` (di-spread ke `AppRouter.tsx` via `...featureRoutes`):
 
 ```tsx
 const ProductsPage = lazy(() => import('@/features/products/pages/ProductsPage'));
-// path: 'products' + FeatureLazyPage wrapper — lihat Bagian 15 English Step 7
+// path: 'products' + FeatureLazyPage wrapper. Lihat Bagian 15 English Step 7
 ```
 
-### Langkah 5 — Tambah menu di `featureMenuItems.tsx` + ikon di `SidebarIcons.tsx`
+### Langkah 5: Tambah menu di `featureMenuItems.tsx` + ikon di `SidebarIcons.tsx`
 
 Tambahkan item ke return `buildFeatureMenuItems()` di `src/layouts/sidebar/featureMenuItems.tsx`. Ikon opsional di `SidebarIcons.tsx`.
 
-### Langkah 6 — Verifikasi
+### Langkah 6: Verifikasi
 
 ```bash
 pnpm run dev
 ```
 
-Buka `/products` — tabel mock dengan paginasi harus tampil.
+Buka `/products`, tabel mock dengan paginasi harus tampil.
 
-### Langkah 7 — Sambungkan API nyata (opsional)
+### Langkah 7: Sambungkan API nyata (opsional)
 
 Lewati langkah ini jika masih memakai mock data. Saat backend siap, hubungkan fitur **Inventaris** end-to-end:
 
-1. Set `VITE_API_BASE_URL` di `.env` — `backendService` membaca `appConfig.apiBaseUrl`
+1. Set `VITE_API_BASE_URL` di `.env`; `backendService` membaca `appConfig.apiBaseUrl`
 2. Tambah `ApiInventoryItemResponse` di `model.response.ts` (snake_case)
 3. Tambah `InventoryItem` di `model.type.ts` (camelCase)
 4. Tambah `toInventoryItem` / `toPaginatedInventory` di `model.map.ts`
-5. Tambah `getInventory()` di `apiSource.ts` — return response API mentah
+5. Tambah `getInventory()` di `apiSource.ts`, return response API mentah
 6. Ganti mock di `inventoryUsecase.ts` dengan `apiSource.getInventory()` + `toPaginatedInventory()`
 
-Hook (`useInventoryPage`) dan page (`InventoryPage`) **tidak perlu diubah**. Kode lengkap ada di [Bagian 15 English — Step 11](./DOCUMENTATION.md#step-11--connect-real-api-when-backend-is-ready).
+Hook (`useInventoryPage`) dan page (`InventoryPage`) **tidak perlu diubah**. Kode lengkap ada di [Bagian 15 English: Step 11](./DOCUMENTATION.md#step-11--connect-real-api-when-backend-is-ready).
 
 ---
 
@@ -582,7 +582,7 @@ make generate name=my-new-app out=~/projects/my-new-app
 | Output | Folder baru berisi salinan penuh template ini |
 | `package.json` | `name` diperbarui ke nama aplikasi Anda |
 | Git | `git init` di folder output |
-| Config | Title/description di `app.config.ts` disalin apa adanya — sesuaikan setelah generate |
+| Config | Title/description di `app.config.ts` disalin apa adanya: sesuaikan setelah generate |
 
 **File demo FileDownload:** `public/samples/` sudah disertakan agar mock download berfungsi langsung.
 
@@ -606,7 +606,7 @@ Setelah generate, `cd` ke folder baru, jalankan `pnpm install`, lalu `make dev`.
 
 ```bash
 pnpm run build
-pnpm run preview   # opsional — cek dist/ secara lokal
+pnpm run preview   # opsional, cek dist/ secara lokal
 ```
 
 ---
@@ -630,8 +630,8 @@ pnpm run preview   # opsional — cek dist/ secara lokal
 
 ## Bacaan Lanjutan
 
-- [DOCUMENTATION.md](./DOCUMENTATION.md) — versi English
-- [README.id.md](./README.id.md) — ringkasan singkat (Bahasa Indonesia)
-- [README.md](./README.md) — ringkasan singkat (English)
+- [DOCUMENTATION.md](./DOCUMENTATION.md) (versi English)
+- [README.id.md](./README.id.md): ringkasan singkat (Bahasa Indonesia)
+- [README.md](./README.md): ringkasan singkat (English)
 - [Katalog komponen (live)](https://template.teristimewa.com/react-dashboard-template-01/components)
 - [Dokumentasi (live)](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview)
