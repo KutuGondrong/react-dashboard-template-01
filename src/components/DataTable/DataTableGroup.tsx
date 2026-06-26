@@ -131,7 +131,7 @@ export function DataTableGroup({
   return (
     <div
       ref={rootRef}
-      className={cn(shellClass, 'flex flex-col', fillHeight && 'min-h-0 flex-1', className)}
+      className={cn(shellClass, 'flex min-w-0 flex-col', fillHeight && 'min-h-0 flex-1', className)}
       style={Object.keys(rootStyle).length > 0 ? rootStyle : undefined}
     >
       <div
@@ -139,7 +139,8 @@ export function DataTableGroup({
         style={Object.keys(bodyStyle).length > 0 ? bodyStyle : undefined}
         className={cn(
           fillHeight && 'min-h-0 flex-1',
-          isScrollable && 'overflow-auto overscroll-y-contain [overflow-anchor:none]',
+          'min-w-0 overflow-x-auto',
+          isScrollable && 'overflow-y-auto overscroll-y-contain [overflow-anchor:none]',
         )}
       >
         {body}
