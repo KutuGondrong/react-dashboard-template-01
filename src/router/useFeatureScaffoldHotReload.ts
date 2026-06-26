@@ -31,7 +31,7 @@ if (import.meta.hot) {
   });
   // Only remount the router when generated routes change (`make feature`).
   // Menu items, locale files, and feature pages hot-reload on their own.
-  import.meta.hot.accept('@/router/featureRoutes.generated', bumpRouterRevision);
+  import.meta.hot.accept('@/router/featureRoutes', bumpRouterRevision);
 }
 
 /**

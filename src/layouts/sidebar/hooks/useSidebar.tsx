@@ -9,7 +9,7 @@ import {
   TutorialIcon,
   UsersIcon,
 } from '@/layouts/sidebar/components/SidebarIcons';
-import { buildGeneratedFeatureMenuItems } from '@/layouts/sidebar/featureMenuItems.generated';
+import { buildFeatureMenuItems } from '@/layouts/sidebar/featureMenuItems';
 
 const COMPONENTS_PATH = '/components';
 
@@ -31,7 +31,7 @@ export function useSidebar() {
         path: '/users',
         icon: <UsersIcon />,
       },
-      ...buildGeneratedFeatureMenuItems(t),
+      ...buildFeatureMenuItems(t),
     ];
 
     if (isDev) {

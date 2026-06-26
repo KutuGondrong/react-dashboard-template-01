@@ -181,7 +181,7 @@ pnpm run build   # recommended
 | `/settings` | MainLayout | Protected | SettingsPage |
 | `/login` | AuthLayout | Public | LoginPage |
 | `/register` | AuthLayout | Public | RegisterPage |
-| `*` | — | — | Redirect → `/dashboard` |
+| `*` | MainLayout | Protected | NotFoundPage (404) |
 
 - **ProtectedRoute** — requires authentication; redirects to `/login`
 - **PublicRoute** — guest only; redirects to `/dashboard` if logged in

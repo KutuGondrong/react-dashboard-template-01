@@ -42,6 +42,14 @@
     "demoCredentialsTitle": "Kredensial demo",
     "demoCredentialsHint": "admin@mail.com / password123"
   },
+  "errors": {
+    "notFound": {
+      "title": "Halaman tidak ditemukan",
+      "description": "Halaman ini tidak ada atau route belum didaftarkan. Periksa featureRoutes.tsx jika Anda menambah menu sidebar secara manual.",
+      "pathHint": "Path diminta: {{path}}",
+      "backToDashboard": "Kembali ke dasbor"
+    }
+  },
   "dashboard": {
     "title": "Dasbor",
     "subtitle": "Ringkasan aplikasi Anda",

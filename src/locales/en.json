@@ -42,6 +42,14 @@
     "demoCredentialsTitle": "Demo credentials",
     "demoCredentialsHint": "admin@mail.com / password123"
   },
+  "errors": {
+    "notFound": {
+      "title": "Page not found",
+      "description": "This page does not exist or the route is not registered yet. Check featureRoutes.tsx if you added a sidebar menu manually.",
+      "pathHint": "Requested path: {{path}}",
+      "backToDashboard": "Back to dashboard"
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Overview of your application",

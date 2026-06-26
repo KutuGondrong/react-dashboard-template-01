@@ -6,13 +6,14 @@ import { MainLayout, AuthLayout } from '@/layouts';
 import { ProtectedRoute, PublicRoute } from '@/router/RouteGuards';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { AuthShell } from '@/router/AuthShell';
-import { generatedFeatureRoutes } from '@/router/featureRoutes.generated';
+import { featureRoutes } from '@/router/featureRoutes';
 
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'));
 const DashboardPage = lazy(() => import('@/features/dashboard/pages/DashboardPage'));
 const UsersPage = lazy(() => import('@/features/users/pages/UsersPage'));
 const SettingsPage = lazy(() => import('@/features/settings/pages/SettingsPage'));
+const NotFoundPage = lazy(() => import('@/features/errors/pages/NotFoundPage'));
 
 const TutorialLandingPage = isDevFeaturesEnabled
   ? lazy(() => import('@/features/tutorial/pages/TutorialLandingPage'))
@@ -81,9 +82,17 @@ const protectedChildren = [
       </LazyPage>
     ),
   },
-  ...generatedFeatureRoutes,
+  ...featureRoutes,
   ...documentationRoutes,
   ...componentsRoutes,
+  {
+    path: '*',
+    element: (
+      <LazyPage>
+        <NotFoundPage />
+      </LazyPage>
+    ),
+  },
 ];
 
 export function createAppRouter() {
@@ -129,7 +138,21 @@ export function createAppRouter() {
         },
         {
           path: '*',
-          element: <Navigate to="/dashboard" replace />,
+          element: (
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          ),
+          children: [
+            {
+              path: '*',
+              element: (
+                <LazyPage>
+                  <NotFoundPage />
+                </LazyPage>
+              ),
+            },
+          ],
         },
       ],
     },

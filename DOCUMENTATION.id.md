@@ -265,6 +265,8 @@ Route didefinisikan di `src/router/AppRouter.tsx`.
 
 Setiap halaman memakai `React.lazy()` + `Suspense` dengan fallback `SkeletonLoader`.
 
+Route fitur baru didaftarkan di `src/router/featureRoutes.tsx` (di-spread ke `AppRouter.tsx`). Route tidak dikenal (`path: '*'`) menampilkan `NotFoundPage` (404).
+
 - **`MainLayout`** — sidebar, header, footer, `<Outlet />` untuk halaman anak
 - **`AuthLayout`** — kartu terpusat untuk login/register
 
@@ -278,7 +280,7 @@ Setiap halaman memakai `React.lazy()` + `Suspense` dengan fallback `SkeletonLoad
 src/
 ├── config/          # Konfigurasi app, token warna, base path
 ├── context/         # Provider global (Auth, Locale, Theme, Scroll)
-├── router/          # Route dan guard
+├── router/          # AppRouter, featureRoutes, guard
 ├── locales/         # en.json, id.json
 ├── models/          # Response API, tipe UI, mapper
 ├── datasource/      # network (Axios) + local (localStorage)
@@ -492,7 +494,7 @@ make feature name=inventory scope=hook label="Inventory" label-id="Inventaris"
 make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 ```
 
-File yang diubah otomatis: feature folder, `AppRouter.tsx`, `useSidebar.tsx`, `SidebarIcons.tsx`, `en.json`, `id.json`.
+File yang diubah otomatis: feature folder, `featureRoutes.tsx`, `featureMenuItems.tsx`, `SidebarIcons.tsx` *(ikon opsional)*, `en.json`, `id.json`.
 
 ---
 
@@ -528,14 +530,18 @@ src/features/products/
 
 Lihat [Bagian 15 English](./DOCUMENTATION.md#15-create-a-new-page--manual-walkthrough) untuk kode lengkap halaman **Products**.
 
-### Langkah 4 — Daftarkan route di `AppRouter.tsx`
+### Langkah 4 — Daftarkan route di `featureRoutes.tsx`
+
+Tambahkan entry ke array `featureRoutes` (di-spread ke `AppRouter.tsx` via `...featureRoutes`):
 
 ```tsx
 const ProductsPage = lazy(() => import('@/features/products/pages/ProductsPage'));
-// tambahkan ke protectedChildren dengan path: 'products'
+// path: 'products' + FeatureLazyPage wrapper — lihat Bagian 15 English Step 7
 ```
 
-### Langkah 5 — Tambah menu di `useSidebar.tsx` + ikon di `SidebarIcons.tsx`
+### Langkah 5 — Tambah menu di `featureMenuItems.tsx` + ikon di `SidebarIcons.tsx`
+
+Tambahkan item ke return `buildFeatureMenuItems()` di `src/layouts/sidebar/featureMenuItems.tsx`. Ikon opsional di `SidebarIcons.tsx`.
 
 ### Langkah 6 — Verifikasi
 

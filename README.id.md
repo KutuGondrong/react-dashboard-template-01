@@ -449,7 +449,7 @@ apiRepository.ts      → Business logic + mock data (development)
 | Code splitting | `React.lazy()` + `Suspense` per halaman |
 | Basename | `routerBasename` dari `import.meta.env.BASE_URL` |
 | Auth shell | `AuthShell` membungkus `AuthProvider` di luar layout |
-| 404 handling | `path: '*'` → redirect ke `/dashboard` |
+| 404 handling | `path: '*'` → `NotFoundPage` (404 + tombol kembali ke dashboard) |
 
 #### 3.6 ESLint v8 + Prettier v3 — Standar Ketat
 
@@ -553,7 +553,8 @@ src/
 │   └── ScrollContext.tsx          # Scroll container ref untuk ScrollToTop
 │
 ├── router/
-│   ├── AppRouter.tsx              # createBrowserRouter — SEMUA route
+│   ├── AppRouter.tsx              # createBrowserRouter — route inti + spread featureRoutes
+│   ├── featureRoutes.tsx          # registry route feature (make feature)
 │   ├── RouteGuards.tsx            # ProtectedRoute, PublicRoute
 │   └── AuthShell.tsx              # AuthProvider wrapper
 │
@@ -620,8 +621,9 @@ src/
 │   │   ├── components/            # Header, ProfileMenu, ThemeToggle, LocaleToggle
 │   │   └── hooks/
 │   ├── sidebar/
+│   │   ├── featureMenuItems.tsx   # registry menu feature (make feature)
 │   │   ├── components/            # Sidebar, MobileNavDrawer, SidebarIcons
-│   │   └── hooks/useSidebar.ts    # menuItems dari config + locale
+│   │   └── hooks/useSidebar.ts    # menuItems dari config + buildFeatureMenuItems()
 │   └── footer/
 │
 ├── features/                      # ★ Domain modules
@@ -1077,7 +1079,7 @@ resolve: { alias: { '@': path.resolve(__dirname, './src') } }
 | `/register` | AuthLayout | Public | RegisterPage | ✅ |
 | `/tutorial/*` | MainLayout | Protected | Tutorial landing (dev) | ✅ |
 | `/components/*` | MainLayout | Protected | Components landing (dev) | ✅ |
-| `*` | — | — | Redirect → `/dashboard` | — |
+| `*` | MainLayout | Protected | NotFoundPage (404) | ✅ |
 
 #### 6.2 Route Guards — Implementasi
 
@@ -1381,8 +1383,8 @@ make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 
 Yang di-generate otomatis:
 - Folder `src/features/<name>/`
-- Route di `AppRouter.tsx`
-- Menu item di sidebar (`useSidebar.ts`)
+- Route di `src/router/featureRoutes.tsx`
+- Menu item di `src/layouts/sidebar/featureMenuItems.tsx`
 - Locale keys di `en.json` + `id.json`
 - Icon sidebar
 

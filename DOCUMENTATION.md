@@ -346,7 +346,7 @@ modal.confirm({
 
 ## 7. Routing Architecture
 
-Routes are defined in `src/router/AppRouter.tsx` using `createBrowserRouter`.
+Routes are defined in `src/router/AppRouter.tsx` using `createBrowserRouter`. Feature routes live in `featureRoutes.tsx` (spread via `...featureRoutes`).
 
 ### Layout structure
 
@@ -362,7 +362,7 @@ Routes are defined in `src/router/AppRouter.tsx` using `createBrowserRouter`.
 ├── /login
 └── /register
 
-* → redirect to /dashboard
+* → NotFoundPage (404, with link back to /dashboard)
 ```
 
 ### Route guards
@@ -427,7 +427,8 @@ react-app/
 │   │   └── ScrollContext.tsx
 │   │
 │   ├── router/
-│   │   ├── AppRouter.tsx      # Route definitions
+│   │   ├── AppRouter.tsx      # Core route definitions
+│   │   ├── featureRoutes.tsx  # Feature route registry (make feature)
 │   │   ├── RouteGuards.tsx    # Protected / Public guards
 │   │   └── AuthShell.tsx      # AuthProvider wrapper
 │   │
@@ -478,7 +479,7 @@ react-app/
 │   ├── layouts/
 │   │   ├── main-layout/       # MainLayout shell
 │   │   ├── header/            # Header, profile menu, theme toggle
-│   │   ├── sidebar/           # Sidebar nav, icons, useSidebar hook
+│   │   ├── sidebar/           # Sidebar nav, featureMenuItems, icons, useSidebar hook
 │   │   └── footer/
 │   │
 │   ├── features/              # Domain modules (one folder per feature)
@@ -899,9 +900,9 @@ make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 2. `src/features/<name>/components/<Name>Table.tsx` *(full / hook)*
 3. `src/features/<name>/hooks/use<Name>Page.ts` *(full / hook)*
 4. `src/features/<name>/usecase/<name>Usecase.ts` *(full only)*
-5. `src/router/AppRouter.tsx` — lazy route
-6. `src/layouts/sidebar/hooks/useSidebar.tsx` — menu item
-7. `src/layouts/sidebar/components/SidebarIcons.tsx` — icon component
+5. `src/router/featureRoutes.tsx` — lazy route (spread into `AppRouter.tsx`)
+6. `src/layouts/sidebar/featureMenuItems.tsx` — menu item (merged via `buildFeatureMenuItems()`)
+7. `src/layouts/sidebar/components/SidebarIcons.tsx` — icon component *(optional custom icon)*
 8. `src/locales/en.json` + `id.json` — `nav.*` and `<name>.subtitle`
 
 After scaffolding, run `pnpm run dev` and open `/<name>`.
@@ -1096,28 +1097,29 @@ export function ProductsTable() {
 
 ### Step 7 — Register the route
 
+Append to `src/router/featureRoutes.tsx` (spread into `protectedChildren` via `...featureRoutes` in `AppRouter.tsx`):
+
 ```tsx
-// src/router/AppRouter.tsx
 const ProductsPage = lazy(() => import('@/features/products/pages/ProductsPage'));
 
-// inside protectedChildren:
+// inside featureRoutes array:
 {
   path: 'products',
   element: (
-    <LazyPage>
+    <FeatureLazyPage>
       <ProductsPage />
-    </LazyPage>
+    </FeatureLazyPage>
   ),
 },
 ```
 
 ### Step 8 — Add sidebar menu item
 
+Append to the return value of `buildFeatureMenuItems()` in `src/layouts/sidebar/featureMenuItems.tsx`:
+
 ```tsx
-// src/layouts/sidebar/hooks/useSidebar.tsx
 import { ProductsIcon } from '@/layouts/sidebar/components/SidebarIcons';
 
-// inside menuItems array:
 {
   key: 'products',
   label: t('nav.products'),

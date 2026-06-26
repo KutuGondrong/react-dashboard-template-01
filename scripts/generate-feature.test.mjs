@@ -21,12 +21,12 @@ function setupFixture() {
 
   fs.copyFileSync(GENERATE_FEATURE, path.join(dir, 'scripts/generate-feature.mjs'));
   fs.copyFileSync(
-    path.join(TEMPLATE_DIR, 'featureRoutes.generated.tsx'),
-    path.join(dir, 'src/router/featureRoutes.generated.tsx'),
+    path.join(TEMPLATE_DIR, 'featureRoutes.tsx'),
+    path.join(dir, 'src/router/featureRoutes.tsx'),
   );
   fs.copyFileSync(
-    path.join(TEMPLATE_DIR, 'featureMenuItems.generated.tsx'),
-    path.join(dir, 'src/layouts/sidebar/featureMenuItems.generated.tsx'),
+    path.join(TEMPLATE_DIR, 'featureMenuItems.tsx'),
+    path.join(dir, 'src/layouts/sidebar/featureMenuItems.tsx'),
   );
   fs.writeFileSync(path.join(dir, 'src/locales/en.json'), '{"nav":{}}\n');
   fs.writeFileSync(path.join(dir, 'src/locales/id.json'), '{"nav":{}}\n');
@@ -54,8 +54,8 @@ test('sequential generation: full → hook → page scopes produce valid routes'
   runFeature(dir, '--name=reports --scope=hook --label="Reports" --label-id="Laporan"');
   runFeature(dir, '--name=alerts --scope=page --label="Alerts" --label-id="Peringatan"');
 
-  const routesPath = path.join(dir, 'src/router/featureRoutes.generated.tsx');
-  const menuPath = path.join(dir, 'src/layouts/sidebar/featureMenuItems.generated.tsx');
+  const routesPath = path.join(dir, 'src/router/featureRoutes.tsx');
+  const menuPath = path.join(dir, 'src/layouts/sidebar/featureMenuItems.tsx');
   const routes = fs.readFileSync(routesPath, 'utf8');
   const menu = fs.readFileSync(menuPath, 'utf8');
 
@@ -70,4 +70,48 @@ test('sequential generation: full → hook → page scopes produce valid routes'
   assert.match(routes, /const InventoryPage = lazy/);
   assert.match(routes, /const ReportsPage = lazy/);
   assert.match(routes, /const AlertsPage = lazy/);
+});
+
+test('manual tutorial flow: feature files then locale, menu, and route wiring', () => {
+  const dir = setupFixture();
+
+  execSync(
+    `node --input-type=module -e "
+import { parseName, buildTemplates, writeManualFeatureFiles, wireManualFeatureNavigation } from './scripts/generate-feature.mjs';
+const meta = parseName('inventory');
+const labels = { labelEn: 'Inventory', labelId: 'Inventaris' };
+const templates = buildTemplates(meta, labels, 'full');
+writeManualFeatureFiles(meta, templates);
+wireManualFeatureNavigation(meta, templates);
+"`,
+    { cwd: dir, stdio: 'pipe' },
+  );
+
+  const pagePath = path.join(dir, 'src/features/inventory/pages/InventoryPage.tsx');
+  const hookPath = path.join(dir, 'src/features/inventory/hooks/useInventoryPage.ts');
+  const usecasePath = path.join(dir, 'src/features/inventory/usecase/inventoryUsecase.ts');
+  const routesPath = path.join(dir, 'src/router/featureRoutes.tsx');
+  const menuPath = path.join(dir, 'src/layouts/sidebar/featureMenuItems.tsx');
+  const enLocalePath = path.join(dir, 'src/locales/en.json');
+  const idLocalePath = path.join(dir, 'src/locales/id.json');
+
+  assert.equal(fs.existsSync(pagePath), true);
+  assert.equal(fs.existsSync(hookPath), true);
+  assert.equal(fs.existsSync(usecasePath), true);
+
+  const routes = fs.readFileSync(routesPath, 'utf8');
+  const menu = fs.readFileSync(menuPath, 'utf8');
+  const enLocale = JSON.parse(fs.readFileSync(enLocalePath, 'utf8'));
+  const idLocale = JSON.parse(fs.readFileSync(idLocalePath, 'utf8'));
+
+  assert.equal(routes.includes('{{'), false);
+  assert.equal(menu.includes('{{'), false);
+  assert.match(routes, /path: 'inventory'/);
+  assert.match(routes, /features\/inventory\/pages\/InventoryPage/);
+  assert.match(menu, /key: 'inventory'/);
+  assert.match(menu, /path: '\/inventory'/);
+  assert.equal(enLocale.nav.inventory, 'Inventory');
+  assert.equal(idLocale.nav.inventory, 'Inventaris');
+  assert.match(enLocale.inventory.subtitle, /Manage inventory/i);
+  assert.match(idLocale.inventory.subtitle, /Kelola inventaris/i);
 });
