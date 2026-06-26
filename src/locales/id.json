@@ -6,12 +6,14 @@
     "components": "Komponen",
     "componentsOverview": "Ringkasan",
     "storybook": "Storybook",
-    "tutorial": "Tutorial",
-    "tutorialDocument": "Dokumentasi",
-    "tutorialPreview": "Preview Hasil",
+    "documentation": "Dokumentasi",
+    "documentationOverview": "Overview",
+    "documentationTutorial": "Tutorial",
+    "documentationPreview": "Preview",
     "login": "Masuk",
     "register": "Daftar",
-    "orders": "Pesanan"
+    "orders": "Pesanan",
+    "inventory": "Inventaris"
   },
   "auth": {
     "loginTitle": "Masuk",
@@ -97,6 +99,9 @@
   },
   "orders": {
     "subtitle": "Kelola pesanan dengan mock data, pagination, dan layout halaman standar."
+  },
+  "inventory": {
+    "subtitle": "Kelola inventaris dengan mock data, pagination, dan layout halaman standar."
   },
   "footer": {
     "copyright": "© {{year}} Teristimewa Dashboard. Hak cipta dilindungi.",

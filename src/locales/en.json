@@ -6,12 +6,14 @@
     "components": "Components",
     "componentsOverview": "Overview",
     "storybook": "Storybook",
-    "tutorial": "Tutorial",
-    "tutorialDocument": "Documentation",
-    "tutorialPreview": "Preview",
+    "documentation": "Documentation",
+    "documentationOverview": "Overview",
+    "documentationTutorial": "Tutorial",
+    "documentationPreview": "Preview",
     "login": "Login",
     "register": "Register",
-    "orders": "Orders"
+    "orders": "Orders",
+    "inventory": "Inventory"
   },
   "auth": {
     "loginTitle": "Sign In",
@@ -97,6 +99,9 @@
   },
   "orders": {
     "subtitle": "Manage orders with mock data, pagination, and standard page layout."
+  },
+  "inventory": {
+    "subtitle": "Manage inventory with mock data, pagination, and standard page layout."
   },
   "footer": {
     "copyright": "© {{year}} Teristimewa Dashboard. All rights reserved.",

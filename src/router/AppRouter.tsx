@@ -38,10 +38,10 @@ const componentsRoutes = StorybookLandingPage
     ]
   : [];
 
-const tutorialRoutes = TutorialLandingPage
+const documentationRoutes = TutorialLandingPage
   ? [
       {
-        path: 'tutorial',
+        path: 'documentation',
         element: (
           <LazyPage>
             <TutorialLandingPage />
@@ -80,7 +80,7 @@ const protectedChildren = [
       </LazyPage>
     ),
   },
-  ...tutorialRoutes,
+  ...documentationRoutes,
   ...componentsRoutes,
 ];
 

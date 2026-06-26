@@ -40,9 +40,9 @@ export function useSidebar() {
 
     if (isDev) {
       items.push({
-        key: 'tutorial',
-        label: t('nav.tutorial'),
-        path: '/tutorial',
+        key: 'documentation',
+        label: t('nav.documentation'),
+        path: '/documentation',
         icon: <TutorialIcon />,
         devBadge: true,
       });

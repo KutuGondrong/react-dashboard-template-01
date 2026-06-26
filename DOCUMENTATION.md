@@ -73,7 +73,7 @@ URLs are centralized in `src/config/external-links.json`:
 |-----|-----|---------|
 | `templateRepoUrl` | [github.com/KutuGondrong/react-dashboard-template-01](https://github.com/KutuGondrong/react-dashboard-template-01.git) | Git clone URL for end users |
 | `readmeUrl` | GitHub README | Short project overview |
-| `tutorialUrl` | [template.teristimewa.com/.../tutorial/document](https://template.teristimewa.com/react-dashboard-template-01/tutorial/document) | Published tutorial |
+| `tutorialUrl` | [template.teristimewa.com/.../documentation/overview](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview) | Published documentation |
 | `componentsUrl` | [template.teristimewa.com/.../components](https://template.teristimewa.com/react-dashboard-template-01/components) | Published component catalog |
 
 **Live template preview:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01)
@@ -87,10 +87,22 @@ When you run `pnpm run dev`, the protected area shows these main menu items:
 | Dashboard | `/dashboard` | Stats cards, charts |
 | Users | `/users` | Paginated user table |
 | Settings | `/settings` | App preferences |
-| Tutorial *(DEV)* | `/tutorial` | Landing page → links to `tutorialUrl` |
+
+**Template repo (boilerplate)** also includes a nested **Documentation** *(DEV)* group:
+
+| Submenu | Route | Feature |
+|---------|-------|---------|
+| Overview | `/documentation/overview` | Clone, generate, logo, i18n, API, environment |
+| Tutorial | `/documentation/tutorial` | Add a page (Inventory example) via `make feature` or manual |
+| Preview | `/documentation/preview` | Live preview of the Tutorial result |
+
+**Generated apps** show **Documentation** *(DEV)* as a single landing page at `/documentation` → links to `tutorialUrl`.
+
+| Menu key | Route | Feature |
+|----------|-------|---------|
 | Components *(DEV)* | `/components` | Landing page → links to `componentsUrl` |
 
-In development (`pnpm run dev`), **Tutorial** and **Components** show a DEV badge and open landing pages with buttons to the published docs above. Production builds (`pnpm run build`) strip these routes. Hide them during dev with `VITE_SHOW_DEV_FEATURES=false` in `.env`.
+In development (`pnpm run dev`), **Documentation** and **Components** show a DEV badge and open landing pages with buttons to the published docs above. Production builds (`pnpm run build`) strip these routes. Hide them during dev with `VITE_SHOW_DEV_FEATURES=false` in `.env`.
 
 ---
 
@@ -343,7 +355,7 @@ Routes are defined in `src/router/AppRouter.tsx` using `createBrowserRouter`.
 ├── /dashboard
 ├── /users
 ├── /settings
-├── /tutorial              (dev only — landing → external docs)
+├── /documentation         (dev only — landing → external docs)
 └── /components            (dev only — landing → external catalog)
 
 /  (PublicRoute + AuthLayout)
@@ -806,7 +818,7 @@ async getUsers(page: number, pageSize: number): Promise<PaginatedResult<User>> {
 
 `useUsersPage` still calls `usersUsecase.getUsers()`. The UI layer is unaware of mock vs real.
 
-For a **new page you create from scratch** (e.g. Products), add response types, mappers, and endpoints following [Section 15 — Step 11](#step-11--connect-real-api-when-backend-is-ready).
+For a **new page you create from scratch** (e.g. Inventory from the Tutorial), add response types, domain types, mappers, and endpoints following [Section 15 — Step 11](#step-11--connect-real-api-when-backend-is-ready) or the in-app Tutorial step 7.
 
 ### Error handling
 
@@ -1136,16 +1148,92 @@ pnpm run dev
 
 Navigate to `/products`. You should see the table with mock data and working pagination.
 
-### Step 11 — Connect real API (when backend is ready)
+### Step 11 — Connect real API (optional, when backend is ready)
 
-Follow [Section 12](#12-data-layer--api-implementation):
+Skip this step if you are still using mock data from Step 6. When your backend is ready, wire the **Inventory** feature end-to-end:
 
-1. Add `ApiProductResponse` to `model.response.ts`
-2. Add `toProductItem` / `toPaginatedProducts` to `model.map.ts`
-3. Add `getProducts()` to `apiSource.ts`
-4. Replace mock in `productsUsecase.ts` with `apiSource` + mapper
+**Step 1 — Set API base URL**
 
-The hook and page require **no changes**.
+```bash
+# .env
+VITE_API_BASE_URL=http://localhost:3000/api
+```
+
+`backendService` reads `appConfig.apiBaseUrl` (defaults to `/api`).
+
+**Step 2 — Add API response type** (`model.response.ts`, snake_case)
+
+```tsx
+export interface ApiInventoryItemResponse {
+  id: string;
+  name: string;
+  is_active: boolean;
+}
+
+export type ApiInventoryListResponse = ApiPaginatedResponse<ApiInventoryItemResponse>;
+```
+
+**Step 3 — Add domain type** (`model.type.ts`, camelCase)
+
+```tsx
+export interface InventoryItem {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
+```
+
+**Step 4 — Add mapper** (`model.map.ts`)
+
+```tsx
+export function toInventoryItem(api: ApiInventoryItemResponse): InventoryItem {
+  return {
+    id: api.id,
+    name: api.name,
+    isActive: api.is_active,
+  };
+}
+
+export function toPaginatedInventory(
+  response: ApiPaginatedResponse<ApiInventoryItemResponse>,
+): PaginatedResult<InventoryItem> {
+  return {
+    data: response.data.map(toInventoryItem),
+    total: response.total,
+    page: response.page,
+    pageSize: response.page_size,
+    totalPages: response.total_pages,
+  };
+}
+```
+
+**Step 5 — Add endpoint** (`apiSource.ts`)
+
+```tsx
+async getInventory(page: number, pageSize: number): Promise<ApiInventoryListResponse> {
+  const response = await backendService.get<ApiInventoryListResponse>('/inventory', {
+    params: { page, page_size: pageSize },
+  });
+  return response.data;
+},
+```
+
+**Step 6 — Replace mock in usecase**
+
+```tsx
+// inventoryUsecase.ts
+import { apiSource } from '@/datasource/network/apiSource';
+import { toPaginatedInventory } from '@/models/model.map';
+
+export const inventoryUsecase = {
+  async getItems(page: number, pageSize: number) {
+    const response = await apiSource.getInventory(page, pageSize);
+    return toPaginatedInventory(response);
+  },
+};
+```
+
+The hook (`useInventoryPage`) and page (`InventoryPage`) require **no changes**.
 
 ---
 
@@ -1211,4 +1299,4 @@ pnpm run preview  # optional local check of dist/
 - [DOCUMENTATION.id.md](./DOCUMENTATION.id.md) — this document in Bahasa Indonesia
 - [README.id.md](./README.id.md) — concise overview (Bahasa Indonesia)
 - [Component catalog (live)](https://template.teristimewa.com/react-dashboard-template-01/components)
-- [Tutorial (live)](https://template.teristimewa.com/react-dashboard-template-01/tutorial/document)
+- [Documentation (live)](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview)

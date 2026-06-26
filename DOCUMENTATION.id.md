@@ -81,7 +81,7 @@ URL dikelola di `src/config/external-links.json`:
 |-----|-----|--------|
 | `templateRepoUrl` | [github.com/KutuGondrong/react-dashboard-template-01](https://github.com/KutuGondrong/react-dashboard-template-01.git) | URL clone Git untuk end user |
 | `readmeUrl` | README GitHub | Ringkasan singkat proyek |
-| `tutorialUrl` | [template.teristimewa.com/.../tutorial/document](https://template.teristimewa.com/react-dashboard-template-01/tutorial/document) | Tutorial terpublikasi |
+| `tutorialUrl` | [template.teristimewa.com/.../documentation/overview](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview) | Dokumentasi terpublikasi |
 | `componentsUrl` | [template.teristimewa.com/.../components](https://template.teristimewa.com/react-dashboard-template-01/components) | Katalog komponen terpublikasi |
 
 **Preview template live:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01)
@@ -95,10 +95,22 @@ Saat menjalankan `pnpm run dev`, area terproteksi menampilkan menu utama:
 | Dashboard | `/dashboard` | Kartu statistik, chart |
 | Users | `/users` | Tabel user dengan paginasi |
 | Settings | `/settings` | Preferensi aplikasi |
-| Tutorial *(DEV)* | `/tutorial` | Landing page → tautan ke `tutorialUrl` |
+
+**Repo template (boilerplate)** juga punya grup **Dokumentasi** *(DEV)* bertingkat:
+
+| Submenu | Route | Fitur |
+|---------|-------|-------|
+| Overview | `/documentation/overview` | Clone, generate, logo, i18n, API, environment |
+| Tutorial | `/documentation/tutorial` | Tambah halaman (contoh Inventaris) via `make feature` atau manual |
+| Preview | `/documentation/preview` | Preview live hasil Tutorial |
+
+**App hasil generate** menampilkan **Dokumentasi** *(DEV)* sebagai landing page tunggal di `/documentation` → tautan ke `tutorialUrl`.
+
+| Key menu | Route | Fitur |
+|----------|-------|-------|
 | Components *(DEV)* | `/components` | Landing page → tautan ke `componentsUrl` |
 
-Saat development (`pnpm run dev`), **Tutorial** dan **Components** menampilkan badge DEV dan membuka landing page dengan tombol ke dokumentasi terpublikasi di atas. Build produksi (`pnpm run build`) menghapus route ini. Sembunyikan saat dev dengan `VITE_SHOW_DEV_FEATURES=false` di `.env`.
+Saat development (`pnpm run dev`), **Dokumentasi** dan **Components** menampilkan badge DEV dan membuka landing page dengan tombol ke dokumentasi terpublikasi di atas. Build produksi (`pnpm run build`) menghapus route ini. Sembunyikan saat dev dengan `VITE_SHOW_DEV_FEATURES=false` di `.env`.
 
 ---
 
@@ -416,7 +428,7 @@ Fitur Users sudah punya tipe API, mapper (`toUser`, `toPaginatedUsers`), dan `ge
 2. Ganti mock di `apiRepository.getUsers()` dengan `apiSource.getUsers()` + `toPaginatedUsers()`
 3. Usecase, hook, dan page **tidak perlu diubah**
 
-Untuk **halaman baru** (mis. Products), tambahkan tipe, mapper, dan endpoint dari nol — lihat [Bagian 15 — Langkah 7](#id-15-buat-halaman-baru--manual).
+Untuk **halaman baru** (mis. Inventaris dari Tutorial), tambahkan tipe response, tipe domain, mapper, dan endpoint — lihat [Bagian 15 — Langkah 7](#id-15-buat-halaman-baru--manual) atau langkah 7 di Tutorial dalam aplikasi.
 
 ### Penyimpanan lokal
 
@@ -533,9 +545,18 @@ pnpm run dev
 
 Buka `/products` — tabel mock dengan paginasi harus tampil.
 
-### Langkah 7 — Sambungkan API nyata
+### Langkah 7 — Sambungkan API nyata (opsional)
 
-Ikuti [Bagian 12](#id-12-lapisan-data--implementasi-api). Hook dan page tidak perlu diubah.
+Lewati langkah ini jika masih memakai mock data. Saat backend siap, hubungkan fitur **Inventaris** end-to-end:
+
+1. Set `VITE_API_BASE_URL` di `.env` — `backendService` membaca `appConfig.apiBaseUrl`
+2. Tambah `ApiInventoryItemResponse` di `model.response.ts` (snake_case)
+3. Tambah `InventoryItem` di `model.type.ts` (camelCase)
+4. Tambah `toInventoryItem` / `toPaginatedInventory` di `model.map.ts`
+5. Tambah `getInventory()` di `apiSource.ts` — return response API mentah
+6. Ganti mock di `inventoryUsecase.ts` dengan `apiSource.getInventory()` + `toPaginatedInventory()`
+
+Hook (`useInventoryPage`) dan page (`InventoryPage`) **tidak perlu diubah**. Kode lengkap ada di [Bagian 15 English — Step 11](./DOCUMENTATION.md#step-11--connect-real-api-when-backend-is-ready).
 
 ---
 
@@ -607,4 +628,4 @@ pnpm run preview   # opsional — cek dist/ secara lokal
 - [README.id.md](./README.id.md) — ringkasan singkat (Bahasa Indonesia)
 - [README.md](./README.md) — ringkasan singkat (English)
 - [Katalog komponen (live)](https://template.teristimewa.com/react-dashboard-template-01/components)
-- [Tutorial (live)](https://template.teristimewa.com/react-dashboard-template-01/tutorial/document)
+- [Dokumentasi (live)](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview)
