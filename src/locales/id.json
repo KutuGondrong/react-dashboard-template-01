@@ -45,8 +45,8 @@
   "errors": {
     "notFound": {
       "title": "Halaman tidak ditemukan",
-      "description": "Halaman ini tidak ada atau route belum didaftarkan. Periksa featureRoutes.tsx jika Anda menambah menu sidebar secara manual.",
-      "pathHint": "Path diminta: {{path}}",
+      "description": "Halaman yang Anda cari tidak ada atau mungkin sudah dipindahkan. Gunakan menu atau kembali ke dasbor.",
+      "descriptionDev": "Petunjuk dev: jika Anda menambah item sidebar secara manual, daftarkan route di featureRoutes.tsx.",
       "backToDashboard": "Kembali ke dasbor"
     }
   },

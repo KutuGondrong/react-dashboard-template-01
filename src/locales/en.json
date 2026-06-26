@@ -45,8 +45,8 @@
   "errors": {
     "notFound": {
       "title": "Page not found",
-      "description": "This page does not exist or the route is not registered yet. Check featureRoutes.tsx if you added a sidebar menu manually.",
-      "pathHint": "Requested path: {{path}}",
+      "description": "The page you're looking for doesn't exist or may have been moved. Use the menu or go back to the dashboard.",
+      "descriptionDev": "Dev hint: if you added a sidebar item manually, register the route in featureRoutes.tsx.",
       "backToDashboard": "Back to dashboard"
     }
   },
