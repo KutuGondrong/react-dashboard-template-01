@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { routerBasename } from '@/config/basePath';
 import { isDevFeaturesEnabled } from '@/config/devFeatures';
@@ -7,20 +7,22 @@ import { ProtectedRoute, PublicRoute } from '@/router/RouteGuards';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { AuthShell } from '@/router/AuthShell';
 import { featureRoutes } from '@/router/featureRoutes';
+import { lazyWithRetry } from '@/router/lazyWithRetry';
+import { RouteErrorFallback } from '@/router/RouteErrorFallback';
 
-const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
-const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'));
-const DashboardPage = lazy(() => import('@/features/dashboard/pages/DashboardPage'));
-const UsersPage = lazy(() => import('@/features/users/pages/UsersPage'));
-const SettingsPage = lazy(() => import('@/features/settings/pages/SettingsPage'));
-const NotFoundPage = lazy(() => import('@/features/errors/pages/NotFoundPage'));
+const LoginPage = lazyWithRetry(() => import('@/features/auth/pages/LoginPage'));
+const RegisterPage = lazyWithRetry(() => import('@/features/auth/pages/RegisterPage'));
+const DashboardPage = lazyWithRetry(() => import('@/features/dashboard/pages/DashboardPage'));
+const UsersPage = lazyWithRetry(() => import('@/features/users/pages/UsersPage'));
+const SettingsPage = lazyWithRetry(() => import('@/features/settings/pages/SettingsPage'));
+const NotFoundPage = lazyWithRetry(() => import('@/features/errors/pages/NotFoundPage'));
 
 const TutorialLandingPage = isDevFeaturesEnabled
-  ? lazy(() => import('@/features/tutorial/pages/TutorialLandingPage'))
+  ? lazyWithRetry(() => import('@/features/tutorial/pages/TutorialLandingPage'))
   : null;
 
 const StorybookLandingPage = isDevFeaturesEnabled
-  ? lazy(() => import('@/features/storybook/pages/StorybookLandingPage'))
+  ? lazyWithRetry(() => import('@/features/storybook/pages/StorybookLandingPage'))
   : null;
 
 function LazyPage({ children }: { children: React.ReactNode }) {
@@ -100,6 +102,7 @@ export function createAppRouter() {
   [
     {
       element: <AuthShell />,
+      errorElement: <RouteErrorFallback />,
       children: [
         {
           path: '/',

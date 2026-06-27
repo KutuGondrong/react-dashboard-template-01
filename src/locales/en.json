@@ -83,6 +83,8 @@
   "error": {
     "boundaryTitle": "Unexpected Error",
     "boundaryDescription": "An unexpected error occurred. Please try again or contact support if the problem persists.",
+    "chunkTitle": "New Version Available",
+    "chunkDescription": "The app was updated while you had it open. Reload the page to continue.",
     "reloadPage": "Reload Page",
     "goHome": "Go to Home"
   },

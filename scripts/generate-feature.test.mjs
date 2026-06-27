@@ -67,9 +67,9 @@ test('sequential generation: full → hook → page scopes produce valid routes'
   assert.match(menu, /key: 'inventory'/);
   assert.match(menu, /key: 'reports'/);
   assert.match(menu, /key: 'alerts'/);
-  assert.match(routes, /const InventoryPage = lazy/);
-  assert.match(routes, /const ReportsPage = lazy/);
-  assert.match(routes, /const AlertsPage = lazy/);
+  assert.match(routes, /const InventoryPage = lazyWithRetry/);
+  assert.match(routes, /const ReportsPage = lazyWithRetry/);
+  assert.match(routes, /const AlertsPage = lazyWithRetry/);
 });
 
 test('manual tutorial flow: feature files then locale, menu, and route wiring', () => {

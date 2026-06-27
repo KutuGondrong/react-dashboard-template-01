@@ -268,8 +268,9 @@ const ROUTES_FILE_HEADER = `/**
  * Feature routes — edit manually or append via make feature.
  * Spread into protectedChildren in AppRouter.tsx.
  */
-import { lazy, Suspense, type ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
+import { lazyWithRetry } from '@/router/lazyWithRetry';
 
 function FeatureLazyPage({ children }: { children: ReactNode }) {
   return <Suspense fallback={<SkeletonLoader />}>{children}</Suspense>;
@@ -302,8 +303,8 @@ function appendGeneratedRoute(meta) {
     }
 
     let updated = ensureRoutesFileHeader(content);
-    const lazyDecl = `const ${meta.pascal}Page = lazy(() => import('@/features/${meta.camel}/pages/${meta.pascal}Page'));\n\n`;
-    if (!updated.includes(`const ${meta.pascal}Page = lazy`)) {
+    const lazyDecl = `const ${meta.pascal}Page = lazyWithRetry(() => import('@/features/${meta.camel}/pages/${meta.pascal}Page'));\n\n`;
+    if (!updated.includes(`const ${meta.pascal}Page = lazyWithRetry`)) {
       updated = updated.replace('export const featureRoutes', `${lazyDecl}export const featureRoutes`);
     }
 
