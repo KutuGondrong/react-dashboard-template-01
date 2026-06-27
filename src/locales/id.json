@@ -83,8 +83,8 @@
   "error": {
     "boundaryTitle": "Kesalahan Tidak Terduga",
     "boundaryDescription": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi atau hubungi dukungan jika masalah berlanjut.",
-    "chunkTitle": "Versi Baru Tersedia",
-    "chunkDescription": "Aplikasi diperbarui saat Anda masih membukanya. Muat ulang halaman untuk melanjutkan.",
+    "chunkTitle": "Kayaknya ada masalah",
+    "chunkDescription": "Kayaknya sedang ada masalah. Refresh aja deh.",
     "reloadPage": "Muat Ulang Halaman",
     "goHome": "Ke Beranda"
   },
