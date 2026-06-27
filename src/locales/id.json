@@ -51,8 +51,8 @@
     }
   },
   "dashboard": {
-    "title": "Dasbor",
-    "subtitle": "Ringkasan aplikasi Anda",
+    "title": "Selamat Datang Kembali",
+    "subtitle": "Pantau metrik, aktivitas, dan tren aplikasi Anda. Semua terkumpul rapi di satu tempat.",
     "totalUsers": "Total Pengguna",
     "activeSessions": "Sesi Aktif",
     "recentActivity": "Aktivitas Terbaru",

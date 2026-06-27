@@ -51,8 +51,8 @@
     }
   },
   "dashboard": {
-    "title": "Dashboard",
-    "subtitle": "Overview of your application",
+    "title": "Welcome Back",
+    "subtitle": "Monitor metrics, activity, and trends. Everything you need, in one place.",
     "totalUsers": "Total Users",
     "activeSessions": "Active Sessions",
     "recentActivity": "Recent Activity",

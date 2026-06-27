@@ -1,11 +1,11 @@
 import { useAuth } from '@/context/AuthContext';
 import { useLocale } from '@/context/LocaleContext';
-import { UserCard } from '@/components/Avatar';
 import { Button } from '@/components/Button';
 import {
   DashboardCharts,
   DashboardChartsSkeleton,
 } from '@/features/dashboard/components/DashboardCharts';
+import { DashboardHeader } from '@/features/dashboard/components/DashboardHeader';
 import {
   DashboardStatsCards,
   DashboardStatsSkeleton,
@@ -20,20 +20,11 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('dashboard.title')}</h1>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{t('dashboard.subtitle')}</p>
-      </div>
-
-      {user && (
-        <UserCard
-          name={user.fullName}
-          email={user.email}
-          role={user.role}
-          avatarUrl={user.avatarUrl}
-          presence="online"
-        />
-      )}
+      <DashboardHeader
+        title={t('dashboard.title')}
+        subtitle={t('dashboard.subtitle')}
+        user={user}
+      />
 
       {error && (
         <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/30">
