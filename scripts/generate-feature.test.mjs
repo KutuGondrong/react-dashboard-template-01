@@ -6,7 +6,7 @@ import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { appendArrayEntry } from './generate-feature.mjs';
+import { appendArrayEntry, parseName } from './generate-feature.mjs';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const GENERATE_FEATURE = path.join(SCRIPT_DIR, 'generate-feature.mjs');
@@ -114,4 +114,89 @@ wireManualFeatureNavigation(meta, templates);
   assert.equal(idLocale.nav.inventory, 'Inventaris');
   assert.match(enLocale.inventory.subtitle, /Manage inventory/i);
   assert.match(idLocale.inventory.subtitle, /Kelola inventaris/i);
+});
+
+test('multi-word label and label-id are written to locale files', () => {
+  const dir = setupFixture();
+
+  runFeature(
+    dir,
+    '--name=multi-word --label="Test by system" --label-id="Di test oleh sistim"',
+  );
+
+  const enLocale = JSON.parse(fs.readFileSync(path.join(dir, 'src/locales/en.json'), 'utf8'));
+  const idLocale = JSON.parse(fs.readFileSync(path.join(dir, 'src/locales/id.json'), 'utf8'));
+
+  assert.equal(enLocale.nav.multiWord, 'Test by system');
+  assert.equal(idLocale.nav.multiWord, 'Di test oleh sistim');
+});
+
+test('make feature passes quoted multi-word labels to the generator', () => {
+  const dir = setupFixture();
+
+  fs.writeFileSync(
+    path.join(dir, 'Makefile'),
+    [
+      'NODE := node',
+      'feature:',
+      '\t@$(NODE) scripts/generate-feature.mjs --name="$(name)" $(if $(label),--label="$(label)",) $(if $(label-id),--label-id="$(label-id)",)',
+      '',
+    ].join('\n'),
+  );
+
+  execSync(
+    'make feature name=make-label label="Test by system" label-id="Di test oleh sistim"',
+    { cwd: dir, stdio: 'pipe' },
+  );
+
+  const enLocale = JSON.parse(fs.readFileSync(path.join(dir, 'src/locales/en.json'), 'utf8'));
+  const idLocale = JSON.parse(fs.readFileSync(path.join(dir, 'src/locales/id.json'), 'utf8'));
+
+  assert.equal(enLocale.nav.makeLabel, 'Test by system');
+  assert.equal(idLocale.nav.makeLabel, 'Di test oleh sistim');
+});
+
+test('parseName uses camelCase key for multi-word names', () => {
+  assert.deepEqual(parseName('Multi Word'), {
+    kebab: 'multi-word',
+    pascal: 'MultiWord',
+    camel: 'multiWord',
+    parts: ['multi', 'word'],
+  });
+  assert.deepEqual(parseName('multi-word'), {
+    kebab: 'multi-word',
+    pascal: 'MultiWord',
+    camel: 'multiWord',
+    parts: ['multi', 'word'],
+  });
+  assert.deepEqual(parseName('multiWord'), {
+    kebab: 'multi-word',
+    pascal: 'MultiWord',
+    camel: 'multiWord',
+    parts: ['multi', 'word'],
+  });
+  assert.deepEqual(parseName('inventory'), {
+    kebab: 'inventory',
+    pascal: 'Inventory',
+    camel: 'inventory',
+    parts: ['inventory'],
+  });
+});
+
+test('multi-word name generates camelCase route, menu, and folder keys', () => {
+  const dir = setupFixture();
+
+  runFeature(dir, '--name="Multi Word" --label="Multi Word" --label-id="Multi Kata"');
+
+  const routes = fs.readFileSync(path.join(dir, 'src/router/featureRoutes.tsx'), 'utf8');
+  const menu = fs.readFileSync(path.join(dir, 'src/layouts/sidebar/featureMenuItems.tsx'), 'utf8');
+  const enLocale = JSON.parse(fs.readFileSync(path.join(dir, 'src/locales/en.json'), 'utf8'));
+
+  assert.equal(fs.existsSync(path.join(dir, 'src/features/multiWord/pages/MultiWordPage.tsx')), true);
+  assert.match(routes, /path: 'multiWord'/);
+  assert.match(routes, /features\/multiWord\//);
+  assert.match(menu, /key: 'multiWord'/);
+  assert.match(menu, /path: '\/multiWord'/);
+  assert.equal(enLocale.nav.multiWord, 'Multi Word');
+  assert.equal(enLocale.multiWord.subtitle.length > 0, true);
 });

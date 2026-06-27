@@ -31,18 +31,35 @@ function parseScope(raw) {
   return scope;
 }
 
-function parseName(raw) {
-  const kebab = raw
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
+function splitNameParts(raw) {
+  const trimmed = raw.trim();
+  if (!trimmed) return [];
 
-  if (!kebab) {
-    throw new Error('Feature name is required, e.g. products or my-feature');
+  const normalized = trimmed.replace(/[\s_]+/g, '-');
+  if (normalized.includes('-')) {
+    return normalized
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, '')
+      .split('-')
+      .filter(Boolean);
   }
 
-  const parts = kebab.split('-').filter(Boolean);
+  const camelParts = trimmed.replace(/[^a-zA-Z0-9]/g, '').match(/[A-Z]?[a-z0-9]+/g);
+  if (camelParts?.length) {
+    return camelParts.map((part) => part.toLowerCase());
+  }
+
+  return [];
+}
+
+function parseName(raw) {
+  const parts = splitNameParts(raw);
+
+  if (parts.length === 0) {
+    throw new Error('Feature name is required, e.g. products, my-feature, or multiWord');
+  }
+
+  const kebab = parts.join('-');
   const pascal = parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join('');
   const camel = parts[0] + parts.slice(1).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join('');
   return { kebab, pascal, camel, parts };
@@ -54,16 +71,16 @@ function readLocaleData(relativePath) {
   return JSON.parse(fs.readFileSync(absolute, 'utf8'));
 }
 
-function detectExistingLocaleKey(kebab) {
+function detectExistingLocaleKey(key) {
   const found = [];
   for (const localeFile of ['src/locales/en.json', 'src/locales/id.json']) {
     const data = readLocaleData(localeFile);
     if (!data) continue;
-    if (data.nav?.[kebab] !== undefined) {
-      found.push(`nav.${kebab} in ${localeFile}`);
+    if (data.nav?.[key] !== undefined) {
+      found.push(`nav.${key} in ${localeFile}`);
     }
-    if (data[kebab] !== undefined) {
-      found.push(`"${kebab}" section in ${localeFile}`);
+    if (data[key] !== undefined) {
+      found.push(`"${key}" section in ${localeFile}`);
     }
   }
   return found;
@@ -84,11 +101,11 @@ function patchLocales(meta, templates) {
       data.nav = {};
     }
 
-    data.nav[meta.kebab] = labels.nav;
+    data.nav[meta.camel] = labels.nav;
 
     const existingSection =
-      typeof data[meta.kebab] === 'object' && data[meta.kebab] !== null ? data[meta.kebab] : {};
-    data[meta.kebab] = { ...existingSection, subtitle: labels.subtitle };
+      typeof data[meta.camel] === 'object' && data[meta.camel] !== null ? data[meta.camel] : {};
+    data[meta.camel] = { ...existingSection, subtitle: labels.subtitle };
 
     if (data.nav.generatedFeature && Object.keys(data.nav.generatedFeature).length === 0) {
       delete data.nav.generatedFeature;
@@ -109,26 +126,26 @@ function readRootFile(relativePath) {
 
 function detectExistingFeature(meta) {
   const found = [];
-  const featureRoot = path.join(ROOT, 'src/features', meta.kebab);
+  const featureRoot = path.join(ROOT, 'src/features', meta.camel);
   const hasFolder = fs.existsSync(featureRoot);
 
   const routesGen = readRootFile(ROUTES_FILE);
   const hasRoute = Boolean(
     routesGen &&
-      (routesGen.includes(`path: '${meta.kebab}'`) || routesGen.includes(`features/${meta.kebab}/`)),
+      (routesGen.includes(`path: '${meta.camel}'`) || routesGen.includes(`features/${meta.camel}/`)),
   );
 
   const menuGen = readRootFile(MENU_FILE);
   const hasSidebar = Boolean(
     menuGen &&
-      (menuGen.includes(`key: '${meta.kebab}'`) || menuGen.includes(`path: '/${meta.kebab}'`)),
+      (menuGen.includes(`key: '${meta.camel}'`) || menuGen.includes(`path: '/${meta.camel}'`)),
   );
 
   if (hasFolder) {
-    found.push(`src/features/${meta.kebab}/`);
+    found.push(`src/features/${meta.camel}/`);
   }
   if (hasRoute) {
-    found.push(`Route /${meta.kebab} in ${ROUTES_FILE}`);
+    found.push(`Route /${meta.camel} in ${ROUTES_FILE}`);
   }
   if (hasSidebar) {
     found.push(`Sidebar menu in ${MENU_FILE}`);
@@ -138,17 +155,17 @@ function detectExistingFeature(meta) {
 }
 
 function suggestFeatureNames(meta) {
-  const suffixes = ['list', 'manage', 'overview', 'admin'];
+  const suffixes = ['List', 'Manage', 'Overview', 'Admin'];
   return suffixes.map((suffix) => {
-    const name = `${meta.kebab}-${suffix}`;
-    const label = `${meta.pascal} ${suffix.charAt(0).toUpperCase()}${suffix.slice(1)}`;
-    return `make feature name=${name} label="${label}"`;
+    const name = `${meta.camel}${suffix}`;
+    const label = `${meta.pascal} ${suffix}`;
+    return `make feature name="${name}" label="${label}"`;
   });
 }
 
 function exitFeatureAlreadyExists(meta, found) {
   console.error('');
-  console.error(`✗ Feature name "${meta.kebab}" is already in use — choose a different name.`);
+  console.error(`✗ Feature name "${meta.camel}" is already in use — choose a different name.`);
   console.error('');
   console.error('  Found:');
   found.forEach((item) => console.error(`    - ${item}`));
@@ -280,18 +297,18 @@ export function appendArrayEntry(inner, entry) {
 
 function appendGeneratedRoute(meta) {
   patchFile(ROUTES_FILE, (content) => {
-    if (content.includes(`features/${meta.kebab}/`)) {
+    if (content.includes(`features/${meta.camel}/`)) {
       return content;
     }
 
     let updated = ensureRoutesFileHeader(content);
-    const lazyDecl = `const ${meta.pascal}Page = lazy(() => import('@/features/${meta.kebab}/pages/${meta.pascal}Page'));\n\n`;
+    const lazyDecl = `const ${meta.pascal}Page = lazy(() => import('@/features/${meta.camel}/pages/${meta.pascal}Page'));\n\n`;
     if (!updated.includes(`const ${meta.pascal}Page = lazy`)) {
       updated = updated.replace('export const featureRoutes', `${lazyDecl}export const featureRoutes`);
     }
 
     const routeEntry = `  {
-    path: '${meta.kebab}',
+    path: '${meta.camel}',
     element: (
       <FeatureLazyPage>
         <${meta.pascal}Page />
@@ -315,16 +332,16 @@ function appendGeneratedRoute(meta) {
 
 function appendGeneratedMenuItem(meta) {
   patchFile(MENU_FILE, (content) => {
-    if (content.includes(`key: '${meta.kebab}'`)) {
+    if (content.includes(`key: '${meta.camel}'`)) {
       return content;
     }
 
     let updated = ensureFeatureMenuIcon(content);
 
     const menuEntry = `    {
-      key: '${meta.kebab}',
-      label: t('nav.${meta.kebab}'),
-      path: '/${meta.kebab}',
+      key: '${meta.camel}',
+      label: t('nav.${meta.camel}'),
+      path: '/${meta.camel}',
       icon: <FeatureMenuIcon />,
     }`;
 
@@ -364,7 +381,7 @@ function subtitleForScope(scope, labelEn, labelId) {
 }
 
 function buildTemplates(meta, labels, scope) {
-  const { kebab, pascal, camel } = meta;
+  const { camel, pascal } = meta;
   const { labelEn, labelId } = labels;
   const subtitles = subtitleForScope(scope, labelEn, labelId);
 
@@ -377,9 +394,9 @@ export default function ${pascal}Page() {
   return (
     <div className="space-y-6">
       <div>
-        <Typography.Title level={2}>{t('nav.${kebab}')}</Typography.Title>
+        <Typography.Title level={2}>{t('nav.${camel}')}</Typography.Title>
         <Typography.Text color="muted" className="mt-1 block">
-          {t('${kebab}.subtitle')}
+          {t('${camel}.subtitle')}
         </Typography.Text>
       </div>
     </div>
@@ -389,7 +406,7 @@ export default function ${pascal}Page() {
 
   const pageWithTable = `import { useLocale } from '@/context/LocaleContext';
 import { Typography } from '@/components/Typography';
-import { ${pascal}Table } from '@/features/${kebab}/components/${pascal}Table';
+import { ${pascal}Table } from '@/features/${camel}/components/${pascal}Table';
 
 export default function ${pascal}Page() {
   const { t } = useLocale();
@@ -397,9 +414,9 @@ export default function ${pascal}Page() {
   return (
     <div className="space-y-6">
       <div>
-        <Typography.Title level={2}>{t('nav.${kebab}')}</Typography.Title>
+        <Typography.Title level={2}>{t('nav.${camel}')}</Typography.Title>
         <Typography.Text color="muted" className="mt-1 block">
-          {t('${kebab}.subtitle')}
+          {t('${camel}.subtitle')}
         </Typography.Text>
       </div>
 
@@ -412,11 +429,11 @@ export default function ${pascal}Page() {
   const table = `import { useMemo } from 'react';
 import { useLocale } from '@/context/LocaleContext';
 import type { TableColumn } from '@/models/model.type';
-import type { ${pascal}Item } from '@/features/${kebab}/hooks/use${pascal}Page';
+import type { ${pascal}Item } from '@/features/${camel}/hooks/use${pascal}Page';
 import { DataTable, DataTableGroup } from '@/components/DataTable';
 import { Pagination } from '@/components/Pagination';
 import { Badge } from '@/components/Badge';
-import { use${pascal}Page } from '@/features/${kebab}/hooks/use${pascal}Page';
+import { use${pascal}Page } from '@/features/${camel}/hooks/use${pascal}Page';
 
 export function ${pascal}Table() {
   const { t } = useLocale();
@@ -463,7 +480,7 @@ export function ${pascal}Table() {
 
   const hookWithUsecase = `import { useCallback, useEffect, useState } from 'react';
 import { appConfig } from '@/config/app.config';
-import { ${camel}Usecase } from '@/features/${kebab}/usecase/${camel}Usecase';
+import { ${camel}Usecase } from '@/features/${camel}/usecase/${camel}Usecase';
 
 export interface ${pascal}Item {
   id: string;
@@ -528,11 +545,11 @@ export interface ${pascal}Item {
 }
 
 const MOCK_${pascal.toUpperCase()}_ITEMS: ${pascal}Item[] = [
-  { id: '${kebab}_001', name: '${labelEn} A', isActive: true },
-  { id: '${kebab}_002', name: '${labelEn} B', isActive: true },
-  { id: '${kebab}_003', name: '${labelEn} C', isActive: false },
-  { id: '${kebab}_004', name: '${labelEn} D', isActive: true },
-  { id: '${kebab}_005', name: '${labelEn} E', isActive: true },
+  { id: '${camel}_001', name: '${labelEn} A', isActive: true },
+  { id: '${camel}_002', name: '${labelEn} B', isActive: true },
+  { id: '${camel}_003', name: '${labelEn} C', isActive: false },
+  { id: '${camel}_004', name: '${labelEn} D', isActive: true },
+  { id: '${camel}_005', name: '${labelEn} E', isActive: true },
 ];
 
 function delay(ms: number): Promise<void> {
@@ -599,14 +616,14 @@ export function use${pascal}Page() {
 `;
 
   const usecase = `import type { PaginatedResult } from '@/models/model.type';
-import type { ${pascal}Item } from '@/features/${kebab}/hooks/use${pascal}Page';
+import type { ${pascal}Item } from '@/features/${camel}/hooks/use${pascal}Page';
 
 const MOCK_${pascal.toUpperCase()}_ITEMS: ${pascal}Item[] = [
-  { id: '${kebab}_001', name: '${labelEn} A', isActive: true },
-  { id: '${kebab}_002', name: '${labelEn} B', isActive: true },
-  { id: '${kebab}_003', name: '${labelEn} C', isActive: false },
-  { id: '${kebab}_004', name: '${labelEn} D', isActive: true },
-  { id: '${kebab}_005', name: '${labelEn} E', isActive: true },
+  { id: '${camel}_001', name: '${labelEn} A', isActive: true },
+  { id: '${camel}_002', name: '${labelEn} B', isActive: true },
+  { id: '${camel}_003', name: '${labelEn} C', isActive: false },
+  { id: '${camel}_004', name: '${labelEn} D', isActive: true },
+  { id: '${camel}_005', name: '${labelEn} E', isActive: true },
 ];
 
 function delay(ms: number): Promise<void> {
@@ -641,7 +658,7 @@ export const ${camel}Usecase = {
 
 /** Step 2 in the tutorial guide — create feature files without menu/route wiring. */
 export function writeManualFeatureFiles(meta, templates) {
-  const featureRoot = path.join(ROOT, 'src/features', meta.kebab);
+  const featureRoot = path.join(ROOT, 'src/features', meta.camel);
 
   fs.mkdirSync(path.join(featureRoot, 'pages'), { recursive: true });
   fs.writeFileSync(path.join(featureRoot, 'pages', `${meta.pascal}Page.tsx`), templates.page);
@@ -698,32 +715,32 @@ function main() {
   };
 
   const existing = [
-    ...new Set([...detectExistingFeature(meta), ...detectExistingLocaleKey(meta.kebab)]),
+    ...new Set([...detectExistingFeature(meta), ...detectExistingLocaleKey(meta.camel)]),
   ];
   if (existing.length > 0) {
     exitFeatureAlreadyExists(meta, existing);
   }
 
-  const featureRoot = path.join(ROOT, 'src/features', meta.kebab);
+  const featureRoot = path.join(ROOT, 'src/features', meta.camel);
   const templates = buildTemplates(meta, labels, scope);
   const created = [];
 
   writeFileIfMissing(path.join(featureRoot, 'pages', `${meta.pascal}Page.tsx`), templates.page);
-  created.push(`src/features/${meta.kebab}/pages/${meta.pascal}Page.tsx`);
+  created.push(`src/features/${meta.camel}/pages/${meta.pascal}Page.tsx`);
 
   if (templates.table) {
     writeFileIfMissing(path.join(featureRoot, 'components', `${meta.pascal}Table.tsx`), templates.table);
-    created.push(`src/features/${meta.kebab}/components/${meta.pascal}Table.tsx`);
+    created.push(`src/features/${meta.camel}/components/${meta.pascal}Table.tsx`);
   }
 
   if (templates.hook) {
     writeFileIfMissing(path.join(featureRoot, 'hooks', `use${meta.pascal}Page.ts`), templates.hook);
-    created.push(`src/features/${meta.kebab}/hooks/use${meta.pascal}Page.ts`);
+    created.push(`src/features/${meta.camel}/hooks/use${meta.pascal}Page.ts`);
   }
 
   if (templates.usecase) {
     writeFileIfMissing(path.join(featureRoot, 'usecase', `${meta.camel}Usecase.ts`), templates.usecase);
-    created.push(`src/features/${meta.kebab}/usecase/${meta.camel}Usecase.ts`);
+    created.push(`src/features/${meta.camel}/usecase/${meta.camel}Usecase.ts`);
   }
 
   wireManualFeatureNavigation(meta, templates);
@@ -739,7 +756,7 @@ function main() {
 
   const scopeLabels = { full: 'full (page + table + hook + usecase)', hook: 'hook (page + table + hook)', page: 'page (empty page only)' };
 
-  console.log(`\n✓ Feature "${meta.kebab}" generated (${scopeLabels[scope]}).\n`);
+  console.log(`\n✓ Feature "${meta.camel}" generated (${scopeLabels[scope]}).\n`);
   console.log('Created:');
   created.forEach((file) => console.log(`  ${file}`));
   console.log('\nUpdated:');
@@ -755,8 +772,8 @@ function main() {
   }
   console.log('\nCustom sidebar icon (optional):');
   console.log('  1. Add your icon in src/layouts/sidebar/components/SidebarIcons.tsx');
-  console.log(`  2. In ${MENU_FILE}, replace <FeatureMenuIcon /> for key '${meta.kebab}'`);
-  console.log(`\nOpen http://localhost:5173/${meta.kebab} after make dev\n`);
+  console.log(`  2. In ${MENU_FILE}, replace <FeatureMenuIcon /> for key '${meta.camel}'`);
+  console.log(`\nOpen http://localhost:5173/${meta.camel} after make dev\n`);
 }
 
 const isMain =

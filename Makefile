@@ -53,7 +53,7 @@ feature:
 ifndef name
 	$(error Usage: make feature name=<feature-name> [scope=full|hook|page] [label="Display Name"] [label-id="Nama Tampilan"])
 endif
-	@$(NODE) scripts/generate-feature.mjs --name=$(name) $(if $(scope),--scope=$(scope),) $(if $(label),--label=$(label),) $(if $(label-id),--label-id=$(label-id),)
+	@$(NODE) scripts/generate-feature.mjs --name="$(name)" $(if $(scope),--scope="$(scope)",) $(if $(label),--label="$(label)",) $(if $(label-id),--label-id="$(label-id)",)
 
 test-feature:
 	@$(NODE) --test scripts/generate-feature.test.mjs
