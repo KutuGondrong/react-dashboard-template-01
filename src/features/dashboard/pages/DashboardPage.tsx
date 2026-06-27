@@ -6,10 +6,12 @@ import {
   DashboardChartsSkeleton,
 } from '@/features/dashboard/components/DashboardCharts';
 import { DashboardHeader } from '@/features/dashboard/components/DashboardHeader';
+import { DashboardProfileCard } from '@/features/dashboard/components/DashboardProfileCard';
 import {
   DashboardStatsCards,
   DashboardStatsSkeleton,
 } from '@/features/dashboard/components/DashboardStatsCards';
+import { DashboardUserDistribution } from '@/features/dashboard/components/DashboardUserDistribution';
 import { useDashboardPage } from '@/features/dashboard/hooks/useDashboardPage';
 
 export default function DashboardPage() {
@@ -20,11 +22,17 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <DashboardHeader
-        title={t('dashboard.title')}
-        subtitle={t('dashboard.subtitle')}
-        user={user}
-      />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto] lg:items-stretch">
+        <div className="flex flex-col gap-4">
+          <DashboardHeader title={t('dashboard.title')} subtitle={t('dashboard.subtitle')} />
+          {user && <DashboardProfileCard user={user} />}
+        </div>
+        <DashboardUserDistribution
+          userDistribution={userDistribution}
+          resolveLabel={t}
+          isLoading={isLoading}
+        />
+      </div>
 
       {error && (
         <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/30">
@@ -50,7 +58,6 @@ export default function DashboardPage() {
             <DashboardCharts
               revenueChart={revenueChart}
               activityChart={activityChart}
-              userDistribution={userDistribution}
               resolveLabel={t}
             />
           </>
