@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { cn } from '@/components/Layout/layoutUtils';
 import { useLocale } from '@/context/LocaleContext';
@@ -605,20 +613,71 @@ function NavMenuFlyoutDismissButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function NavMenuFlyout({ item, ctx }: { item: NavMenuItem; ctx: ItemContext }) {
+const FLYOUT_VIEWPORT_MARGIN = 16;
+const FLYOUT_MIN_HEIGHT = 120;
+
+function NavMenuFlyout({
+  item,
+  ctx,
+  anchorRef,
+}: {
+  item: NavMenuItem;
+  ctx: ItemContext;
+  anchorRef: RefObject<HTMLElement | null>;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [panelStyle, setPanelStyle] = useState<{ top: number; maxHeight?: number }>({ top: 0 });
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const anchor = anchorRef.current;
+    if (!panel || !anchor) return;
+
+    const syncPanelBounds = () => {
+      const anchorRect = anchor.getBoundingClientRect();
+      const margin = FLYOUT_VIEWPORT_MARGIN;
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - margin - anchorRect.top;
+
+      panel.style.maxHeight = '';
+      panel.style.top = '0px';
+
+      const naturalHeight = panel.getBoundingClientRect().height;
+
+      if (naturalHeight <= spaceBelow) {
+        setPanelStyle({ top: 0 });
+        return;
+      }
+
+      setPanelStyle({
+        top: 0,
+        maxHeight: Math.max(FLYOUT_MIN_HEIGHT, spaceBelow),
+      });
+    };
+
+    syncPanelBounds();
+    window.addEventListener('resize', syncPanelBounds);
+    return () => window.removeEventListener('resize', syncPanelBounds);
+  }, [anchorRef, item.key, item.children?.length]);
+
   return (
     <div
-      className="absolute left-full top-0 z-[100] ml-2 min-w-[180px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+      ref={panelRef}
+      style={{
+        top: panelStyle.top,
+        ...(panelStyle.maxHeight != null ? { maxHeight: panelStyle.maxHeight } : undefined),
+      }}
+      className="absolute left-full top-0 z-[100] ml-2 flex min-w-[180px] flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
       role="menu"
     >
-      <div className="flex items-center gap-2 border-b border-gray-200 px-3 py-2 dark:border-gray-700">
+      <div className="flex shrink-0 items-center gap-2 border-b border-gray-200 px-3 py-2 dark:border-gray-700">
         <NavMenuFlyoutDismissButton onClick={() => ctx.onFlyoutToggle(null)} />
         <span className="flex min-w-0 flex-1 items-center gap-2 truncate text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
           {item.label}
           {item.devBadge && <DevBadge />}
         </span>
       </div>
-      <div className="space-y-1 p-1.5 pt-2">
+      <div className="scrollbar-hide min-h-0 space-y-1 overflow-y-auto overscroll-contain p-1.5 pt-2">
         {item.children!.map((child) => (
           <NavMenuNode
             key={child.key}
@@ -632,13 +691,18 @@ function NavMenuFlyout({ item, ctx }: { item: NavMenuItem; ctx: ItemContext }) {
 }
 
 function NavMenuNode({ item, ctx }: { item: NavMenuItem; ctx: ItemContext }) {
+  const anchorRef = useRef<HTMLDivElement>(null);
   const hasChildren = Boolean(item.children?.length);
   const isFlyoutOpen = ctx.flyoutKey === item.key;
 
   return (
-    <div className={ctx.collapsed && hasChildren ? 'relative' : undefined}>
-      <NavMenuNodeContent item={item} ctx={ctx} />
-      {ctx.collapsed && hasChildren && isFlyoutOpen && <NavMenuFlyout item={item} ctx={ctx} />}
+    <div>
+      <div ref={anchorRef} className={ctx.collapsed && hasChildren ? 'relative' : undefined}>
+        <NavMenuNodeContent item={item} ctx={ctx} />
+        {ctx.collapsed && hasChildren && isFlyoutOpen && (
+          <NavMenuFlyout item={item} ctx={ctx} anchorRef={anchorRef} />
+        )}
+      </div>
       <NavMenuNodeSubtree item={item} ctx={ctx} />
     </div>
   );

@@ -8,8 +8,19 @@
     "dev": "vite --mode development",
     "build": "tsc --noEmit && vite build --mode production",
     "preview": "vite preview",
+    "prepare": "husky",
     "lint": "eslint src --ext .ts,.tsx && tsc --noEmit",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\" && eslint src --ext .ts,.tsx --fix"
+    "lint:check": "eslint src --ext .ts,.tsx --max-warnings 0 && tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\" && eslint src --ext .ts,.tsx --fix",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\""
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 0"
+    ],
+    "src/**/*.{css,json}": "prettier --write",
+    "*.{json,md,yml,yaml}": "prettier --write"
   },
   "volta": {
     "node": "20.11.0",
@@ -32,6 +43,8 @@
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
