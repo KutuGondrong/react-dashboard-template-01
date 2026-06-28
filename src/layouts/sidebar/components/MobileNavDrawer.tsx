@@ -21,7 +21,7 @@ export function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
       contentClassName="!px-4 !pt-4 !pb-5"
       className="lg:hidden [&>div]:max-w-[85vw]"
     >
-      <Sidebar embedded collapsible={false} className="min-h-full" />
+      <Sidebar embedded collapsible={false} className="min-h-full" onMenuDismiss={onClose} />
     </Drawer>
   );
 }

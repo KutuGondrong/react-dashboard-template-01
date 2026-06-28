@@ -77,6 +77,8 @@ export interface NavMenuProps {
   scrollControls?: NavMenuScrollControls;
   /** Mobile drawer / embedded panel — defers horizontal padding to the parent container. */
   embedded?: boolean;
+  /** Called when a leaf item is activated (path or onClick). Use to close mobile drawer overlays. */
+  onMenuDismiss?: () => void;
 }
 
 function ChevronIcon({ expanded }: { expanded: boolean }) {
@@ -211,6 +213,7 @@ interface ItemContext {
   inFlyout?: boolean;
   flyoutDismissOnAction: boolean;
   onNavigate?: (path: string) => void;
+  onMenuDismiss?: () => void;
 }
 
 function isNavPathActive(path: string, pathname: string, end?: boolean): boolean {
@@ -280,6 +283,11 @@ function dismissFlyoutIfNeeded(ctx: ItemContext, item: NavMenuItem) {
   }
 }
 
+function handleLeafMenuAction(ctx: ItemContext, item: NavMenuItem) {
+  dismissFlyoutIfNeeded(ctx, item);
+  ctx.onMenuDismiss?.();
+}
+
 function rowPadding(depth: number, collapsed: boolean) {
   if (collapsed) return 'justify-center px-2 py-2.5';
   if (depth > 0) return 'gap-2 px-3 py-2';
@@ -303,7 +311,7 @@ function NavMenuLink({ item, ctx }: { item: NavMenuItem; ctx: ItemContext }) {
       path={item.path!}
       end={item.end}
       title={ctx.collapsed ? item.label : undefined}
-      onAfterNavigate={() => dismissFlyoutIfNeeded(ctx, item)}
+      onAfterNavigate={() => handleLeafMenuAction(ctx, item)}
       ctx={ctx}
       className={(isActive) =>
         cn(
@@ -549,9 +557,13 @@ function NavMenuNodeContent({ item, ctx }: { item: NavMenuItem; ctx: ItemContext
       }
       return;
     }
-    if (hasChildren) ctx.onToggle(item.key);
+    if (hasChildren) {
+      ctx.onToggle(item.key);
+      item.onClick?.();
+      return;
+    }
     item.onClick?.();
-    if (!hasChildren) dismissFlyoutIfNeeded(ctx, item);
+    handleLeafMenuAction(ctx, item);
   };
 
   if (!hasChildren && item.path && !item.onClick) {
@@ -954,6 +966,7 @@ export function NavMenu({
   showScrollbar = false,
   scrollControls = 'all',
   embedded = false,
+  onMenuDismiss,
 }: NavMenuProps) {
   const { t } = useLocale();
   const { pathname: routerPathname } = useLocation();
@@ -1069,6 +1082,7 @@ export function NavMenu({
     childConnector,
     flyoutDismissOnAction,
     onNavigate,
+    onMenuDismiss,
   };
 
   const handleCollapseToggle = () => {

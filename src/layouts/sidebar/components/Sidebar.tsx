@@ -7,6 +7,7 @@ interface SidebarProps {
   collapsible?: boolean;
   embedded?: boolean;
   className?: string;
+  onMenuDismiss?: () => void;
 }
 
 export function Sidebar({
@@ -15,6 +16,7 @@ export function Sidebar({
   collapsible = true,
   embedded = false,
   className,
+  onMenuDismiss,
 }: SidebarProps) {
   const { menuItems } = useSidebar();
 
@@ -27,6 +29,7 @@ export function Sidebar({
       collapseTriggerPosition="top-peek"
       childConnector="tree"
       embedded={embedded}
+      onMenuDismiss={onMenuDismiss}
       className={className ?? 'h-full min-h-0 w-full flex-1'}
     />
   );

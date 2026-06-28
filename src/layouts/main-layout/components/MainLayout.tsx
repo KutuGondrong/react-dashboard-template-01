@@ -1,5 +1,4 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import { AnimatedBackground } from '@/components/AnimatedBackground';
 import { ScrollContainer } from '@/components/ScrollToTop';
@@ -15,12 +14,6 @@ import { ScrollProvider } from '@/context/ScrollContext';
 export function MainLayout() {
   const { sidebarCollapsed, onSidebarCollapse, mobileNavOpen, toggleMobileNav, closeMobileNav } =
     useMainLayout();
-  const location = useLocation();
-
-  useEffect(() => {
-    closeMobileNav();
-  }, [location.pathname, closeMobileNav]);
-
   return (
     <ScrollProvider>
       <Layout
