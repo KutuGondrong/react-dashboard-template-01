@@ -1,12 +1,14 @@
 import { apiRepository } from '@/datasource/network/apiRepository';
 import {
   toBarChartData,
+  toDashboardInsights,
   toDashboardStats,
   toDonutChartData,
   toLineChartData,
 } from '@/models/model.map';
 import type {
   BarChartData,
+  DashboardInsights,
   DashboardStats,
   DonutChartData,
   LineChartData,
@@ -31,5 +33,10 @@ export const dashboardUsecase = {
   async getUserDistribution(): Promise<DonutChartData> {
     const response = await apiRepository.getUserDistributionChart();
     return toDonutChartData(response);
+  },
+
+  async getInsights(): Promise<DashboardInsights> {
+    const response = await apiRepository.getDashboardInsights();
+    return toDashboardInsights(response);
   },
 };

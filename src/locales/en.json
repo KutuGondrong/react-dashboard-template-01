@@ -65,6 +65,55 @@
       "admin": "Admin",
       "moderator": "Moderator",
       "user": "Users"
+    },
+    "insights": {
+      "title": "Dashboard Insights",
+      "subtitle": "Key highlights and platform health at a glance.",
+      "live": "Live",
+      "updatedAt": "Updated {{time}}",
+      "badges": {
+        "growth": "Growth",
+        "record": "Record",
+        "peak": "Peak Day"
+      },
+      "highlights": {
+        "growth": {
+          "title": "User base is expanding",
+          "description": "128 total users with +12% growth this month — momentum is building across the platform."
+        },
+        "revenue": {
+          "title": "June revenue hits a new high",
+          "description": "Monthly revenue reached 8.2M, up from 7.0M in May — your strongest month so far."
+        },
+        "activity": {
+          "title": "Friday drives peak activity",
+          "description": "Weekly activity peaked at 52 sessions on Friday, with +18% overall growth in recent events."
+        }
+      },
+      "actions": {
+        "viewUsers": "View users",
+        "viewReports": "Open reports",
+        "viewAlerts": "Check alerts"
+      },
+      "summary": {
+        "title": "Platform overview",
+        "status": {
+          "label": "System status",
+          "value": "Operational"
+        },
+        "sync": {
+          "label": "Data sync",
+          "value": "Real-time"
+        },
+        "uptime": {
+          "label": "Uptime",
+          "value": "99.9%"
+        },
+        "response": {
+          "label": "Avg. response",
+          "value": "< 120ms"
+        }
+      }
     }
   },
   "users": {

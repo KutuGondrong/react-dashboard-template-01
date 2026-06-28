@@ -65,7 +65,7 @@ function CardAction({
   }
 
   return (
-    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 dark:text-primary-400">
+    <span className="mt-4 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-primary-600 dark:text-primary-400">
       {content}
     </span>
   );
@@ -92,7 +92,7 @@ function CardContent({
         <Typography.Text
           weight="semibold"
           className={cn(
-            'text-base text-gray-900 dark:text-gray-100',
+            'w-full text-base text-gray-900 dark:text-gray-100',
             isWholeCardClickable &&
               'transition-colors group-hover:text-primary-700 dark:group-hover:text-primary-300',
           )}
@@ -101,12 +101,15 @@ function CardContent({
         </Typography.Text>
       ) : null}
 
-      {children}
+      {children != null ? <div className="w-full">{children}</div> : null}
 
       {description ? (
         <Typography.Text
           color="muted"
-          className={cn('flex-1 text-sm leading-relaxed', children || title ? 'mt-3' : undefined)}
+          className={cn(
+            'w-full flex-1 text-sm leading-relaxed',
+            children || title ? 'mt-3' : undefined,
+          )}
         >
           {description}
         </Typography.Text>
@@ -138,7 +141,7 @@ export function Card({
   const actionHref = href && actionLabel && !isWholeCardClickable ? href : undefined;
 
   const surfaceClasses = cn(
-    'flex flex-col rounded-xl border p-5 shadow-sm',
+    'flex flex-col items-start rounded-xl border p-5 shadow-sm',
     VARIANT_CLASSES[variant],
     isWholeCardClickable && CLICKABLE_CARD_CLASSES,
     className,

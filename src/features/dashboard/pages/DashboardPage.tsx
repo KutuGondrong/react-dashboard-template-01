@@ -6,6 +6,7 @@ import {
   DashboardChartsSkeleton,
 } from '@/features/dashboard/components/DashboardCharts';
 import { DashboardHeader } from '@/features/dashboard/components/DashboardHeader';
+import { DashboardInsightsSection } from '@/features/dashboard/components/DashboardInsights';
 import { DashboardProfileCard } from '@/features/dashboard/components/DashboardProfileCard';
 import {
   DashboardStatsCards,
@@ -17,15 +18,30 @@ import { useDashboardPage } from '@/features/dashboard/hooks/useDashboardPage';
 export default function DashboardPage() {
   const { user } = useAuth();
   const { t } = useLocale();
-  const { stats, revenueChart, activityChart, userDistribution, isLoading, error, refetch } =
-    useDashboardPage();
+  const {
+    stats,
+    revenueChart,
+    activityChart,
+    userDistribution,
+    insights,
+    isLoading,
+    error,
+    refetch,
+  } = useDashboardPage();
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto] lg:items-stretch">
         <div className="flex flex-col gap-4">
-          <DashboardHeader title={t('dashboard.title')} subtitle={t('dashboard.subtitle')} />
-          {user && <DashboardProfileCard user={user} />}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto] sm:items-stretch">
+            <DashboardHeader title={t('dashboard.title')} subtitle={t('dashboard.subtitle')} />
+            {user && <DashboardProfileCard user={user} />}
+          </div>
+          {isLoading ? (
+            <DashboardStatsSkeleton />
+          ) : (
+            stats && <DashboardStatsCards stats={stats} resolveLabel={t} />
+          )}
         </div>
         <DashboardUserDistribution
           userDistribution={userDistribution}
@@ -44,25 +60,19 @@ export default function DashboardPage() {
       )}
 
       {isLoading ? (
-        <>
-          <DashboardStatsSkeleton />
-          <DashboardChartsSkeleton />
-        </>
+        <DashboardChartsSkeleton />
       ) : (
-        stats &&
         revenueChart &&
-        activityChart &&
-        userDistribution && (
-          <>
-            <DashboardStatsCards stats={stats} resolveLabel={t} />
-            <DashboardCharts
-              revenueChart={revenueChart}
-              activityChart={activityChart}
-              resolveLabel={t}
-            />
-          </>
+        activityChart && (
+          <DashboardCharts
+            revenueChart={revenueChart}
+            activityChart={activityChart}
+            resolveLabel={t}
+          />
         )
       )}
+
+      <DashboardInsightsSection insights={insights} resolveLabel={t} isLoading={isLoading} />
     </div>
   );
 }

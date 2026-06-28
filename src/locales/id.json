@@ -65,6 +65,55 @@
       "admin": "Admin",
       "moderator": "Moderator",
       "user": "Pengguna"
+    },
+    "insights": {
+      "title": "Insight Dasbor",
+      "subtitle": "Sorotan utama dan kesehatan platform dalam satu tampilan.",
+      "live": "Live",
+      "updatedAt": "Diperbarui {{time}}",
+      "badges": {
+        "growth": "Pertumbuhan",
+        "record": "Rekor",
+        "peak": "Puncak"
+      },
+      "highlights": {
+        "growth": {
+          "title": "Basis pengguna terus bertumbuh",
+          "description": "128 total pengguna dengan pertumbuhan +12% bulan ini — momentum platform semakin kuat."
+        },
+        "revenue": {
+          "title": "Pendapatan Juni capai rekor baru",
+          "description": "Pendapatan bulanan mencapai 8,2M, naik dari 7,0M di Mei — bulan terbaik sejauh ini."
+        },
+        "activity": {
+          "title": "Jumat jadi hari puncak aktivitas",
+          "description": "Aktivitas mingguan puncak di 52 sesi pada Jumat, dengan pertumbuhan +18% pada event terbaru."
+        }
+      },
+      "actions": {
+        "viewUsers": "Lihat pengguna",
+        "viewReports": "Buka laporan",
+        "viewAlerts": "Cek peringatan"
+      },
+      "summary": {
+        "title": "Ringkasan platform",
+        "status": {
+          "label": "Status sistem",
+          "value": "Operasional"
+        },
+        "sync": {
+          "label": "Sinkronisasi data",
+          "value": "Real-time"
+        },
+        "uptime": {
+          "label": "Uptime",
+          "value": "99,9%"
+        },
+        "response": {
+          "label": "Respon rata-rata",
+          "value": "< 120ms"
+        }
+      }
     }
   },
   "users": {

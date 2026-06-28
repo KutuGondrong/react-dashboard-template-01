@@ -4,6 +4,7 @@ import { useTheme } from '@/context/ThemeContext';
 import type { SupportedLocale } from '@/config/app.config';
 import type { SelectOption, ThemeMode } from '@/models/model.type';
 import { ComboBox } from '@/components/ComboBox';
+import { useSettingsPage } from '@/features/settings/hooks/useSettingsPage';
 
 const LOCALE_FLAGS: Record<SupportedLocale, string> = {
   en: '🇬🇧',
@@ -105,17 +106,11 @@ function renderThemeOption(option: SelectOption) {
 export default function SettingsPage() {
   const { t, locale, setLocale } = useLocale();
   const { mode, setMode } = useTheme();
-
-  const localeOptions: SelectOption[] = [
-    { value: 'en', label: 'English' },
-    { value: 'id', label: 'Bahasa Indonesia' },
-  ];
-
-  const themeOptions: SelectOption[] = [
-    { value: 'light', label: t('components.common.lightMode') },
-    { value: 'dark', label: t('components.common.darkMode') },
-    { value: 'system', label: t('components.common.systemMode') },
-  ];
+  const { localeOptions, themeOptions, onLocaleChange, onThemeChange } = useSettingsPage(
+    t,
+    setLocale,
+    setMode,
+  );
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -130,7 +125,7 @@ export default function SettingsPage() {
           label={t('components.common.language')}
           options={localeOptions}
           value={locale}
-          onChange={(option) => setLocale(option.value as SupportedLocale)}
+          onChange={onLocaleChange}
           searchable={false}
           renderLabel={renderLocaleOption}
           renderSelectedLabel={renderLocaleOption}
@@ -140,7 +135,7 @@ export default function SettingsPage() {
           label={t('components.common.theme')}
           options={themeOptions}
           value={mode}
-          onChange={(option) => setMode(option.value as ThemeMode)}
+          onChange={onThemeChange}
           searchable={false}
           renderLabel={renderThemeOption}
           renderSelectedLabel={renderThemeOption}

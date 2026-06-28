@@ -57,8 +57,8 @@ export function Badge({
   const resolvedCustom = isCustom ? { ...DEFAULT_CUSTOM_COLORS, ...customColors } : undefined;
 
   const badgeClassName = isCustom
-    ? `inline-flex items-center gap-1.5 rounded-full font-medium ${sizeClasses[size]} ${className}`
-    : `inline-flex items-center gap-1.5 rounded-full font-medium ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+    ? `inline-flex w-fit max-w-full shrink-0 items-center gap-1.5 rounded-full font-medium ${sizeClasses[size]} ${className}`
+    : `inline-flex w-fit max-w-full shrink-0 items-center gap-1.5 rounded-full font-medium ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
   const badgeStyle = resolvedCustom
     ? { backgroundColor: resolvedCustom.background, color: resolvedCustom.color }

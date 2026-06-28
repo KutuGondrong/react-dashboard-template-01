@@ -140,3 +140,29 @@ export interface DonutChartData {
   segments: DonutSegment[];
   total: number;
 }
+
+export type DashboardInsightTone = 'success' | 'info' | 'warning' | 'primary';
+
+export interface DashboardInsightHighlight {
+  id: string;
+  badgeKey: string;
+  titleKey: string;
+  descriptionKey: string;
+  tone: DashboardInsightTone;
+  href?: string;
+  actionKey?: string;
+}
+
+export interface DashboardInsightSummaryItem {
+  id: string;
+  labelKey: string;
+  valueKey: string;
+  tone: DashboardInsightTone;
+}
+
+export interface DashboardInsights {
+  highlights: DashboardInsightHighlight[];
+  summaryTitleKey: string;
+  summaryItems: DashboardInsightSummaryItem[];
+  updatedAt: Date;
+}

@@ -249,4 +249,67 @@ export const apiRepository = {
       ],
     };
   },
+
+  async getDashboardInsights() {
+    await delay(700);
+    return {
+      highlights: [
+        {
+          id: 'insight_growth',
+          badge_key: 'dashboard.insights.badges.growth',
+          title_key: 'dashboard.insights.highlights.growth.title',
+          description_key: 'dashboard.insights.highlights.growth.description',
+          tone: 'success' as const,
+          href: '/users',
+          action_key: 'dashboard.insights.actions.viewUsers',
+        },
+        {
+          id: 'insight_revenue',
+          badge_key: 'dashboard.insights.badges.record',
+          title_key: 'dashboard.insights.highlights.revenue.title',
+          description_key: 'dashboard.insights.highlights.revenue.description',
+          tone: 'primary' as const,
+          href: '/reports',
+          action_key: 'dashboard.insights.actions.viewReports',
+        },
+        {
+          id: 'insight_activity',
+          badge_key: 'dashboard.insights.badges.peak',
+          title_key: 'dashboard.insights.highlights.activity.title',
+          description_key: 'dashboard.insights.highlights.activity.description',
+          tone: 'info' as const,
+          href: '/alerts',
+          action_key: 'dashboard.insights.actions.viewAlerts',
+        },
+      ],
+      summary_title_key: 'dashboard.insights.summary.title',
+      summary_items: [
+        {
+          id: 'summary_status',
+          label_key: 'dashboard.insights.summary.status.label',
+          value_key: 'dashboard.insights.summary.status.value',
+          tone: 'success' as const,
+        },
+        {
+          id: 'summary_sync',
+          label_key: 'dashboard.insights.summary.sync.label',
+          value_key: 'dashboard.insights.summary.sync.value',
+          tone: 'info' as const,
+        },
+        {
+          id: 'summary_uptime',
+          label_key: 'dashboard.insights.summary.uptime.label',
+          value_key: 'dashboard.insights.summary.uptime.value',
+          tone: 'success' as const,
+        },
+        {
+          id: 'summary_response',
+          label_key: 'dashboard.insights.summary.response.label',
+          value_key: 'dashboard.insights.summary.response.value',
+          tone: 'primary' as const,
+        },
+      ],
+      updated_at: new Date().toISOString(),
+    };
+  },
 };

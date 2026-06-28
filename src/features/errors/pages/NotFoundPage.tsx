@@ -1,6 +1,6 @@
+import { useLocale } from '@/context/LocaleContext';
 import { Button } from '@/components/Button';
 import { Typography } from '@/components/Typography';
-import { useLocale } from '@/context/LocaleContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function NotFoundPage() {

@@ -2,6 +2,7 @@ import type {
   ApiAuthResponse,
   ApiBarChartResponse,
   ApiChartDataPointResponse,
+  ApiDashboardInsightsResponse,
   ApiDashboardStatsResponse,
   ApiDonutChartResponse,
   ApiLineChartResponse,
@@ -19,6 +20,10 @@ import type {
   ChartDataPoint,
   DashboardStat,
   DashboardStats,
+  DashboardInsightHighlight,
+  DashboardInsightSummaryItem,
+  DashboardInsights,
+  DashboardInsightTone,
   DonutChartData,
   DonutSegment,
   LineChartData,
@@ -131,5 +136,38 @@ export function toDonutChartData(response: ApiDonutChartResponse): DonutChartDat
       }),
     ),
     total: response.total,
+  };
+}
+
+function mapInsightTone(tone: string): DashboardInsightTone {
+  if (tone === 'success' || tone === 'info' || tone === 'warning' || tone === 'primary') {
+    return tone;
+  }
+  return 'info';
+}
+
+export function toDashboardInsights(response: ApiDashboardInsightsResponse): DashboardInsights {
+  return {
+    highlights: response.highlights.map(
+      (item): DashboardInsightHighlight => ({
+        id: item.id,
+        badgeKey: item.badge_key,
+        titleKey: item.title_key,
+        descriptionKey: item.description_key,
+        tone: mapInsightTone(item.tone),
+        ...(item.href ? { href: item.href } : {}),
+        ...(item.action_key ? { actionKey: item.action_key } : {}),
+      }),
+    ),
+    summaryTitleKey: response.summary_title_key,
+    summaryItems: response.summary_items.map(
+      (item): DashboardInsightSummaryItem => ({
+        id: item.id,
+        labelKey: item.label_key,
+        valueKey: item.value_key,
+        tone: mapInsightTone(item.tone),
+      }),
+    ),
+    updatedAt: new Date(response.updated_at),
   };
 }

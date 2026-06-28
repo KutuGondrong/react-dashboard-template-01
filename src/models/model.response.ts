@@ -74,3 +74,27 @@ export interface ApiDonutChartResponse {
   segments: ApiDonutSegmentResponse[];
   total: number;
 }
+
+export interface ApiDashboardInsightHighlightResponse {
+  id: string;
+  badge_key: string;
+  title_key: string;
+  description_key: string;
+  tone: 'success' | 'info' | 'warning' | 'primary';
+  href?: string;
+  action_key?: string;
+}
+
+export interface ApiDashboardInsightSummaryItemResponse {
+  id: string;
+  label_key: string;
+  value_key: string;
+  tone: 'success' | 'info' | 'warning' | 'primary';
+}
+
+export interface ApiDashboardInsightsResponse {
+  highlights: ApiDashboardInsightHighlightResponse[];
+  summary_title_key: string;
+  summary_items: ApiDashboardInsightSummaryItemResponse[];
+  updated_at: string;
+}
