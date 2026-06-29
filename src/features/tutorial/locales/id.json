@@ -6,7 +6,7 @@
   "landingHint": "Dokumentasi akan terbuka di tab browser baru di situs publisher template.",
   "landingLinkLabel": "Buka dokumentasi Tutorial lengkap",
   "landingUrlNote": "Situs dokumentasi: {{url}}",
-  "landingRepoNote": "Repository template (clone dulu): {{url}}",
+  "landingRepoNote": "Repository template (clone dulu):",
   "devBannerTitle": "Hanya mode development",
   "devBannerDescription": "Menu ini muncul saat menjalankan make dev. Build production (make build) tidak pernah menyertakannya. Tidak mau tampil di dev? Set VITE_SHOW_DEV_FEATURES=false di .env atau .env.development."
 }

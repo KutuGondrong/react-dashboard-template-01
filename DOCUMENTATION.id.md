@@ -61,11 +61,11 @@ Page → Hook → Usecase → Repository / apiSource → Axios (backendService)
 
 **Aturan dependensi:**
 
-| Lapisan | Boleh mengimpor |
-|---------|-----------------|
-| Presentation | Application, Domain, Infrastructure |
-| Application | Domain, Infrastructure |
-| Domain | Tidak boleh dari Presentation atau Application |
+| Lapisan      | Boleh mengimpor                                |
+| ------------ | ---------------------------------------------- |
+| Presentation | Application, Domain, Infrastructure            |
+| Application  | Domain, Infrastructure                         |
+| Domain       | Tidak boleh dari Presentation atau Application |
 
 **Login demo (mock development):** `admin@mail.com` / `password123`
 
@@ -77,12 +77,12 @@ Page → Hook → Usecase → Repository / apiSource → Axios (backendService)
 
 URL dikelola di `src/config/external-links.json`:
 
-| Key | URL | Fungsi |
-|-----|-----|--------|
-| `templateRepoUrl` | [github.com/KutuGondrong/react-dashboard-template-01](https://github.com/KutuGondrong/react-dashboard-template-01.git) | URL clone Git untuk end user |
-| `readmeUrl` | README GitHub | Ringkasan singkat proyek |
-| `tutorialUrl` | [template.teristimewa.com/.../documentation/overview](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview) | Dokumentasi terpublikasi |
-| `componentsUrl` | [template.teristimewa.com/.../components](https://template.teristimewa.com/react-dashboard-template-01/components) | Katalog komponen terpublikasi |
+| Key               | URL                                                                                                                                        | Fungsi                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
+| `templateRepoUrl` | [github.com/KutuGondrong/react-dashboard-template-01](https://github.com/KutuGondrong/react-dashboard-template-01.git)                     | URL clone Git untuk end user  |
+| `readmeUrl`       | README GitHub                                                                                                                              | Ringkasan singkat proyek      |
+| `tutorialUrl`     | [template.teristimewa.com/.../documentation/overview](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview) | Dokumentasi terpublikasi      |
+| `componentsUrl`   | [template.teristimewa.com/.../components](https://template.teristimewa.com/react-dashboard-template-01/components)                         | Katalog komponen terpublikasi |
 
 **Preview template live:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01)
 
@@ -90,27 +90,24 @@ URL dikelola di `src/config/external-links.json`:
 
 Saat menjalankan `pnpm run dev`, area terproteksi menampilkan menu utama:
 
-| Key menu | Route | Fitur |
-|----------|-------|-------|
-| Dashboard | `/dashboard` | Kartu statistik, chart |
-| Users | `/users` | Tabel user dengan paginasi |
-| Settings | `/settings` | Preferensi aplikasi |
+| Key menu  | Route        | Fitur                      |
+| --------- | ------------ | -------------------------- |
+| Dashboard | `/dashboard` | Kartu statistik, chart     |
+| Users     | `/users`     | Tabel user dengan paginasi |
+| Settings  | `/settings`  | Preferensi aplikasi        |
 
-**Repo template (boilerplate)** juga punya grup **Dokumentasi** *(DEV)* bertingkat:
+Menu dev opsional _(badge DEV)_ saat `VITE_SHOW_DEV_FEATURES=true`:
 
-| Submenu | Route | Fitur |
-|---------|-------|-------|
-| Overview | `/documentation/overview` | Clone, generate, logo, i18n, API, environment |
-| Tutorial | `/documentation/tutorial` | Tambah halaman (contoh Inventaris) via `make feature` atau manual |
-| Preview | `/documentation/preview` | Preview live hasil Tutorial |
+| Key menu            | Route            | Fitur                                    |
+| ------------------- | ---------------- | ---------------------------------------- |
+| Dokumentasi _(DEV)_ | `/documentation` | Landing page → tautan ke `tutorialUrl`   |
+| Components _(DEV)_  | `/components`    | Landing page → tautan ke `componentsUrl` |
 
-**App hasil generate** menampilkan **Dokumentasi** *(DEV)* sebagai landing page tunggal di `/documentation` → tautan ke `tutorialUrl`.
+Saat development (`pnpm run dev`), **Dokumentasi** dan **Components** membuka landing page dengan tombol ke dokumentasi terpublikasi di atas. Build produksi (`pnpm run build`) menghapus route ini.
 
-| Key menu | Route | Fitur |
-|----------|-------|-------|
-| Components *(DEV)* | `/components` | Landing page → tautan ke `componentsUrl` |
+**Sembunyikan saat dev:** set `VITE_SHOW_DEV_FEATURES=false` di `.env` atau `.env.development`.
 
-Saat development (`pnpm run dev`), **Dokumentasi** dan **Components** menampilkan badge DEV dan membuka landing page dengan tombol ke dokumentasi terpublikasi di atas. Build produksi (`pnpm run build`) menghapus route ini. Sembunyikan saat dev dengan `VITE_SHOW_DEV_FEATURES=false` di `.env`.
+**Hapus sepenuhnya:** hapus `...devLandingRoutes` dari `AppRouter.tsx` dan `buildDevLandingMenuItems` dari `useSidebar.tsx` (lihat komentar di `src/router/devLandingRoutes.tsx`).
 
 ---
 
@@ -120,27 +117,27 @@ Saat development (`pnpm run dev`), **Dokumentasi** dan **Components** menampilka
 
 Versi dipin via [Volta](https://volta.sh) di `package.json`:
 
-| Tool | Versi |
-|------|-------|
+| Tool    | Versi     |
+| ------- | --------- |
 | Node.js | `20.11.0` |
-| pnpm | `8.15.4` |
+| pnpm    | `8.15.4`  |
 
 ### Dependensi runtime
 
-| Paket | Versi | Peran |
-|-------|-------|-------|
-| `react` + `react-dom` | 18.3.1 | Rendering UI |
-| `react-router-dom` | 6.28.0 | Routing client-side, lazy routes |
-| `axios` | 1.7.9 | HTTP client (via `backendService`) |
+| Paket                 | Versi  | Peran                              |
+| --------------------- | ------ | ---------------------------------- |
+| `react` + `react-dom` | 18.3.1 | Rendering UI                       |
+| `react-router-dom`    | 6.28.0 | Routing client-side, lazy routes   |
+| `axios`               | 1.7.9  | HTTP client (via `backendService`) |
 
 ### Dependensi dev
 
-| Paket | Versi | Peran |
-|-------|-------|-------|
-| `typescript` | 5.7.2 | Static typing |
-| `vite` | 5.4.11 | Dev server & bundler produksi |
-| `tailwindcss` | 3.4.16 | Utility-first CSS |
-| `eslint` + `prettier` | - | Linting & formatting |
+| Paket                 | Versi  | Peran                         |
+| --------------------- | ------ | ----------------------------- |
+| `typescript`          | 5.7.2  | Static typing                 |
+| `vite`                | 5.4.11 | Dev server & bundler produksi |
+| `tailwindcss`         | 3.4.16 | Utility-first CSS             |
+| `eslint` + `prettier` | -      | Linting & formatting          |
 
 **Path alias:** `@/*` → `src/*`
 
@@ -152,12 +149,12 @@ Versi dipin via [Volta](https://volta.sh) di `package.json`:
 
 ### Langkah 1: Instal prasyarat
 
-| Tool | Wajib | Catatan |
-|------|-------|---------|
-| Git | Direkomendasikan | Clone repositori |
-| Node.js 20.x | Ya | `20.11.0` direkomendasikan |
-| pnpm 8.x | Ya* | `8.15.4` direkomendasikan |
-| GNU Make | Opsional | Shortcut: `make dev`, `make feature` |
+| Tool         | Wajib            | Catatan                              |
+| ------------ | ---------------- | ------------------------------------ |
+| Git          | Direkomendasikan | Clone repositori                     |
+| Node.js 20.x | Ya               | `20.11.0` direkomendasikan           |
+| pnpm 8.x     | Ya\*             | `8.15.4` direkomendasikan            |
+| GNU Make     | Opsional         | Shortcut: `make dev`, `make feature` |
 
 ```bash
 volta pin node@20.11.0
@@ -232,14 +229,14 @@ ErrorBoundary
 
 ## 6. Hierarki Provider
 
-| Provider | File | Hook | Tanggung jawab |
-|----------|------|------|----------------|
-| `ErrorBoundary` | `components/ErrorBoundary/` | - | Tangkap error render |
-| `LocaleProvider` | `context/LocaleContext.tsx` | `useLocale()` | Terjemahan `t()`, ganti bahasa |
-| `ThemeProvider` | `context/ThemeContext.tsx` | `useTheme()` | Mode light/dark/system |
-| `ToastProvider` | `components/Toast/` | `useToast()` | Notifikasi toast |
-| `ModalProvider` | `components/Modal/` | `useModal()` | Dialog konfirmasi |
-| `AuthProvider` | `context/AuthContext.tsx` | `useAuth()` | Sesi, login, logout |
+| Provider         | File                        | Hook                 | Tanggung jawab                 |
+| ---------------- | --------------------------- | -------------------- | ------------------------------ |
+| `ErrorBoundary`  | `components/ErrorBoundary/` | -                    | Tangkap error render           |
+| `LocaleProvider` | `context/LocaleContext.tsx` | `useLocale()`        | Terjemahan `t()`, ganti bahasa |
+| `ThemeProvider`  | `context/ThemeContext.tsx`  | `useTheme()`         | Mode light/dark/system         |
+| `ToastProvider`  | `components/Toast/`         | `useToast()`         | Notifikasi toast               |
+| `ModalProvider`  | `components/Modal/`         | `useModal()`         | Dialog konfirmasi              |
+| `AuthProvider`   | `context/AuthContext.tsx`   | `useAuth()`          | Sesi, login, logout            |
 | `ScrollProvider` | `context/ScrollContext.tsx` | `useScrollContext()` | Scroll-to-top saat ganti route |
 
 Contoh:
@@ -258,14 +255,23 @@ const { mode, toggleTheme } = useTheme();
 
 Route didefinisikan di `src/router/AppRouter.tsx`.
 
-| Guard | Perilaku |
-|-------|----------|
-| `ProtectedRoute` | Butuh token valid; redirect ke `/login` |
-| `PublicRoute` | Hanya tamu; redirect ke `/dashboard` jika sudah login |
+| Registry     | File                        | Fungsi                                                                   |
+| ------------ | --------------------------- | ------------------------------------------------------------------------ |
+| Manual       | `featureRoutes.tsx`         | Route bawaan (dashboard, users, …) — edit manual                         |
+| Generated    | `featureRoutesGenerate.tsx` | Route dari `make feature` — **jangan edit manual**                       |
+| Dev landings | `devLandingRoutes.tsx`      | `/documentation` & `/components` → tautan eksternal publisher (opsional) |
+| Core         | `AppRouter.tsx`             | Redirect index, spread registry, `settings` (paling akhir), 404          |
+
+Urutan spread di `protectedChildren`: `...featureRoutes`, `...featureRoutesGenerate`, `...devLandingRoutes`.
+
+| Guard            | Perilaku                                              |
+| ---------------- | ----------------------------------------------------- |
+| `ProtectedRoute` | Butuh token valid; redirect ke `/login`               |
+| `PublicRoute`    | Hanya tamu; redirect ke `/dashboard` jika sudah login |
 
 Setiap halaman memakai `React.lazy()` + `Suspense` dengan fallback `SkeletonLoader`.
 
-Route fitur baru didaftarkan di `src/router/featureRoutes.tsx` (di-spread ke `AppRouter.tsx`). Route tidak dikenal (`path: '*'`) menampilkan `NotFoundPage` (404).
+Route `settings` tetap di `AppRouter.tsx` (paling akhir). Route tidak dikenal (`path: '*'`) menampilkan `NotFoundPage` (404).
 
 - **`MainLayout`**: sidebar, header, footer, `<Outlet />` untuk halaman anak
 - **`AuthLayout`**: kartu terpusat untuk login/register
@@ -280,7 +286,7 @@ Route fitur baru didaftarkan di `src/router/featureRoutes.tsx` (di-spread ke `Ap
 src/
 ├── config/          # Konfigurasi app, token warna, base path
 ├── context/         # Provider global (Auth, Locale, Theme, Scroll)
-├── router/          # AppRouter, featureRoutes, guard
+├── router/          # AppRouter, devLandingRoutes, featureRoutes(+Generate), guard
 ├── locales/         # en.json, id.json
 ├── models/          # Response API, tipe UI, mapper
 ├── datasource/      # network (Axios) + local (localStorage)
@@ -308,12 +314,12 @@ src/features/<nama>/
 
 Fitur **Users** yang sudah ada di template ini menjadi contoh referensi. Untuk menambah halaman sendiri (mis. Products), lihat [Bagian 14](#id-14-buat-halaman-baru--shortcut-make-feature) dan [Bagian 15](#id-15-buat-halaman-baru--manual).
 
-| File | Lapisan | Fungsi |
-|------|---------|--------|
-| `UsersPage.tsx` | Presentation | Shell halaman, judul, komposisi tabel |
-| `UsersTable.tsx` | Presentation | Kolom, DataTable, Pagination |
-| `useUsersPage.ts` | Application | State, fetch, paginasi |
-| `usersUsecase.ts` | Application | Operasi async, delegasi ke repository |
+| File              | Lapisan      | Fungsi                                |
+| ----------------- | ------------ | ------------------------------------- |
+| `UsersPage.tsx`   | Presentation | Shell halaman, judul, komposisi tabel |
+| `UsersTable.tsx`  | Presentation | Kolom, DataTable, Pagination          |
+| `useUsersPage.ts` | Application  | State, fetch, paginasi                |
+| `usersUsecase.ts` | Application  | Operasi async, delegasi ke repository |
 
 **Aturan:** Halaman tetap tipis. Jangan panggil `axios`, `localStorage`, atau API langsung dari page/komponen.
 
@@ -331,10 +337,10 @@ Button · Input · ComboBox · DataTable · Pagination · Modal · Drawer · Toa
 
 ### Di mana melihat komponen
 
-| Kapan | URL |
-|-------|-----|
-| **Development** (`pnpm run dev`) | Menu **Components** (badge DEV) → landing page dengan tautan ke katalog |
-| **Katalog komponen (live)** | [https://template.teristimewa.com/react-dashboard-template-01/components](https://template.teristimewa.com/react-dashboard-template-01/components) |
+| Kapan                            | URL                                                                                                                                                |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Development** (`pnpm run dev`) | Menu **Components** (badge DEV) → landing page dengan tautan ke katalog                                                                            |
+| **Katalog komponen (live)**      | [https://template.teristimewa.com/react-dashboard-template-01/components](https://template.teristimewa.com/react-dashboard-template-01/components) |
 
 Katalog live menampilkan props, matriks state, dan contoh kode siap salin untuk setiap komponen bersama.
 
@@ -345,7 +351,9 @@ import { Button } from '@/components/Button';
 import { DataTable, DataTableGroup } from '@/components/DataTable';
 import { Pagination } from '@/components/Pagination';
 
-<Button variant="primary" onClick={handleSave}>Simpan</Button>
+<Button variant="primary" onClick={handleSave}>
+  Simpan
+</Button>;
 ```
 
 Teks default di dalam `src/components/` harus memakai `t('components.common.*')`.
@@ -360,12 +368,12 @@ Hook adalah jembatan **Application layer** antara UI dan logika bisnis.
 
 ### Jenis hook di proyek ini
 
-| Kategori | Lokasi | Contoh |
-|----------|--------|--------|
-| Context hooks | `context/`, Toast, Modal | `useAuth`, `useLocale`, `useTheme` |
-| Feature hooks | `features/<nama>/hooks/` | `useUsersPage`, `useProductsPage` |
-| Layout hooks | `layouts/**/hooks/` | `useMainLayout`, `useSidebar` |
-| Component hooks | `components/**/hooks/` | `useFileDownload` |
+| Kategori        | Lokasi                   | Contoh                             |
+| --------------- | ------------------------ | ---------------------------------- |
+| Context hooks   | `context/`, Toast, Modal | `useAuth`, `useLocale`, `useTheme` |
+| Feature hooks   | `features/<nama>/hooks/` | `useUsersPage`, `useProductsPage`  |
+| Layout hooks    | `layouts/**/hooks/`      | `useMainLayout`, `useSidebar`      |
+| Component hooks | `components/**/hooks/`   | `useFileDownload`                  |
 
 ### Pola feature hook
 
@@ -384,18 +392,20 @@ export function useUsersPage() {
     }
   }, [page, pageSize]);
 
-  useEffect(() => { fetchUsers(); }, [fetchUsers]);
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
-  return { users, isLoading, page, setPage, /* ... */ };
+  return { users, isLoading, page, setPage /* ... */ };
 }
 ```
 
 ### Aturan hook
 
-| Lakukan | Jangan |
-|---------|--------|
-| Panggil usecase dari feature hook | Panggil `axios` langsung di hook |
-| Biarkan page tipis | Taruh aturan bisnis di komponen |
+| Lakukan                                | Jangan                                 |
+| -------------------------------------- | -------------------------------------- |
+| Panggil usecase dari feature hook      | Panggil `axios` langsung di hook       |
+| Biarkan page tipis                     | Taruh aturan bisnis di komponen        |
 | Pakai context hooks untuk state global | Duplikasi logika auth/locale per fitur |
 
 ---
@@ -414,11 +424,11 @@ apiRepository.ts    → Logika bisnis, validasi, mock data, mapper
 
 ### Model: lapisan anti-korupsi
 
-| File | Format | Contoh field |
-|------|--------|--------------|
-| `model.response.ts` | snake_case (API) | `full_name`, `is_active` |
-| `model.type.ts` | camelCase (UI) | `fullName`, `isActive` |
-| `model.map.ts` | Fungsi transform | `toUser()`, `toPaginatedUsers()` |
+| File                | Format           | Contoh field                     |
+| ------------------- | ---------------- | -------------------------------- |
+| `model.response.ts` | snake_case (API) | `full_name`, `is_active`         |
+| `model.type.ts`     | camelCase (UI)   | `fullName`, `isActive`           |
+| `model.map.ts`      | Fungsi transform | `toUser()`, `toPaginatedUsers()` |
 
 **Aturan:** Komponen dan hook tidak pernah melihat field `snake_case`.
 
@@ -448,9 +458,9 @@ localSource.clearAuth();
 
 ## 13. i18n & Tema
 
-| File | Bahasa |
-|------|--------|
-| `src/locales/en.json` | English |
+| File                  | Bahasa           |
+| --------------------- | ---------------- |
+| `src/locales/en.json` | English          |
 | `src/locales/id.json` | Bahasa Indonesia |
 
 Kedua file harus punya **struktur key yang sama**. Nama parameter `{{param}}` harus cocok; urutan kata boleh berbeda.
@@ -471,20 +481,20 @@ make feature name=products label="Products" label-id="Produk"
 
 ### Scope
 
-| Scope | File yang dibuat | Mock data |
-|-------|------------------|-----------|
-| `full` *(default)* | page, table, hook, usecase | di `usecase/*.ts` |
-| `hook` | page, table, hook | inline di hook |
-| `page` | page saja | tidak ada |
+| Scope              | File yang dibuat           | Mock data         |
+| ------------------ | -------------------------- | ----------------- |
+| `full` _(default)_ | page, table, hook, usecase | di `usecase/*.ts` |
+| `hook`             | page, table, hook          | inline di hook    |
+| `page`             | page saja                  | tidak ada         |
 
 ### Parameter
 
-| Parameter | Wajib | Deskripsi |
-|-----------|-------|-----------|
-| `name` | Ya | Key fitur → folder, route `/products`, locale `nav.products` |
-| `label` | Direkomendasikan | Label menu bahasa Inggris |
-| `label-id` | Direkomendasikan | Label menu bahasa Indonesia |
-| `scope` | Tidak | `full` · `hook` · `page` |
+| Parameter  | Wajib            | Deskripsi                                                    |
+| ---------- | ---------------- | ------------------------------------------------------------ |
+| `name`     | Ya               | Key fitur → folder, route `/products`, locale `nav.products` |
+| `label`    | Direkomendasikan | Label menu bahasa Inggris                                    |
+| `label-id` | Direkomendasikan | Label menu bahasa Indonesia                                  |
+| `scope`    | Tidak            | `full` · `hook` · `page`                                     |
 
 ### Contoh
 
@@ -494,7 +504,9 @@ make feature name=inventory scope=hook label="Inventory" label-id="Inventaris"
 make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 ```
 
-File yang diubah otomatis: feature folder, `featureRoutes.tsx`, `featureMenuItems.tsx`, `SidebarIcons.tsx` *(ikon opsional)*, `en.json`, `id.json`.
+File yang diubah otomatis (`make feature` — jangan edit manual): feature folder, `featureRoutesGenerate.tsx`, `featureMenuItemsGenerate.tsx`, `en.json`, `id.json`.
+
+Registry manual: `featureRoutes.tsx` (route bawaan), `featureMenuItems.tsx` (menu bawaan). Ikon kustom opsional di `SidebarIcons.tsx`, lalu ganti `<FeatureMenuIcon />` di `featureMenuItemsGenerate.tsx`.
 
 ---
 
@@ -535,7 +547,7 @@ Lihat [Bagian 15 English](./DOCUMENTATION.md#15-create-a-new-page--manual-walkth
 Tambahkan entry ke array `featureRoutes` (di-spread ke `AppRouter.tsx` via `...featureRoutes`):
 
 ```tsx
-const ProductsPage = lazy(() => import('@/features/products/pages/ProductsPage'));
+const ProductsPage = lazyWithRetry(() => import('@/features/products/pages/ProductsPage'));
 // path: 'products' + FeatureLazyPage wrapper. Lihat Bagian 15 English Step 7
 ```
 
@@ -577,12 +589,12 @@ make generate name=my-new-app
 make generate name=my-new-app out=~/projects/my-new-app
 ```
 
-| Yang terjadi | Detail |
-|--------------|--------|
-| Output | Folder baru berisi salinan penuh template ini |
-| `package.json` | `name` diperbarui ke nama aplikasi Anda |
-| Git | `git init` di folder output |
-| Config | Title/description di `app.config.ts` disalin apa adanya: sesuaikan setelah generate |
+| Yang terjadi   | Detail                                                                              |
+| -------------- | ----------------------------------------------------------------------------------- |
+| Output         | Folder baru berisi salinan penuh template ini                                       |
+| `package.json` | `name` diperbarui ke nama aplikasi Anda                                             |
+| Git            | `git init` di folder output                                                         |
+| Config         | Title/description di `app.config.ts` disalin apa adanya: sesuaikan setelah generate |
 
 **File demo FileDownload:** `public/samples/` sudah disertakan agar mock download berfungsi langsung.
 
@@ -594,11 +606,11 @@ Setelah generate, `cd` ke folder baru, jalankan `pnpm install`, lalu `make dev`.
 
 ## 17. Deployment
 
-| Variabel | Default | Fungsi |
-|----------|---------|--------|
-| `VITE_API_BASE_URL` | `/api` | Base URL API backend |
-| `VITE_BASE_PATH` | `/` | Base path saat di-host di subpath |
-| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Tampilkan route landing Tutorial & Components saat dev |
+| Variabel                 | Default      | Fungsi                                                                                                                                                             |
+| ------------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `VITE_API_BASE_URL`      | `/api`       | Base URL API backend                                                                                                                                               |
+| `VITE_BASE_PATH`         | `/`          | Base path saat di-host di subpath                                                                                                                                  |
+| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Tampilkan route landing Tutorial & Components saat dev. Set `false` untuk sembunyikan, atau hapus `devLandingRoutes` / `devLandingMenuItems` untuk bersih permanen |
 
 **Subpath hosting:** Set `VITE_BASE_PATH` sesuai path hosting sebelum `pnpm run build`. Output `dist/` harus disajikan dengan SPA fallback agar deep link (mis. `/dashboard`) mengarah ke `index.html`. Konfigurasi fallback mengikuti dokumentasi web server Anda (nginx, Apache, S3 + CloudFront, dll.).
 
@@ -615,16 +627,16 @@ pnpm run preview   # opsional, cek dist/ secara lokal
 
 ## 18. Referensi Makefile
 
-| Perintah | Deskripsi |
-|----------|-----------|
-| `make dev` | Jalankan Vite dev server |
-| `make format` | Prettier + ESLint auto-fix |
-| `make lint` | ESLint + TypeScript check |
-| `make build` | Format → type-check → build produksi |
-| `make preview` | Serve `dist/` secara lokal |
-| `make clean` | Hapus `dist/`, `.turbo`, `node_modules/.vite` |
-| `make feature name=X label="Name" label-id="Nama"` | Scaffold menu + halaman |
-| `make generate name=my-app` | Scaffold micro-app di luar repo ini |
+| Perintah                                           | Deskripsi                                     |
+| -------------------------------------------------- | --------------------------------------------- |
+| `make dev`                                         | Jalankan Vite dev server                      |
+| `make format`                                      | Prettier + ESLint auto-fix                    |
+| `make lint`                                        | ESLint + TypeScript check                     |
+| `make build`                                       | Format → type-check → build produksi          |
+| `make preview`                                     | Serve `dist/` secara lokal                    |
+| `make clean`                                       | Hapus `dist/`, `.turbo`, `node_modules/.vite` |
+| `make feature name=X label="Name" label-id="Nama"` | Scaffold menu + halaman                       |
+| `make generate name=my-app`                        | Scaffold micro-app di luar repo ini           |
 
 ---
 

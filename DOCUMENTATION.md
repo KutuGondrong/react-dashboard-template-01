@@ -55,11 +55,11 @@ Page → Hook → Usecase → Repository / apiSource → Axios (backendService)
 
 **Dependency rules:**
 
-| Layer | May import |
-|-------|------------|
-| Presentation (`pages`, `components`, `layouts`) | Application, Domain, Infrastructure |
-| Application (`hooks`, `usecase`, `context`) | Domain, Infrastructure |
-| Domain (`models/`) | Nothing from Presentation or Application |
+| Layer                                           | May import                               |
+| ----------------------------------------------- | ---------------------------------------- |
+| Presentation (`pages`, `components`, `layouts`) | Application, Domain, Infrastructure      |
+| Application (`hooks`, `usecase`, `context`)     | Domain, Infrastructure                   |
+| Domain (`models/`)                              | Nothing from Presentation or Application |
 
 **Demo login (development mock):** `admin@mail.com` / `password123`
 
@@ -69,12 +69,12 @@ Page → Hook → Usecase → Repository / apiSource → Axios (backendService)
 
 URLs are centralized in `src/config/external-links.json`:
 
-| Key | URL | Purpose |
-|-----|-----|---------|
-| `templateRepoUrl` | [github.com/KutuGondrong/react-dashboard-template-01](https://github.com/KutuGondrong/react-dashboard-template-01.git) | Git clone URL for end users |
-| `readmeUrl` | GitHub README | Short project overview |
-| `tutorialUrl` | [template.teristimewa.com/.../documentation/overview](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview) | Published documentation |
-| `componentsUrl` | [template.teristimewa.com/.../components](https://template.teristimewa.com/react-dashboard-template-01/components) | Published component catalog |
+| Key               | URL                                                                                                                                        | Purpose                     |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
+| `templateRepoUrl` | [github.com/KutuGondrong/react-dashboard-template-01](https://github.com/KutuGondrong/react-dashboard-template-01.git)                     | Git clone URL for end users |
+| `readmeUrl`       | GitHub README                                                                                                                              | Short project overview      |
+| `tutorialUrl`     | [template.teristimewa.com/.../documentation/overview](https://template.teristimewa.com/react-dashboard-template-01/documentation/overview) | Published documentation     |
+| `componentsUrl`   | [template.teristimewa.com/.../components](https://template.teristimewa.com/react-dashboard-template-01/components)                         | Published component catalog |
 
 **Live template preview:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01)
 
@@ -82,27 +82,24 @@ URLs are centralized in `src/config/external-links.json`:
 
 When you run `pnpm run dev`, the protected area shows these main menu items:
 
-| Menu key | Route | Feature |
-|----------|-------|---------|
-| Dashboard | `/dashboard` | Stats cards, charts |
-| Users | `/users` | Paginated user table |
-| Settings | `/settings` | App preferences |
+| Menu key  | Route        | Feature              |
+| --------- | ------------ | -------------------- |
+| Dashboard | `/dashboard` | Stats cards, charts  |
+| Users     | `/users`     | Paginated user table |
+| Settings  | `/settings`  | App preferences      |
 
-**Template repo (boilerplate)** also includes a nested **Documentation** *(DEV)* group:
+Optional dev menu items _(DEV badge)_ when `VITE_SHOW_DEV_FEATURES=true`:
 
-| Submenu | Route | Feature |
-|---------|-------|---------|
-| Overview | `/documentation/overview` | Clone, generate, logo, i18n, API, environment |
-| Tutorial | `/documentation/tutorial` | Add a page (Inventory example) via `make feature` or manual |
-| Preview | `/documentation/preview` | Live preview of the Tutorial result |
+| Menu key              | Route            | Feature                                 |
+| --------------------- | ---------------- | --------------------------------------- |
+| Documentation _(DEV)_ | `/documentation` | Landing page → links to `tutorialUrl`   |
+| Components _(DEV)_    | `/components`    | Landing page → links to `componentsUrl` |
 
-**Generated apps** show **Documentation** *(DEV)* as a single landing page at `/documentation` → links to `tutorialUrl`.
+In development (`pnpm run dev`), **Documentation** and **Components** open landing pages with buttons to the published docs above. Production builds (`pnpm run build`) strip these routes.
 
-| Menu key | Route | Feature |
-|----------|-------|---------|
-| Components *(DEV)* | `/components` | Landing page → links to `componentsUrl` |
+**Hide during dev:** set `VITE_SHOW_DEV_FEATURES=false` in `.env` or `.env.development`.
 
-In development (`pnpm run dev`), **Documentation** and **Components** show a DEV badge and open landing pages with buttons to the published docs above. Production builds (`pnpm run build`) strip these routes. Hide them during dev with `VITE_SHOW_DEV_FEATURES=false` in `.env`.
+**Remove entirely:** delete `...devLandingRoutes` from `AppRouter.tsx` and `buildDevLandingMenuItems` from `useSidebar.tsx` (see comments in `src/router/devLandingRoutes.tsx`).
 
 ---
 
@@ -110,30 +107,30 @@ In development (`pnpm run dev`), **Documentation** and **Components** show a DEV
 
 Pinned via [Volta](https://volta.sh) in `package.json`:
 
-| Tool | Version |
-|------|---------|
+| Tool    | Version   |
+| ------- | --------- |
 | Node.js | `20.11.0` |
-| pnpm | `8.15.4` |
+| pnpm    | `8.15.4`  |
 
 ### Runtime dependencies
 
-| Package | Version | Role |
-|---------|---------|------|
-| `react` + `react-dom` | 18.3.1 | UI rendering |
-| `react-router-dom` | 6.28.0 | Client-side routing, lazy routes |
-| `axios` | 1.7.9 | HTTP client (via `backendService`) |
+| Package               | Version | Role                               |
+| --------------------- | ------- | ---------------------------------- |
+| `react` + `react-dom` | 18.3.1  | UI rendering                       |
+| `react-router-dom`    | 6.28.0  | Client-side routing, lazy routes   |
+| `axios`               | 1.7.9   | HTTP client (via `backendService`) |
 
 ### Dev dependencies
 
-| Package | Version | Role |
-|---------|---------|------|
-| `typescript` | 5.7.2 | Static typing |
-| `vite` | 5.4.11 | Dev server & production bundler |
-| `@vitejs/plugin-react` | 4.3.4 | React Fast Refresh |
-| `tailwindcss` | 3.4.16 | Utility-first CSS |
-| `postcss` + `autoprefixer` | - | CSS pipeline |
-| `eslint` + plugins | - | Linting |
-| `prettier` + `prettier-plugin-tailwindcss` | - | Formatting |
+| Package                                    | Version | Role                            |
+| ------------------------------------------ | ------- | ------------------------------- |
+| `typescript`                               | 5.7.2   | Static typing                   |
+| `vite`                                     | 5.4.11  | Dev server & production bundler |
+| `@vitejs/plugin-react`                     | 4.3.4   | React Fast Refresh              |
+| `tailwindcss`                              | 3.4.16  | Utility-first CSS               |
+| `postcss` + `autoprefixer`                 | -       | CSS pipeline                    |
+| `eslint` + plugins                         | -       | Linting                         |
+| `prettier` + `prettier-plugin-tailwindcss` | -       | Formatting                      |
 
 **Path alias:** `@/*` → `src/*` (configured in `tsconfig.json` and `vite.config.ts`).
 
@@ -143,12 +140,12 @@ Pinned via [Volta](https://volta.sh) in `package.json`:
 
 ### Step 1: Install prerequisites
 
-| Tool | Required | Notes |
-|------|----------|-------|
-| Git | Recommended | Clone the repository |
-| Node.js 20.x | Yes | `20.11.0` recommended |
-| pnpm 8.x | Yes* | `8.15.4` recommended; npm works as fallback |
-| GNU Make | Optional | Shortcuts: `make dev`, `make feature`, etc. |
+| Tool         | Required    | Notes                                       |
+| ------------ | ----------- | ------------------------------------------- |
+| Git          | Recommended | Clone the repository                        |
+| Node.js 20.x | Yes         | `20.11.0` recommended                       |
+| pnpm 8.x     | Yes\*       | `8.15.4` recommended; npm works as fallback |
+| GNU Make     | Optional    | Shortcuts: `make dev`, `make feature`, etc. |
 
 Install Volta (recommended for version pinning):
 
@@ -287,15 +284,15 @@ ErrorBoundary
 
 ### Provider reference
 
-| Provider | File | Hook | Responsibility |
-|----------|------|------|----------------|
-| `ErrorBoundary` | `components/ErrorBoundary/` | - | Catches render errors; localized recovery UI |
-| `LocaleProvider` | `context/LocaleContext.tsx` | `useLocale()` | `t(key, params)`, `locale`, `setLocale` |
-| `ThemeProvider` | `context/ThemeContext.tsx` | `useTheme()` | `mode`, `resolvedTheme`, `setMode`, `toggleTheme` |
-| `ToastProvider` | `components/Toast/` | `useToast()` | Show success/error/info toasts |
-| `ModalProvider` | `components/Modal/` | `useModal()` | Open/close confirmation dialogs |
-| `AuthProvider` | `context/AuthContext.tsx` | `useAuth()` | `user`, `token`, `login`, `logout`, `isAuthenticated` |
-| `ScrollProvider` | `context/ScrollContext.tsx` | `useScrollContext()` | Scroll-to-top on route change |
+| Provider         | File                        | Hook                 | Responsibility                                        |
+| ---------------- | --------------------------- | -------------------- | ----------------------------------------------------- |
+| `ErrorBoundary`  | `components/ErrorBoundary/` | -                    | Catches render errors; localized recovery UI          |
+| `LocaleProvider` | `context/LocaleContext.tsx` | `useLocale()`        | `t(key, params)`, `locale`, `setLocale`               |
+| `ThemeProvider`  | `context/ThemeContext.tsx`  | `useTheme()`         | `mode`, `resolvedTheme`, `setMode`, `toggleTheme`     |
+| `ToastProvider`  | `components/Toast/`         | `useToast()`         | Show success/error/info toasts                        |
+| `ModalProvider`  | `components/Modal/`         | `useModal()`         | Open/close confirmation dialogs                       |
+| `AuthProvider`   | `context/AuthContext.tsx`   | `useAuth()`          | `user`, `token`, `login`, `logout`, `isAuthenticated` |
+| `ScrollProvider` | `context/ScrollContext.tsx` | `useScrollContext()` | Scroll-to-top on route change                         |
 
 ### `useLocale()` example
 
@@ -323,7 +320,7 @@ await login({ email: 'admin@mail.com', password: 'password123' });
 import { useTheme } from '@/context/ThemeContext';
 
 const { mode, resolvedTheme, setMode, toggleTheme } = useTheme();
-setMode('dark');   // 'light' | 'dark' | 'system'
+setMode('dark'); // 'light' | 'dark' | 'system'
 ```
 
 ### `useToast()` / `useModal()` example
@@ -338,7 +335,9 @@ toast.success('Saved successfully');
 const modal = useModal();
 modal.confirm({
   title: 'Delete user?',
-  onConfirm: () => { /* ... */ },
+  onConfirm: () => {
+    /* ... */
+  },
 });
 ```
 
@@ -346,7 +345,16 @@ modal.confirm({
 
 ## 7. Routing Architecture
 
-Routes are defined in `src/router/AppRouter.tsx` using `createBrowserRouter`. Feature routes live in `featureRoutes.tsx` (spread via `...featureRoutes`).
+Routes are defined in `src/router/AppRouter.tsx` using `createBrowserRouter`.
+
+| Registry     | File                        | Purpose                                                                |
+| ------------ | --------------------------- | ---------------------------------------------------------------------- |
+| Manual       | `featureRoutes.tsx`         | Built-in routes (dashboard, users, …) — edit by hand                   |
+| Generated    | `featureRoutesGenerate.tsx` | Routes from `make feature` — **do not edit manually**                  |
+| Dev landings | `devLandingRoutes.tsx`      | `/documentation` & `/components` → external publisher links (optional) |
+| Core         | `AppRouter.tsx`             | Index redirect, spread registries, `settings` (last), 404              |
+
+Spread order in `protectedChildren`: `...featureRoutes`, `...featureRoutesGenerate`, `...devLandingRoutes`.
 
 ### Layout structure
 
@@ -367,10 +375,10 @@ Routes are defined in `src/router/AppRouter.tsx` using `createBrowserRouter`. Fe
 
 ### Route guards
 
-| Guard | File | Behavior |
-|-------|------|----------|
-| `ProtectedRoute` | `router/RouteGuards.tsx` | Requires valid token; redirects to `/login` |
-| `PublicRoute` | `router/RouteGuards.tsx` | Guest only; redirects to `/dashboard` if logged in |
+| Guard            | File                     | Behavior                                           |
+| ---------------- | ------------------------ | -------------------------------------------------- |
+| `ProtectedRoute` | `router/RouteGuards.tsx` | Requires valid token; redirects to `/login`        |
+| `PublicRoute`    | `router/RouteGuards.tsx` | Guest only; redirects to `/dashboard` if logged in |
 
 ### Code splitting
 
@@ -428,7 +436,9 @@ react-app/
 │   │
 │   ├── router/
 │   │   ├── AppRouter.tsx      # Core route definitions
-│   │   ├── featureRoutes.tsx  # Feature route registry (make feature)
+│   │   ├── devLandingRoutes.tsx        # Optional publisher landing routes (Tutorial & Components)
+│   │   ├── featureRoutes.tsx           # Manual feature routes
+│   │   ├── featureRoutesGenerate.tsx   # Generated by make feature (do not edit)
 │   │   ├── RouteGuards.tsx    # Protected / Public guards
 │   │   └── AuthShell.tsx      # AuthProvider wrapper
 │   │
@@ -479,7 +489,7 @@ react-app/
 │   ├── layouts/
 │   │   ├── main-layout/       # MainLayout shell
 │   │   ├── header/            # Header, profile menu, theme toggle
-│   │   ├── sidebar/           # Sidebar nav, featureMenuItems, icons, useSidebar hook
+│   │   ├── sidebar/           # Sidebar nav, featureMenuItems(+Generate), devLandingMenuItems, icons, useSidebar
 │   │   └── footer/
 │   │
 │   ├── features/              # Domain modules (one folder per feature)
@@ -517,12 +527,12 @@ Each feature follows the same layered pattern. The **Users** feature that ships 
 
 ### Layer responsibilities
 
-| File | Layer | Does |
-|------|-------|------|
-| `UsersPage.tsx` | Presentation | Page shell, title, composes `<UsersTable />` |
-| `UsersTable.tsx` | Presentation | Columns, DataTable, Pagination |
-| `useUsersPage.ts` | Application | `useState`, `useEffect`, calls usecase |
-| `usersUsecase.ts` | Application | Async operations, delegates to repository |
+| File              | Layer        | Does                                         |
+| ----------------- | ------------ | -------------------------------------------- |
+| `UsersPage.tsx`   | Presentation | Page shell, title, composes `<UsersTable />` |
+| `UsersTable.tsx`  | Presentation | Columns, DataTable, Pagination               |
+| `useUsersPage.ts` | Application  | `useState`, `useEffect`, calls usecase       |
+| `usersUsecase.ts` | Application  | Async operations, delegates to repository    |
 
 ### Example: `UsersPage.tsx`
 
@@ -558,36 +568,36 @@ All shared UI lives in `src/components/`. Built with Tailwind CSS and design tok
 
 ### Component catalog
 
-| Component | Import | Typical use |
-|-----------|--------|-------------|
-| `Button` | `@/components/Button` | Actions, form submit |
-| `Input` | `@/components/Input` | Text fields, validation rules |
-| `ComboBox` | `@/components/ComboBox` | Searchable select |
-| `DataTable` | `@/components/DataTable` | Sortable tables with loading state |
-| `Pagination` | `@/components/Pagination` | Page navigation |
-| `Modal` | `@/components/Modal` | Confirm dialogs (`useModal()`) |
-| `Drawer` | `@/components/Drawer` | Side panels |
-| `Toast` | `@/components/Toast` | Notifications (`useToast()`) |
-| `Badge` | `@/components/Badge` | Status chips |
-| `Card` | `@/components/Card` | Content containers |
-| `Avatar` | `@/components/Avatar` | User avatars, user cards |
-| `Toggle` | `@/components/Toggle` | Boolean switches |
-| `Typography` | `@/components/Typography` | Title, Text, Paragraph |
-| `Chart` | `@/components/Chart` | Bar, Line, Donut, MetricCard |
-| `FileManagement` | `@/components/FileManagement` | Upload / download |
-| `Layout` | `@/components/Layout` | Grid, Flex, Masonry, Splitter |
-| `NavMenu` | `@/components/NavMenu` | Sidebar navigation tree |
-| `SkeletonLoader` | `@/components/SkeletonLoader` | Loading placeholders |
-| `ScrollToTop` | `@/components/ScrollToTop` | Scroll container + anchor |
-| `CodeBlock` | `@/components/CodeBlock` | Syntax-highlighted code |
-| `ErrorBoundary` | `@/components/ErrorBoundary` | Error recovery screen |
+| Component        | Import                        | Typical use                        |
+| ---------------- | ----------------------------- | ---------------------------------- |
+| `Button`         | `@/components/Button`         | Actions, form submit               |
+| `Input`          | `@/components/Input`          | Text fields, validation rules      |
+| `ComboBox`       | `@/components/ComboBox`       | Searchable select                  |
+| `DataTable`      | `@/components/DataTable`      | Sortable tables with loading state |
+| `Pagination`     | `@/components/Pagination`     | Page navigation                    |
+| `Modal`          | `@/components/Modal`          | Confirm dialogs (`useModal()`)     |
+| `Drawer`         | `@/components/Drawer`         | Side panels                        |
+| `Toast`          | `@/components/Toast`          | Notifications (`useToast()`)       |
+| `Badge`          | `@/components/Badge`          | Status chips                       |
+| `Card`           | `@/components/Card`           | Content containers                 |
+| `Avatar`         | `@/components/Avatar`         | User avatars, user cards           |
+| `Toggle`         | `@/components/Toggle`         | Boolean switches                   |
+| `Typography`     | `@/components/Typography`     | Title, Text, Paragraph             |
+| `Chart`          | `@/components/Chart`          | Bar, Line, Donut, MetricCard       |
+| `FileManagement` | `@/components/FileManagement` | Upload / download                  |
+| `Layout`         | `@/components/Layout`         | Grid, Flex, Masonry, Splitter      |
+| `NavMenu`        | `@/components/NavMenu`        | Sidebar navigation tree            |
+| `SkeletonLoader` | `@/components/SkeletonLoader` | Loading placeholders               |
+| `ScrollToTop`    | `@/components/ScrollToTop`    | Scroll container + anchor          |
+| `CodeBlock`      | `@/components/CodeBlock`      | Syntax-highlighted code            |
+| `ErrorBoundary`  | `@/components/ErrorBoundary`  | Error recovery screen              |
 
 ### Where to browse components
 
-| When | URL |
-|------|-----|
-| **Development** (`pnpm run dev`) | Sidebar **Components** (DEV badge) → landing page with link to the catalog |
-| **Component catalog (live)** | [https://template.teristimewa.com/react-dashboard-template-01/components](https://template.teristimewa.com/react-dashboard-template-01/components) |
+| When                             | URL                                                                                                                                                |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Development** (`pnpm run dev`) | Sidebar **Components** (DEV badge) → landing page with link to the catalog                                                                         |
+| **Component catalog (live)**     | [https://template.teristimewa.com/react-dashboard-template-01/components](https://template.teristimewa.com/react-dashboard-template-01/components) |
 
 The live catalog shows props, state matrix (default / loading / error / disabled), and copy-paste code samples for every shared component.
 
@@ -598,7 +608,7 @@ import { Button } from '@/components/Button';
 
 <Button variant="primary" size="md" isLoading={saving} onClick={handleSave}>
   Save
-</Button>
+</Button>;
 ```
 
 Variants: `primary` · `secondary` · `outline` · `ghost` · `danger`  
@@ -622,7 +632,7 @@ import { Pagination } from '@/components/Pagination';
       onPageSizeChange={onPageSizeChange}
     />
   </DataTableGroup.Footer>
-</DataTableGroup>
+</DataTableGroup>;
 ```
 
 ### Component locale rule
@@ -641,12 +651,12 @@ Hooks are the **Application layer** bridge between UI and business logic.
 
 ### Types of hooks in this project
 
-| Category | Location | Examples |
-|----------|----------|----------|
-| Context hooks | `context/`, `components/Toast`, `components/Modal` | `useAuth`, `useLocale`, `useTheme`, `useToast`, `useModal` |
-| Feature hooks | `features/<name>/hooks/` | `useUsersPage`, `useProductsPage` |
-| Layout hooks | `layouts/**/hooks/` | `useMainLayout`, `useSidebar` |
-| Component hooks | `components/**/hooks/` | `useFileDownload` |
+| Category        | Location                                           | Examples                                                   |
+| --------------- | -------------------------------------------------- | ---------------------------------------------------------- |
+| Context hooks   | `context/`, `components/Toast`, `components/Modal` | `useAuth`, `useLocale`, `useTheme`, `useToast`, `useModal` |
+| Feature hooks   | `features/<name>/hooks/`                           | `useUsersPage`, `useProductsPage`                          |
+| Layout hooks    | `layouts/**/hooks/`                                | `useMainLayout`, `useSidebar`                              |
+| Component hooks | `components/**/hooks/`                             | `useFileDownload`                                          |
 
 ### Feature hook pattern: `useUsersPage`
 
@@ -671,7 +681,9 @@ export function useUsersPage() {
     }
   }, [page, pageSize]);
 
-  useEffect(() => { fetchUsers(); }, [fetchUsers]);
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   return { users, isLoading, page, setPage, pageSize, totalPages, totalItems, onPageSizeChange };
 }
@@ -689,19 +701,22 @@ export function useUsersPage() {
 The Users hook adds local state updates after delete/edit without re-fetching:
 
 ```tsx
-const deleteUser = useCallback((userId: string) => {
-  setUsers((prev) => prev.filter((user) => user.id !== userId));
-  // ... adjust pagination totals
-}, [pageSize]);
+const deleteUser = useCallback(
+  (userId: string) => {
+    setUsers((prev) => prev.filter((user) => user.id !== userId));
+    // ... adjust pagination totals
+  },
+  [pageSize],
+);
 ```
 
 ### Hook rules (do / don't)
 
-| Do | Don't |
-|----|-------|
-| Call usecase from feature hooks | Call `axios` or `fetch` in hooks |
-| Keep pages thin, delegate to hooks | Put business rules in components |
-| Use context hooks for global state | Duplicate auth/locale logic per feature |
+| Do                                   | Don't                                                        |
+| ------------------------------------ | ------------------------------------------------------------ |
+| Call usecase from feature hooks      | Call `axios` or `fetch` in hooks                             |
+| Keep pages thin, delegate to hooks   | Put business rules in components                             |
+| Use context hooks for global state   | Duplicate auth/locale logic per feature                      |
 | Memoize callbacks passed to children | Create new inline functions on every render for heavy tables |
 
 ---
@@ -720,11 +735,11 @@ Feature usecases call `apiRepository` (or `apiSource` + mappers when wiring a re
 
 ### Models: anti-corruption layer
 
-| File | Format | Example field |
-|------|--------|---------------|
-| `model.response.ts` | snake_case (API) | `full_name`, `is_active` |
-| `model.type.ts` | camelCase (UI) | `fullName`, `isActive` |
-| `model.map.ts` | Transform functions | `toUser()`, `toPaginatedUsers()` |
+| File                | Format              | Example field                    |
+| ------------------- | ------------------- | -------------------------------- |
+| `model.response.ts` | snake_case (API)    | `full_name`, `is_active`         |
+| `model.type.ts`     | camelCase (UI)      | `fullName`, `isActive`           |
+| `model.map.ts`      | Transform functions | `toUser()`, `toPaginatedUsers()` |
 
 ```tsx
 // model.response.ts
@@ -741,7 +756,7 @@ export interface User {
 
 // model.map.ts
 export function toUser(api: ApiUserResponse): User {
-  return { fullName: api.full_name, isActive: api.is_active, /* ... */ };
+  return { fullName: api.full_name, isActive: api.is_active /* ... */ };
 }
 ```
 
@@ -751,7 +766,7 @@ export function toUser(api: ApiUserResponse): User {
 
 ```tsx
 export const backendService = axios.create({
-  baseURL: appConfig.apiBaseUrl,  // VITE_API_BASE_URL ?? '/api'
+  baseURL: appConfig.apiBaseUrl, // VITE_API_BASE_URL ?? '/api'
   timeout: 30000,
 });
 
@@ -786,11 +801,11 @@ localSource.clearAuth();
 
 ### Current state: mock vs real API
 
-| Feature | Current data source |
-|---------|---------------------|
-| Auth (login/register) | Mock in `apiRepository.ts` (~800ms delay) |
-| Users list | Mock in `apiRepository.ts` |
-| Dashboard | Mock in `dashboardUsecase.ts` |
+| Feature                   | Current data source                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------------------- |
+| Auth (login/register)     | Mock in `apiRepository.ts` (~800ms delay)                                                       |
+| Users list                | Mock in `apiRepository.ts`                                                                      |
+| Dashboard                 | Mock in `dashboardUsecase.ts`                                                                   |
 | New features you scaffold | Mock inline in `<name>Usecase.ts` (see [Section 15](#15-create-a-new-page--manual-walkthrough)) |
 
 `apiSource.ts` already defines real endpoint shapes for when you connect a backend.
@@ -833,9 +848,9 @@ For a **new page you create from scratch** (e.g. Inventory from the Tutorial), a
 
 ### Locales
 
-| File | Language |
-|------|----------|
-| `src/locales/en.json` | English |
+| File                  | Language         |
+| --------------------- | ---------------- |
+| `src/locales/en.json` | English          |
 | `src/locales/id.json` | Bahasa Indonesia |
 
 Both files must share the **same key structure**. Parameter names in `{{param}}` must match across locales; word order can differ.
@@ -866,20 +881,20 @@ make feature name=products label="Products" label-id="Produk"
 
 ### What `make feature` generates
 
-| Scope | Files created | Mock data |
-|-------|---------------|-----------|
-| `full` *(default)* | page, table, hook, usecase | in `usecase/*.ts` |
-| `hook` | page, table, hook | inline in hook |
-| `page` | page only | none |
+| Scope              | Files created              | Mock data         |
+| ------------------ | -------------------------- | ----------------- |
+| `full` _(default)_ | page, table, hook, usecase | in `usecase/*.ts` |
+| `hook`             | page, table, hook          | inline in hook    |
+| `page`             | page only                  | none              |
 
 ### Parameters
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `name` | Yes | Feature key → folder `src/features/products/`, route `/products`, locale `nav.products` |
-| `label` | Recommended | English menu label |
-| `label-id` | Recommended | Indonesian menu label |
-| `scope` | No | `full` · `hook` · `page` |
+| Parameter  | Required    | Description                                                                             |
+| ---------- | ----------- | --------------------------------------------------------------------------------------- |
+| `name`     | Yes         | Feature key → folder `src/features/products/`, route `/products`, locale `nav.products` |
+| `label`    | Recommended | English menu label                                                                      |
+| `label-id` | Recommended | Indonesian menu label                                                                   |
+| `scope`    | No          | `full` · `hook` · `page`                                                                |
 
 ### Examples
 
@@ -897,13 +912,16 @@ make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 ### Files touched automatically
 
 1. `src/features/<name>/pages/<Name>Page.tsx`
-2. `src/features/<name>/components/<Name>Table.tsx` *(full / hook)*
-3. `src/features/<name>/hooks/use<Name>Page.ts` *(full / hook)*
-4. `src/features/<name>/usecase/<name>Usecase.ts` *(full only)*
-5. `src/router/featureRoutes.tsx`, lazy route (spread into `AppRouter.tsx`)
-6. `src/layouts/sidebar/featureMenuItems.tsx`, menu item (merged via `buildFeatureMenuItems()`)
-7. `src/layouts/sidebar/components/SidebarIcons.tsx`, icon component *(optional custom icon)*
-8. `src/locales/en.json` + `id.json`, `nav.*` and `<name>.subtitle`
+2. `src/features/<name>/components/<Name>Table.tsx` _(full / hook)_
+3. `src/features/<name>/hooks/use<Name>Page.ts` _(full / hook)_
+4. `src/features/<name>/usecase/<name>Usecase.ts` _(full only)_
+5. `src/router/featureRoutesGenerate.tsx`, lazy route (spread into `AppRouter.tsx` via `...featureRoutesGenerate`)
+6. `src/layouts/sidebar/featureMenuItemsGenerate.tsx`, menu item (merged via `buildFeatureMenuItemsGenerate()`)
+7. `src/locales/en.json` + `id.json`, `nav.*` and `<name>.subtitle`
+
+Built-in routes and menu items stay in `featureRoutes.tsx` and `featureMenuItems.tsx`. The `settings` route remains in `AppRouter.tsx` (last before 404).
+
+Optional custom icon: add in `SidebarIcons.tsx`, then replace `<FeatureMenuIcon />` in `featureMenuItemsGenerate.tsx` for your feature key.
 
 After scaffolding, run `pnpm run dev` and open `/<name>`.
 
@@ -1001,13 +1019,22 @@ export function useProductsPage() {
     }
   }, [page, pageSize]);
 
-  useEffect(() => { fetchItems(); }, [fetchItems]);
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
 
   return {
-    items, isLoading, page,
+    items,
+    isLoading,
+    page,
     setPage: (p: number) => setPage(p),
-    pageSize, totalPages, totalItems,
-    onPageSizeChange: (size: number) => { setPageSize(size); setPage(1); },
+    pageSize,
+    totalPages,
+    totalItems,
+    onPageSizeChange: (size: number) => {
+      setPageSize(size);
+      setPage(1);
+    },
   };
 }
 ```
@@ -1100,7 +1127,9 @@ export function ProductsTable() {
 Append to `src/router/featureRoutes.tsx` (spread into `protectedChildren` via `...featureRoutes` in `AppRouter.tsx`):
 
 ```tsx
-const ProductsPage = lazy(() => import('@/features/products/pages/ProductsPage'));
+import { lazyWithRetry } from '@/router/lazyWithRetry';
+
+const ProductsPage = lazyWithRetry(() => import('@/features/products/pages/ProductsPage'));
 
 // inside featureRoutes array:
 {
@@ -1135,8 +1164,12 @@ import { ProductsIcon } from '@/layouts/sidebar/components/SidebarIcons';
 export function ProductsIcon() {
   return (
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+      />
     </svg>
   );
 }
@@ -1248,12 +1281,12 @@ make generate name=my-new-app
 make generate name=my-new-app out=~/projects/my-new-app
 ```
 
-| What happens | Detail |
-|--------------|--------|
-| Output | New folder with a full copy of this template |
-| `package.json` | `name` updated to your app name |
-| Git | `git init` in the output folder |
-| Config | `app.config.ts` title/description copied as-is, customize after generate |
+| What happens   | Detail                                                                   |
+| -------------- | ------------------------------------------------------------------------ |
+| Output         | New folder with a full copy of this template                             |
+| `package.json` | `name` updated to your app name                                          |
+| Git            | `git init` in the output folder                                          |
+| Config         | `app.config.ts` title/description copied as-is, customize after generate |
 
 **FileDownload demo files:** `public/samples/` (`report.pdf`, `data.csv`, `readme.txt`) is included so mock download works out of the box.
 
@@ -1263,11 +1296,11 @@ After generate, `cd` into the new folder, run `pnpm install`, then `make dev`.
 
 ## 17. Deployment
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `VITE_API_BASE_URL` | `/api` | Backend API base URL |
-| `VITE_BASE_PATH` | `/` | Base path when served under a subpath (e.g. `/my-app/`) |
-| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Show Tutorial & Components landing routes in dev |
+| Variable                 | Default      | Purpose                                                                                                                                             |
+| ------------------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL`      | `/api`       | Backend API base URL                                                                                                                                |
+| `VITE_BASE_PATH`         | `/`          | Base path when served under a subpath (e.g. `/my-app/`)                                                                                             |
+| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Show Tutorial & Components landing routes in dev. Set `false` to hide, or remove `devLandingRoutes` / `devLandingMenuItems` for a permanent cleanup |
 
 **Subpath hosting:** Set `VITE_BASE_PATH` to match your hosting path before `pnpm run build`. The build output in `dist/` must be served with SPA fallback so deep links (e.g. `/dashboard`) resolve to `index.html`. Configure fallback in your web server (nginx, Apache, S3 + CloudFront, etc.) according to your host's documentation.
 
@@ -1282,16 +1315,16 @@ pnpm run preview  # optional local check of dist/
 
 ## 18. Makefile Reference
 
-| Command | Description |
-|---------|-------------|
-| `make dev` | Start Vite dev server |
-| `make format` | Prettier + ESLint auto-fix |
-| `make lint` | ESLint + TypeScript check |
-| `make build` | Format → type-check → production build |
-| `make preview` | Serve `dist/` locally |
-| `make clean` | Remove `dist/`, `.turbo`, `node_modules/.vite` |
-| `make feature name=X label="Name" label-id="Nama"` | Scaffold menu + page |
-| `make generate name=my-app` | Scaffold micro-app outside this repo |
+| Command                                            | Description                                    |
+| -------------------------------------------------- | ---------------------------------------------- |
+| `make dev`                                         | Start Vite dev server                          |
+| `make format`                                      | Prettier + ESLint auto-fix                     |
+| `make lint`                                        | ESLint + TypeScript check                      |
+| `make build`                                       | Format → type-check → production build         |
+| `make preview`                                     | Serve `dist/` locally                          |
+| `make clean`                                       | Remove `dist/`, `.turbo`, `node_modules/.vite` |
+| `make feature name=X label="Name" label-id="Nama"` | Scaffold menu + page                           |
+| `make generate name=my-app`                        | Scaffold micro-app outside this repo           |
 
 ---
 

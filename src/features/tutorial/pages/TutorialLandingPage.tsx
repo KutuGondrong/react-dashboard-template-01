@@ -3,6 +3,9 @@ import { Typography } from '@/components/Typography';
 import { TutorialDevBanner } from '@/features/tutorial/components/TutorialDevBanner';
 import { useTutorialLocale } from '@/features/tutorial/hooks/useTutorialLocale';
 
+const TUTORIAL_LINK_CLASS =
+  'font-medium text-primary-600 underline-offset-2 hover:underline dark:text-primary-400';
+
 export default function TutorialLandingPage() {
   const { t } = useTutorialLocale();
   const docsUrl = externalLinksConfig.tutorialUrl;
@@ -25,7 +28,15 @@ export default function TutorialLandingPage() {
           {t('landingHint')}
         </Typography.Text>
         <Typography.Text color="muted" className="block text-xs">
-          {t('landingRepoNote', { url: repoUrl })}
+          {t('landingRepoNote')}{' '}
+          <a
+            href={repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={TUTORIAL_LINK_CLASS}
+          >
+            {repoUrl}
+          </a>
         </Typography.Text>
         <a
           href={docsUrl}

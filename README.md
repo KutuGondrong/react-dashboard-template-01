@@ -138,7 +138,7 @@ API responses are mapped via `model.map.ts` (snake_case JSON → camelCase UI ty
 src/
 ├── config/           # App config, color tokens, base path
 ├── context/          # Auth, Locale, Theme, Scroll
-├── router/           # Routes and guards
+├── router/           # AppRouter, featureRoutes, devLandingRoutes (optional dev menus)
 ├── locales/          # en.json, id.json
 ├── models/           # API response, UI types, mappers
 ├── datasource/       # network (Axios) + local (localStorage)
@@ -156,16 +156,16 @@ src/
 
 ### 5. Development Commands
 
-| Command                                            | Description                                    |
-| -------------------------------------------------- | ---------------------------------------------- |
-| `pnpm run dev` / `make dev`                        | Start Vite dev server (port 5173)              |
-| `pnpm run lint` / `make lint`                      | ESLint + TypeScript check                      |
-| `pnpm run format` / `make format`                  | Prettier + ESLint auto-fix                     |
-| `pnpm run build` / `make build`                    | Format → type-check → production build         |
-| `pnpm run preview` / `make preview`                | Serve `dist/` locally                          |
-| `make clean`                                       | Remove `dist/`, `.turbo`, `node_modules/.vite` |
-| `make generate name=my-app`                        | Scaffold micro-app outside this repo           |
-| `make feature name=X label="Name" label-id="Nama"` | Scaffold sidebar menu + page                   |
+| Command                                            | Description                                                                 |
+| -------------------------------------------------- | --------------------------------------------------------------------------- |
+| `pnpm run dev` / `make dev`                        | Start Vite dev server (port 5173)                                           |
+| `pnpm run lint` / `make lint`                      | ESLint + TypeScript check                                                   |
+| `pnpm run format` / `make format`                  | Prettier + ESLint auto-fix                                                  |
+| `pnpm run build` / `make build`                    | Format → type-check → production build                                      |
+| `pnpm run preview` / `make preview`                | Serve `dist/` locally                                                       |
+| `make clean`                                       | Remove `dist/`, `.turbo`, `node_modules/.vite`                              |
+| `make generate name=my-app`                        | Scaffold micro-app outside this repo                                        |
+| `make feature name=X label="Name" label-id="Nama"` | Scaffold page; updates `featureRoutesGenerate` + `featureMenuItemsGenerate` |
 
 **Pre-commit checklist:**
 
@@ -179,18 +179,21 @@ pnpm run build   # recommended
 
 ### 6. Routing & Auth
 
-| Path         | Layout     | Guard     | Page               |
-| ------------ | ---------- | --------- | ------------------ |
-| `/dashboard` | MainLayout | Protected | DashboardPage      |
-| `/users`     | MainLayout | Protected | UsersPage          |
-| `/settings`  | MainLayout | Protected | SettingsPage       |
-| `/login`     | AuthLayout | Public    | LoginPage          |
-| `/register`  | AuthLayout | Public    | RegisterPage       |
-| `*`          | MainLayout | Protected | NotFoundPage (404) |
+| Path               | Layout     | Guard     | Page                        |
+| ------------------ | ---------- | --------- | --------------------------- |
+| `/dashboard`       | MainLayout | Protected | DashboardPage               |
+| `/users`           | MainLayout | Protected | UsersPage                   |
+| `/settings`        | MainLayout | Protected | SettingsPage                |
+| `/documentation/*` | MainLayout | Protected | Documentation landing (dev) |
+| `/components/*`    | MainLayout | Protected | Components landing (dev)    |
+| `/login`           | AuthLayout | Public    | LoginPage                   |
+| `/register`        | AuthLayout | Public    | RegisterPage                |
+| `*`                | MainLayout | Protected | NotFoundPage (404)          |
 
 - **ProtectedRoute**: requires authentication; redirects to `/login`
 - **PublicRoute**: guest only; redirects to `/dashboard` if logged in
 - All pages use `React.lazy()` + `Suspense` for code splitting
+- Optional dev routes (`/documentation`, `/components`) are defined in `devLandingRoutes.tsx`; remove the spread from `AppRouter.tsx` to drop them permanently
 
 ---
 
@@ -238,17 +241,17 @@ Shared components in `src/components/`, built with Tailwind and design tokens:
 
 Button · Input · ComboBox · DataTable · Pagination · Modal · Drawer · Toast · Badge · Card · Avatar · Toggle · Typography · Chart · FileManagement · Layout · NavMenu · SkeletonLoader · ErrorBoundary · ScrollToTop · CodeBlock
 
-Run `pnpm run dev` and open **Components** (DEV badge) for the in-app catalog and playground.
+During `pnpm run dev`, **Documentation** and **Components** _(DEV badge)_ open landing pages with links to the full published docs and component catalog (`external-links.json`). Set `VITE_SHOW_DEV_FEATURES=false` to hide those menus.
 
 ---
 
 ### 10. Deployment
 
-| Variable                 | Default      | Purpose                                               |
-| ------------------------ | ------------ | ----------------------------------------------------- |
-| `VITE_API_BASE_URL`      | `/api`       | Backend API base URL                                  |
-| `VITE_BASE_PATH`         | `/`          | Subpath deploy (e.g. `/react-dashboard-template-01/`) |
-| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Show Tutorial & Storybook                             |
+| Variable                 | Default      | Purpose                                                                   |
+| ------------------------ | ------------ | ------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL`      | `/api`       | Backend API base URL                                                      |
+| `VITE_BASE_PATH`         | `/`          | Subpath deploy (e.g. `/react-dashboard-template-01/`)                     |
+| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Show Documentation & Components landing menus in dev. Set `false` to hide |
 
 Set `previewUrl` in `src/config/external-links.json` (or `VITE_OG_SITE_URL` in `.env.production`) to your deployed app URL so link previews use `public/og-image.jpg`.
 
@@ -270,6 +273,8 @@ For deeper deployment notes, see [DOCUMENTATION.md](./DOCUMENTATION.md) and [DOC
 ```bash
 make feature name=reports label="Reports" label-id="Laporan"
 ```
+
+`make feature` writes route + menu entries to **`featureRoutesGenerate.tsx`** and **`featureMenuItemsGenerate.tsx`** (do not edit manually). Built-in routes and menu items live in **`featureRoutes.tsx`** and **`featureMenuItems.tsx`**.
 
 **Scaffold a micro-app:**
 
@@ -299,4 +304,3 @@ make generate name=my-new-app out=~/projects/my-new-app
 - [README.id.md](./README.id.md): full documentation in Bahasa Indonesia
 - [DOCUMENTATION.md](./DOCUMENTATION.md): deep developer documentation (English)
 - [DOCUMENTATION.id.md](./DOCUMENTATION.id.md): deep developer documentation (Bahasa Indonesia)
-- In-app **Tutorial** (DEV badge) during `pnpm run dev`, links to published docs

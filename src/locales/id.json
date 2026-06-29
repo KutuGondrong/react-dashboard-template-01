@@ -46,7 +46,7 @@
     "notFound": {
       "title": "Halaman tidak ditemukan",
       "description": "Halaman yang Anda cari tidak ada atau mungkin sudah dipindahkan. Gunakan menu atau kembali ke dasbor.",
-      "descriptionDev": "Petunjuk dev: jika Anda menambah item sidebar secara manual, daftarkan route di featureRoutes.tsx.",
+      "descriptionDev": "Petunjuk dev: jika Anda menambah item sidebar secara manual, daftarkan route di featureRoutes.tsx dan menu di featureMenuItems.tsx.",
       "backToDashboard": "Kembali ke dasbor"
     }
   },

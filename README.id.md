@@ -405,7 +405,7 @@ Implikasi praktis:
 content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'];
 ```
 
-**Dark mode**: custom variant untuk isolasi preview tema di Storybook:
+**Dark mode**: custom variant untuk preview komponen dengan tema terisolasi:
 
 ```js
 darkMode: ['variant', '.dark &:not(.theme-preview-light *)'];
@@ -549,7 +549,7 @@ src/
 │   ├── color.tokens.ts            # ★ TOKEN WARNA: primary, accent, semantic
 │   ├── basePath.ts                # routerBasename + assetUrl()
 │   ├── externalLinks.ts           # Type-safe accessor external-links.json
-│   ├── external-links.json        # URL template, tutorial, components
+│   ├── external-links.json        # Published documentation & component catalog URLs
 │   └── devFeatures.ts             # Flag VITE_SHOW_DEV_FEATURES
 │
 ├── context/
@@ -559,8 +559,10 @@ src/
 │   └── ScrollContext.tsx          # Scroll container ref untuk ScrollToTop
 │
 ├── router/
-│   ├── AppRouter.tsx              # createBrowserRouter: route inti + spread featureRoutes
-│   ├── featureRoutes.tsx          # registry route feature (make feature)
+│   ├── AppRouter.tsx              # createBrowserRouter: core routes + spread registries
+│   ├── devLandingRoutes.tsx       # optional dev landing routes (Documentation, Components)
+│   ├── featureRoutes.tsx          # manual feature routes (dashboard, users, …)
+│   ├── featureRoutesGenerate.tsx  # generated routes (make feature — do not edit)
 │   ├── RouteGuards.tsx            # ProtectedRoute, PublicRoute
 │   └── AuthShell.tsx              # AuthProvider wrapper
 │
@@ -627,7 +629,9 @@ src/
 │   │   ├── components/            # Header, ProfileMenu, ThemeToggle, LocaleToggle
 │   │   └── hooks/
 │   ├── sidebar/
-│   │   ├── featureMenuItems.tsx   # registry menu feature (make feature)
+│   │   ├── featureMenuItems.tsx           # manual sidebar items (dashboard, users, …)
+│   │   ├── featureMenuItemsGenerate.tsx   # generated menu (make feature — do not edit)
+│   │   ├── devLandingMenuItems.tsx        # optional DEV menu items (Documentation, Components)
 │   │   ├── components/            # Sidebar, MobileNavDrawer, SidebarIcons
 │   │   └── hooks/useSidebar.ts    # menuItems dari config + buildFeatureMenuItems()
 │   └── footer/
@@ -1079,17 +1083,17 @@ resolve: { alias: { '@': path.resolve(__dirname, './src') } }
 
 #### 6.1 Peta Route Lengkap
 
-| Path            | Layout     | Guard     | Halaman                  | Lazy |
-| --------------- | ---------- | --------- | ------------------------ | ---- |
-| `/`             | MainLayout | Protected | Redirect → `/dashboard`  | -    |
-| `/dashboard`    | MainLayout | Protected | DashboardPage            | ✅   |
-| `/users`        | MainLayout | Protected | UsersPage                | ✅   |
-| `/settings`     | MainLayout | Protected | SettingsPage             | ✅   |
-| `/login`        | AuthLayout | Public    | LoginPage                | ✅   |
-| `/register`     | AuthLayout | Public    | RegisterPage             | ✅   |
-| `/tutorial/*`   | MainLayout | Protected | Tutorial landing (dev)   | ✅   |
-| `/components/*` | MainLayout | Protected | Components landing (dev) | ✅   |
-| `*`             | MainLayout | Protected | NotFoundPage (404)       | ✅   |
+| Path               | Layout     | Guard     | Halaman                     | Lazy |
+| ------------------ | ---------- | --------- | --------------------------- | ---- |
+| `/`                | MainLayout | Protected | Redirect → `/dashboard`     | -    |
+| `/dashboard`       | MainLayout | Protected | DashboardPage               | ✅   |
+| `/users`           | MainLayout | Protected | UsersPage                   | ✅   |
+| `/settings`        | MainLayout | Protected | SettingsPage                | ✅   |
+| `/login`           | AuthLayout | Public    | LoginPage                   | ✅   |
+| `/register`        | AuthLayout | Public    | RegisterPage                | ✅   |
+| `/documentation/*` | MainLayout | Protected | Documentation landing (dev) | ✅   |
+| `/components/*`    | MainLayout | Protected | Components landing (dev)    | ✅   |
+| `*`                | MainLayout | Protected | NotFoundPage (404)          | ✅   |
 
 #### 6.2 Route Guards: Implementasi
 
@@ -1321,17 +1325,17 @@ Semua komponen di `src/components/` dibangun dengan Tailwind CSS dan token warna
 | **AnimatedBackground** | `AnimatedBackground/` | Background animasi untuk layout                                                       |
 | **DevFeatureBanner**   | `DevFeatureBanner/`   | Banner mode DEV untuk fitur pengembangan                                              |
 
----
+Saat `pnpm run dev`, menu **Dokumentasi** dan **Components** _(badge DEV)_ membuka landing page dengan tautan ke dokumentasi dan katalog komponen yang dipublish (`external-links.json`). Set `VITE_SHOW_DEV_FEATURES=false` untuk menyembunyikan menu tersebut.
 
 ### 10. Deployment & Konfigurasi Environment
 
 #### 10.1 Environment Variables
 
-| Variable                 | File               | Default | Fungsi                                                |
-| ------------------------ | ------------------ | ------- | ----------------------------------------------------- |
-| `VITE_API_BASE_URL`      | `.env`             | `/api`  | Base URL backend API                                  |
-| `VITE_BASE_PATH`         | `.env.production`  | `/`     | Subpath deploy (mis. `/react-dashboard-template-01/`) |
-| `VITE_SHOW_DEV_FEATURES` | `.env.development` | `true`  | Tampilkan Tutorial & Storybook                        |
+| Variable                 | File               | Default | Fungsi                                                                                  |
+| ------------------------ | ------------------ | ------- | --------------------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL`      | `.env`             | `/api`  | Base URL backend API                                                                    |
+| `VITE_BASE_PATH`         | `.env.production`  | `/`     | Subpath deploy (mis. `/react-dashboard-template-01/`)                                   |
+| `VITE_SHOW_DEV_FEATURES` | `.env.development` | `true`  | Tampilkan menu landing Dokumentasi & Components saat dev. Set `false` untuk sembunyikan |
 
 Set `previewUrl` di `src/config/external-links.json` (atau `VITE_OG_SITE_URL` di `.env.production`) ke URL deploy agar preview link memakai `public/og-image.jpg`.
 
@@ -1395,13 +1399,19 @@ make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 | `hook` | page + table + hook           | inline di hook |
 | `page` | page saja                     | tidak ada      |
 
-Yang di-generate otomatis:
+Yang di-generate otomatis (`make feature` — jangan edit manual):
 
 - Folder `src/features/<name>/`
-- Route di `src/router/featureRoutes.tsx`
-- Menu item di `src/layouts/sidebar/featureMenuItems.tsx`
+- Route di `src/router/featureRoutesGenerate.tsx`
+- Menu item di `src/layouts/sidebar/featureMenuItemsGenerate.tsx`
 - Locale keys di `en.json` + `id.json`
-- Icon sidebar
+- Ikon sidebar default (`FeatureMenuIcon` di file generate)
+
+Registry manual (edit sendiri jika wiring tanpa generator):
+
+- Route bawaan di `src/router/featureRoutes.tsx` (dashboard, users, …)
+- Menu bawaan di `src/layouts/sidebar/featureMenuItems.tsx`
+- Route `settings` tetap di `AppRouter.tsx` (paling akhir)
 
 #### 11.3 Scaffold Micro-App
 
@@ -1477,3 +1487,9 @@ node scripts/generate-app.mjs --name=my-app
 - Clear localStorage: DevTools → Application → Local Storage → Clear
 
 ---
+
+### Bacaan Lanjutan
+
+- [README.md](./README.md): dokumentasi ringkas (English)
+- [DOCUMENTATION.md](./DOCUMENTATION.md): dokumentasi developer mendalam (English)
+- [DOCUMENTATION.id.md](./DOCUMENTATION.id.md): dokumentasi developer mendalam (Bahasa Indonesia)

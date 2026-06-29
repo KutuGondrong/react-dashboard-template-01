@@ -6,8 +6,10 @@ import { fileURLToPath } from 'url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const VALID_SCOPES = ['full', 'hook', 'page'];
-const ROUTES_FILE = 'src/router/featureRoutes.tsx';
-const MENU_FILE = 'src/layouts/sidebar/featureMenuItems.tsx';
+const ROUTES_FILE = 'src/router/featureRoutesGenerate.tsx';
+const MANUAL_ROUTES_FILE = 'src/router/featureRoutes.tsx';
+const MENU_FILE = 'src/layouts/sidebar/featureMenuItemsGenerate.tsx';
+const MANUAL_MENU_FILE = 'src/layouts/sidebar/featureMenuItems.tsx';
 const GENERATED_FEATURE_ICON_PATH =
   'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z';
 
@@ -130,15 +132,23 @@ function detectExistingFeature(meta) {
   const hasFolder = fs.existsSync(featureRoot);
 
   const routesGen = readRootFile(ROUTES_FILE);
+  const routesManual = readRootFile(MANUAL_ROUTES_FILE);
   const hasRoute = Boolean(
-    routesGen &&
-      (routesGen.includes(`path: '${meta.camel}'`) || routesGen.includes(`features/${meta.camel}/`)),
+    (routesGen &&
+      (routesGen.includes(`path: '${meta.camel}'`) || routesGen.includes(`features/${meta.camel}/`))) ||
+      (routesManual &&
+        (routesManual.includes(`path: '${meta.camel}'`) ||
+          routesManual.includes(`features/${meta.camel}/`))),
   );
 
   const menuGen = readRootFile(MENU_FILE);
+  const menuManual = readRootFile(MANUAL_MENU_FILE);
   const hasSidebar = Boolean(
-    menuGen &&
-      (menuGen.includes(`key: '${meta.camel}'`) || menuGen.includes(`path: '/${meta.camel}'`)),
+    (menuGen &&
+      (menuGen.includes(`key: '${meta.camel}'`) || menuGen.includes(`path: '/${meta.camel}'`))) ||
+      (menuManual &&
+        (menuManual.includes(`key: '${meta.camel}'`) ||
+          menuManual.includes(`path: '/${meta.camel}'`))),
   );
 
   if (hasFolder) {
@@ -259,13 +269,14 @@ function ensureFeatureMenuIcon(content) {
   }
 
   return content.replace(
-    'export function buildFeatureMenuItems',
-    `${FEATURE_MENU_ICON_BLOCK}\nexport function buildFeatureMenuItems`,
+    'export function buildFeatureMenuItemsGenerate',
+    `${FEATURE_MENU_ICON_BLOCK}\nexport function buildFeatureMenuItemsGenerate`,
   );
 }
 
 const ROUTES_FILE_HEADER = `/**
- * Feature routes — edit manually or append via make feature.
+ * Generated feature routes — DO NOT EDIT MANUALLY.
+ * Updated automatically by \`make feature\`.
  * Spread into protectedChildren in AppRouter.tsx.
  */
 import { Suspense, type ReactNode } from 'react';
@@ -296,7 +307,30 @@ export function appendArrayEntry(inner, entry) {
   return `${leadingWhitespace}${withoutTrailingComma},\n${entry},\n`;
 }
 
+function ensureRoutesGenerateFile() {
+  const absolute = path.join(ROOT, ROUTES_FILE);
+  if (fs.existsSync(absolute)) return;
+
+  const templatePath = path.join(ROOT, 'scripts/template/featureRoutesGenerate.tsx');
+  if (fs.existsSync(templatePath)) {
+    fs.copyFileSync(templatePath, absolute);
+    return;
+  }
+
+  fs.writeFileSync(
+    absolute,
+    `/**
+ * Generated feature routes — DO NOT EDIT MANUALLY.
+ * Updated automatically by \`make feature\`.
+ * Spread into protectedChildren in AppRouter.tsx.
+ */
+export const featureRoutesGenerate = [];
+`,
+  );
+}
+
 function appendGeneratedRoute(meta) {
+  ensureRoutesGenerateFile();
   patchFile(ROUTES_FILE, (content) => {
     if (content.includes(`features/${meta.camel}/`)) {
       return content;
@@ -305,7 +339,10 @@ function appendGeneratedRoute(meta) {
     let updated = ensureRoutesFileHeader(content);
     const lazyDecl = `const ${meta.pascal}Page = lazyWithRetry(() => import('@/features/${meta.camel}/pages/${meta.pascal}Page'));\n\n`;
     if (!updated.includes(`const ${meta.pascal}Page = lazyWithRetry`)) {
-      updated = updated.replace('export const featureRoutes', `${lazyDecl}export const featureRoutes`);
+      updated = updated.replace(
+        'export const featureRoutesGenerate',
+        `${lazyDecl}export const featureRoutesGenerate`,
+      );
     }
 
     const routeEntry = `  {
@@ -317,21 +354,48 @@ function appendGeneratedRoute(meta) {
     ),
   }`;
 
-    if (updated.includes('export const featureRoutes = [];')) {
+    if (updated.includes('export const featureRoutesGenerate = [];')) {
       return updated.replace(
-        'export const featureRoutes = [];',
-        `export const featureRoutes = [\n${routeEntry},\n];`,
+        'export const featureRoutesGenerate = [];',
+        `export const featureRoutesGenerate = [\n${routeEntry},\n];`,
       );
     }
 
     return updated.replace(
-      /(export const featureRoutes = \[)([\s\S]*?)(\n\];)/,
+      /(export const featureRoutesGenerate = \[)([\s\S]*?)(\n\];)/,
       (_, open, inner, close) => `${open}${appendArrayEntry(inner, routeEntry)}${close}`,
     );
   });
 }
 
+function ensureMenuItemsGenerateFile() {
+  const absolute = path.join(ROOT, MENU_FILE);
+  if (fs.existsSync(absolute)) return;
+
+  const templatePath = path.join(ROOT, 'scripts/template/featureMenuItemsGenerate.tsx');
+  if (fs.existsSync(templatePath)) {
+    fs.copyFileSync(templatePath, absolute);
+    return;
+  }
+
+  fs.writeFileSync(
+    absolute,
+    `/**
+ * Generated feature sidebar menu items — DO NOT EDIT MANUALLY.
+ * Updated automatically by \`make feature\`.
+ * Merged into useSidebar.tsx via buildFeatureMenuItemsGenerate().
+ */
+import type { NavMenuItem } from '@/components/NavMenu';
+
+export function buildFeatureMenuItemsGenerate(_t: (key: string) => string): NavMenuItem[] {
+  return [];
+}
+`,
+  );
+}
+
 function appendGeneratedMenuItem(meta) {
+  ensureMenuItemsGenerateFile();
   patchFile(MENU_FILE, (content) => {
     if (content.includes(`key: '${meta.camel}'`)) {
       return content;
@@ -347,8 +411,8 @@ function appendGeneratedMenuItem(meta) {
     }`;
 
     updated = updated.replace(
-      'buildFeatureMenuItems(_t:',
-      'buildFeatureMenuItems(t:',
+      'buildFeatureMenuItemsGenerate(_t:',
+      'buildFeatureMenuItemsGenerate(t:',
     );
 
     if (updated.includes('return [];')) {
@@ -356,7 +420,7 @@ function appendGeneratedMenuItem(meta) {
     }
 
     return updated.replace(
-      /(export function buildFeatureMenuItems\(t: \(key: string\) => string\): NavMenuItem\[\] \{\n  return \[)([\s\S]*?)(\n  \];\n\})/,
+      /(export function buildFeatureMenuItemsGenerate\(t: \(key: string\) => string\): NavMenuItem\[\] \{\n  return \[)([\s\S]*?)(\n  \];\n\})/,
       (_, open, inner, close) => `${open}${appendArrayEntry(inner, menuEntry)}${close}`,
     );
   });
@@ -694,6 +758,14 @@ function main() {
       'Usage: node scripts/generate-feature.mjs --name=<feature> [--scope=full|hook|page] [--label="Display Name"] [--label-id="Nama"]',
     );
     console.error('');
+    console.error('Auto-updates (do not edit manually):');
+    console.error('  src/router/featureRoutesGenerate.tsx');
+    console.error('  src/layouts/sidebar/featureMenuItemsGenerate.tsx');
+    console.error('');
+    console.error('Manual registries (edit by hand when not using make feature):');
+    console.error('  src/router/featureRoutes.tsx');
+    console.error('  src/layouts/sidebar/featureMenuItems.tsx');
+    console.error('');
     console.error('Scopes:');
     console.error('  full  — page + table + hook + usecase (default)');
     console.error('  hook  — page + table + hook (mock data inline in hook)');
@@ -760,7 +832,7 @@ function main() {
   console.log(`\n✓ Feature "${meta.camel}" generated (${scopeLabels[scope]}).\n`);
   console.log('Created:');
   created.forEach((file) => console.log(`  ${file}`));
-  console.log('\nUpdated:');
+  console.log('\nUpdated (generated — do not edit manually):');
   console.log(`  ${ROUTES_FILE}`);
   console.log(`  ${MENU_FILE}`);
   console.log('  src/locales/en.json');

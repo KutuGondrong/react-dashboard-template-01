@@ -46,7 +46,7 @@
     "notFound": {
       "title": "Page not found",
       "description": "The page you're looking for doesn't exist or may have been moved. Use the menu or go back to the dashboard.",
-      "descriptionDev": "Dev hint: if you added a sidebar item manually, register the route in featureRoutes.tsx.",
+      "descriptionDev": "Dev hint: if you added a sidebar item manually, register the route in featureRoutes.tsx and the menu in featureMenuItems.tsx.",
       "backToDashboard": "Back to dashboard"
     }
   },
