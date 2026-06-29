@@ -144,7 +144,7 @@ function exitFeatureAlreadyExists(meta, found, rawName) {
   console.error('');
   console.error(`✗ Feature key "${meta.camel}" is already in use — choose a different name.`);
   if (rawName && rawName.trim() !== meta.camel) {
-    console.error(`  Input "${rawName.trim()}" resolves to key "${meta.camel}".`);
+    console.error(`  Feature key: "${meta.camel}" (from name "${rawName.trim()}").`);
   }
   console.error('');
   console.error('  Found:');
@@ -794,7 +794,7 @@ function main() {
 
   console.log(`\n✓ Feature "${meta.camel}" generated (${scopeLabels[scope]}).\n`);
   if (rawName !== meta.camel) {
-    console.log(`  Name normalized: "${rawName}" → key "${meta.camel}"`);
+    console.log(`  Feature key: "${meta.camel}" (from name "${rawName}")`);
   }
   console.log('Created:');
   created.forEach((file) => console.log(`  ${file}`));

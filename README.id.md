@@ -1386,18 +1386,27 @@ make feature name=inventory scope=hook label="Inventory" label-id="Inventaris"
 make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 ```
 
-| Parameter  | Wajib?           | Deskripsi                                                                                                                                              |
-| ---------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `name`     | ✅               | Key feature: folder, route (`/<key>`), locale key (`nav.<key>`). Spasi → camelCase (`abc def` → `abcDef`). Key sudah ada? Perintah gagal — ganti nama. |
-| `label`    | Direkomendasikan | Label menu bahasa Inggris (boleh spasi, pakai tanda kutip)                                                                                             |
-| `label-id` | Direkomendasikan | Label menu bahasa Indonesia (boleh spasi, pakai tanda kutip)                                                                                           |
-| `scope`    | Opsional         | `full` (default), `hook`, `page`                                                                                                                       |
+| Parameter  | Wajib?           | Deskripsi                                                                                                                                                                                                                       |
+| ---------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | ✅               | Nama fitur — boleh pakai spasi (mis. `name="pake spasi"`). Perintah mempertahankan input; key jadi camelCase (`pake spasi` → `pakeSpasi`). Spasi/pemisah berlebih di-trim/digabung. Key sudah ada? Perintah gagal — ganti nama. |
+| `label`    | Direkomendasikan | Label menu bahasa Inggris (boleh spasi, pakai tanda kutip)                                                                                                                                                                      |
+| `label-id` | Direkomendasikan | Label menu bahasa Indonesia (boleh spasi, pakai tanda kutip)                                                                                                                                                                    |
+| `scope`    | Opsional         | `full` (default), `hook`, `page`                                                                                                                                                                                                |
 
 | Scope  | File Dihasilkan               | Mock Data      |
 | ------ | ----------------------------- | -------------- |
 | `full` | page + table + hook + usecase | `usecase/*.ts` |
 | `hook` | page + table + hook           | inline di hook |
 | `page` | page saja                     | tidak ada      |
+
+**Aturan nama:**
+
+| Perintah        | Contoh input | Perintah disalin                  | Hasil (key/folder)                                      |
+| --------------- | ------------ | --------------------------------- | ------------------------------------------------------- |
+| `make feature`  | `pake spasi` | `make feature name="pake spasi"`  | Key **`pakeSpasi`** (camelCase) — folder, route, locale |
+| `make generate` | `my new app` | `make generate name="my new app"` | Folder **`my-new-app`** (kebab-case, path output saja)  |
+
+Spasi/pemisah berlebih di-trim/digabung saat menghitung key atau folder.
 
 Yang di-generate otomatis (`make feature` — jangan edit manual):
 
@@ -1407,7 +1416,7 @@ Yang di-generate otomatis (`make feature` — jangan edit manual):
 - Locale keys di `en.json` + `id.json`
 - Ikon sidebar default (`FeatureMenuIcon` di file generate)
 
-Halaman **Dokumentasi → Tutorial** punya builder perintah interaktif: menormalisasi `name`/`app name` saat mengetik spasi dan menampilkan key/folder sebelum perintah disalin.
+Halaman **Dokumentasi → Tutorial** punya builder perintah interaktif: mempertahankan input `name`/`app name` Anda (termasuk spasi) di perintah yang disalin, dan menampilkan preview feature key atau folder output — input tidak diubah otomatis saat mengetik.
 
 Registry manual (edit sendiri jika wiring tanpa generator):
 
@@ -1429,7 +1438,7 @@ Hasil:
 - `git init` di folder baru
 - Siap `pnpm install && make dev`
 
-**Normalisasi nama folder:** spasi di `name` → kebab-case (`my new app` → `my-new-app`). Hanya untuk path folder output, bukan locale key. Halaman **Dokumentasi → Tutorial** menampilkan preview folder saat Anda mengetik spasi.
+**Aturan nama folder:** spasi di `name` tetap di perintah (mis. `name="my new app"`); folder output memakai kebab-case (`my-new-app`); spasi/pemisah berlebih di-trim/digabung. Hanya untuk path folder output, bukan locale key. Halaman **Dokumentasi → Tutorial** menampilkan preview folder saat Anda mengetik.
 
 ---
 

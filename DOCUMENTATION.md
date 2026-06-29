@@ -889,12 +889,12 @@ make feature name=products label="Products" label-id="Produk"
 
 ### Parameters
 
-| Parameter  | Required    | Description                                                                                                                                                                       |
-| ---------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`     | Yes         | Feature key → folder `src/features/products/`, route `/products`, locale `nav.products`. Spaces → camelCase (`abc def` → `abcDef`). Key taken? Command fails — pick another name. |
-| `label`    | Recommended | English menu label (may contain spaces — quote in shell)                                                                                                                          |
-| `label-id` | Recommended | Indonesian menu label (may contain spaces — quote in shell)                                                                                                                       |
-| `scope`    | No          | `full` · `hook` · `page`                                                                                                                                                          |
+| Parameter  | Required    | Description                                                                                                                                                                                                                                                                                                          |
+| ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | Yes         | Feature name — spaces allowed (e.g. `name="pake spasi"`). Command keeps your input; generated key is camelCase (`pake spasi` → `pakeSpasi`). Extra spaces/separators are trimmed/collapsed when computing the key. Creates folder, route `/<key>`, locale `nav.<key>`. Key taken? Command fails — pick another name. |
+| `label`    | Recommended | English menu label (may contain spaces — quote in shell)                                                                                                                                                                                                                                                             |
+| `label-id` | Recommended | Indonesian menu label (may contain spaces — quote in shell)                                                                                                                                                                                                                                                          |
+| `scope`    | No          | `full` · `hook` · `page`                                                                                                                                                                                                                                                                                             |
 
 ### Examples
 
@@ -923,7 +923,7 @@ Built-in routes and menu items stay in `featureRoutes.tsx` and `featureMenuItems
 
 Optional custom icon: add in `SidebarIcons.tsx`, then replace `<FeatureMenuIcon />` in `featureMenuItemsGenerate.tsx` for your feature key.
 
-In the creator repo, the **Documentation → Tutorial** tab includes a live command builder that normalizes `name` the same way and shows the resulting key before you copy the command.
+In the creator repo, the **Documentation → Tutorial** tab includes a live command builder that keeps your `name` input (including spaces) in the copied command and shows the resulting feature key or output folder before you copy — it does not rewrite your input while typing.
 
 After scaffolding, run `pnpm run dev` and open `/<name>`.
 
@@ -1283,13 +1283,13 @@ make generate name=my-new-app
 make generate name=my-new-app out=~/projects/my-new-app
 ```
 
-| What happens   | Detail                                                                                           |
-| -------------- | ------------------------------------------------------------------------------------------------ |
-| Output         | New folder with a full copy of this template                                                     |
-| `package.json` | `name` updated to your app name                                                                  |
-| Git            | `git init` in the output folder                                                                  |
-| Config         | `app.config.ts` title/description copied as-is, customize after generate                         |
-| Folder name    | Spaces in `name` → kebab-case (e.g. `my new app` → `my-new-app`); CLI prints the normalized path |
+| What happens   | Detail                                                                                                                                                                                               |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Output         | New folder with a full copy of this template                                                                                                                                                         |
+| `package.json` | `name` updated to your app name                                                                                                                                                                      |
+| Git            | `git init` in the output folder                                                                                                                                                                      |
+| Config         | `app.config.ts` title/description copied as-is, customize after generate                                                                                                                             |
+| Folder name    | Spaces in `name` are kept in the command (e.g. `name="my new app"`); output folder uses kebab-case (e.g. `my-new-app`); extra spaces/separators are trimmed/collapsed; CLI prints the resulting path |
 
 **FileDownload demo files:** `public/samples/` (`report.pdf`, `data.csv`, `readme.txt`) is included so mock download works out of the box.
 

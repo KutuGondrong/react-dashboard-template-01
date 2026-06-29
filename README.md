@@ -156,16 +156,16 @@ src/
 
 ### 5. Development Commands
 
-| Command                                            | Description                                                                                                    |
-| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `pnpm run dev` / `make dev`                        | Start Vite dev server (port 5173)                                                                              |
-| `pnpm run lint` / `make lint`                      | ESLint + TypeScript check                                                                                      |
-| `pnpm run format` / `make format`                  | Prettier + ESLint auto-fix                                                                                     |
-| `pnpm run build` / `make build`                    | Format → type-check → production build                                                                         |
-| `pnpm run preview` / `make preview`                | Serve `dist/` locally                                                                                          |
-| `make clean`                                       | Remove `dist/`, `.turbo`, `node_modules/.vite`                                                                 |
-| `make feature name=X label="Name" label-id="Nama"` | Scaffold page; updates `featureRoutesGenerate` + `featureMenuItemsGenerate`. Spaces in `name` → camelCase key. |
-| `make generate name=my-app`                        | Scaffold micro-app outside this repo. Spaces in `name` → kebab-case folder.                                    |
+| Command                                            | Description                                                                                                                                         |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm run dev` / `make dev`                        | Start Vite dev server (port 5173)                                                                                                                   |
+| `pnpm run lint` / `make lint`                      | ESLint + TypeScript check                                                                                                                           |
+| `pnpm run format` / `make format`                  | Prettier + ESLint auto-fix                                                                                                                          |
+| `pnpm run build` / `make build`                    | Format → type-check → production build                                                                                                              |
+| `pnpm run preview` / `make preview`                | Serve `dist/` locally                                                                                                                               |
+| `make clean`                                       | Remove `dist/`, `.turbo`, `node_modules/.vite`                                                                                                      |
+| `make feature name=X label="Name" label-id="Nama"` | Scaffold page; updates `featureRoutesGenerate` + `featureMenuItemsGenerate`. Spaces allowed in `name` — command keeps input, key becomes camelCase. |
+| `make generate name=my-app`                        | Scaffold micro-app outside this repo. Spaces allowed in `name` — command keeps input, folder uses kebab-case.                                       |
 
 **Pre-commit checklist:**
 
@@ -276,14 +276,14 @@ make feature name=reports label="Reports" label-id="Laporan"
 
 `make feature` writes route + menu entries to **`featureRoutesGenerate.tsx`** and **`featureMenuItemsGenerate.tsx`** (do not edit manually). Built-in routes and menu items live in **`featureRoutes.tsx`** and **`featureMenuItems.tsx`**.
 
-**Name normalization:**
+**Name rules:**
 
-| Command         | Input with spaces | Result                                                   |
-| --------------- | ----------------- | -------------------------------------------------------- |
-| `make feature`  | `name=abc def`    | Key **`abcDef`** (camelCase) — folder, route, locale key |
-| `make generate` | `name=my new app` | Folder **`my-new-app`** (kebab-case, output path only)   |
+| Command         | Example input | Command copied                    | Result (key/folder)                                     |
+| --------------- | ------------- | --------------------------------- | ------------------------------------------------------- |
+| `make feature`  | `pake spasi`  | `make feature name="pake spasi"`  | Key **`pakeSpasi`** (camelCase) — folder, route, locale |
+| `make generate` | `my new app`  | `make generate name="my new app"` | Folder **`my-new-app`** (kebab-case, output path only)  |
 
-If a feature key already exists, `make feature` exits and asks you to pick another name. `label` / `label-id` may contain spaces (quote in shell). The **Documentation → Tutorial** command builder applies the same rules live.
+Extra spaces/separators are trimmed and collapsed when computing the key or folder. If a feature key already exists, `make feature` exits and asks you to pick another name. `label` / `label-id` may contain spaces (quote in shell). The **Documentation → Tutorial** command builder keeps your input in the copied command and previews the resulting key or folder — it does not auto-rewrite while you type.
 
 **Scaffold a micro-app:**
 

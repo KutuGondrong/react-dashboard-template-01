@@ -130,7 +130,7 @@ function main() {
 
   console.log(`\n✓ Generated micro-app at ${outputDir}\n`);
   if (rawName !== name) {
-    console.log(`  Folder name normalized: "${rawName}" → ${name}`);
+    console.log(`  Output folder: ${outputDir} (from name "${rawName}")`);
   }
   console.log('Next steps:');
   console.log(`  cd ${outputDir}`);

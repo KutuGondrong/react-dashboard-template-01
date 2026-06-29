@@ -1,12 +1,21 @@
 /** Shared name normalization for make feature / make generate. */
 
+/** Trim input and collapse runs of spaces, underscores, or hyphens to a single hyphen. */
+export function collapseNameSeparators(raw) {
+  return raw
+    .trim()
+    .replace(/[\s_-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 export function splitFeatureNameParts(raw) {
   const trimmed = raw.trim();
   if (!trimmed) return [];
 
-  const normalized = trimmed.replace(/[\s_]+/g, '-');
-  if (normalized.includes('-')) {
-    return normalized
+  const kebabSource = collapseNameSeparators(trimmed);
+  if (kebabSource.includes('-')) {
+    return kebabSource
       .toLowerCase()
       .replace(/[^a-z0-9-]+/g, '')
       .split('-')
@@ -41,11 +50,11 @@ export function parseFeatureName(raw) {
 
 /** Folder / package name — e.g. "my new app" → my-new-app */
 export function normalizeAppFolderName(raw) {
-  const normalized = raw
-    .trim()
+  const normalized = collapseNameSeparators(raw)
     .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
+    .replace(/[^a-z0-9-]+/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
   if (!normalized) {
     throw new Error('App name is required, e.g. my-new-app');
