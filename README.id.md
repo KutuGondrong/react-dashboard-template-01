@@ -1386,12 +1386,12 @@ make feature name=inventory scope=hook label="Inventory" label-id="Inventaris"
 make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 ```
 
-| Parameter  | Wajib?           | Deskripsi                                                                  |
-| ---------- | ---------------- | -------------------------------------------------------------------------- |
-| `name`     | ✅               | Key feature: folder, route (`/name`), locale key (`nav.name`). Kebab-case. |
-| `label`    | Direkomendasikan | Label menu bahasa Inggris                                                  |
-| `label-id` | Direkomendasikan | Label menu bahasa Indonesia                                                |
-| `scope`    | Opsional         | `full` (default), `hook`, `page`                                           |
+| Parameter  | Wajib?           | Deskripsi                                                                                                                                              |
+| ---------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `name`     | ✅               | Key feature: folder, route (`/<key>`), locale key (`nav.<key>`). Spasi → camelCase (`abc def` → `abcDef`). Key sudah ada? Perintah gagal — ganti nama. |
+| `label`    | Direkomendasikan | Label menu bahasa Inggris (boleh spasi, pakai tanda kutip)                                                                                             |
+| `label-id` | Direkomendasikan | Label menu bahasa Indonesia (boleh spasi, pakai tanda kutip)                                                                                           |
+| `scope`    | Opsional         | `full` (default), `hook`, `page`                                                                                                                       |
 
 | Scope  | File Dihasilkan               | Mock Data      |
 | ------ | ----------------------------- | -------------- |
@@ -1406,6 +1406,8 @@ Yang di-generate otomatis (`make feature` — jangan edit manual):
 - Menu item di `src/layouts/sidebar/featureMenuItemsGenerate.tsx`
 - Locale keys di `en.json` + `id.json`
 - Ikon sidebar default (`FeatureMenuIcon` di file generate)
+
+Halaman **Dokumentasi → Tutorial** punya builder perintah interaktif: menormalisasi `name`/`app name` saat mengetik spasi dan menampilkan key/folder sebelum perintah disalin.
 
 Registry manual (edit sendiri jika wiring tanpa generator):
 
@@ -1426,6 +1428,8 @@ Hasil:
 - Update `package.json` name
 - `git init` di folder baru
 - Siap `pnpm install && make dev`
+
+**Normalisasi nama folder:** spasi di `name` → kebab-case (`my new app` → `my-new-app`). Hanya untuk path folder output, bukan locale key. Halaman **Dokumentasi → Tutorial** menampilkan preview folder saat Anda mengetik spasi.
 
 ---
 

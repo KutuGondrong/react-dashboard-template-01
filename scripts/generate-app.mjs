@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import { execSync } from 'child_process';
+import { execFileSync, execSync } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { ensureDownloadSamples } from './ensure-download-samples.mjs';
+import { normalizeAppFolderName } from './name-utils.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -68,7 +69,15 @@ function main() {
     process.exit(1);
   }
 
-  const name = args.name.trim();
+  const rawName = args.name.trim();
+  let name;
+  try {
+    name = normalizeAppFolderName(rawName);
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
+
   let outputDir;
 
   try {
@@ -86,10 +95,7 @@ function main() {
     (item) => `--exclude=${item}`,
   );
 
-  execSync(
-    ['rsync', '-a', ...excludes, `${ROOT}/`, `${outputDir}/`].join(' '),
-    { stdio: 'inherit', shell: true },
-  );
+  execFileSync('rsync', ['-a', ...excludes, `${ROOT}/`, `${outputDir}/`], { stdio: 'inherit' });
 
   const gitDir = path.join(outputDir, '.git');
   if (fs.existsSync(gitDir)) {
@@ -123,6 +129,9 @@ function main() {
   execSync('git init -q', { cwd: outputDir, stdio: 'inherit' });
 
   console.log(`\n✓ Generated micro-app at ${outputDir}\n`);
+  if (rawName !== name) {
+    console.log(`  Folder name normalized: "${rawName}" → ${name}`);
+  }
   console.log('Next steps:');
   console.log(`  cd ${outputDir}`);
   console.log('  pnpm install');

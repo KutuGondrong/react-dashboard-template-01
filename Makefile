@@ -13,7 +13,7 @@ help:
 	@echo "  make preview          - Serve production build locally"
 	@echo "  make clean            - Remove dist, .turbo, node_modules/.vite"
 	@echo "  make generate name=X [out=PATH] - Scaffold your app from this template (default: ../X)"
-	@echo "  make feature name=X [scope=full|hook|page] [label=\"Name\"] [label-id=\"Nama\"] - Scaffold page; updates featureRoutesGenerate + featureMenuItemsGenerate (auto Prettier + ESLint)"
+	@echo "  make feature name=X [scope=full|hook|page] [label=\"Name\"] [label-id=\"Nama\"] - Scaffold page (name spaces → camelCase key, e.g. abc def → abcDef)"
 
 dev:
 	@if [ ! -d node_modules ]; then \

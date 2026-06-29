@@ -889,12 +889,12 @@ make feature name=products label="Products" label-id="Produk"
 
 ### Parameters
 
-| Parameter  | Required    | Description                                                                             |
-| ---------- | ----------- | --------------------------------------------------------------------------------------- |
-| `name`     | Yes         | Feature key → folder `src/features/products/`, route `/products`, locale `nav.products` |
-| `label`    | Recommended | English menu label                                                                      |
-| `label-id` | Recommended | Indonesian menu label                                                                   |
-| `scope`    | No          | `full` · `hook` · `page`                                                                |
+| Parameter  | Required    | Description                                                                                                                                                                       |
+| ---------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | Yes         | Feature key → folder `src/features/products/`, route `/products`, locale `nav.products`. Spaces → camelCase (`abc def` → `abcDef`). Key taken? Command fails — pick another name. |
+| `label`    | Recommended | English menu label (may contain spaces — quote in shell)                                                                                                                          |
+| `label-id` | Recommended | Indonesian menu label (may contain spaces — quote in shell)                                                                                                                       |
+| `scope`    | No          | `full` · `hook` · `page`                                                                                                                                                          |
 
 ### Examples
 
@@ -922,6 +922,8 @@ make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 Built-in routes and menu items stay in `featureRoutes.tsx` and `featureMenuItems.tsx`. The `settings` route remains in `AppRouter.tsx` (last before 404).
 
 Optional custom icon: add in `SidebarIcons.tsx`, then replace `<FeatureMenuIcon />` in `featureMenuItemsGenerate.tsx` for your feature key.
+
+In the creator repo, the **Documentation → Tutorial** tab includes a live command builder that normalizes `name` the same way and shows the resulting key before you copy the command.
 
 After scaffolding, run `pnpm run dev` and open `/<name>`.
 
@@ -1281,12 +1283,13 @@ make generate name=my-new-app
 make generate name=my-new-app out=~/projects/my-new-app
 ```
 
-| What happens   | Detail                                                                   |
-| -------------- | ------------------------------------------------------------------------ |
-| Output         | New folder with a full copy of this template                             |
-| `package.json` | `name` updated to your app name                                          |
-| Git            | `git init` in the output folder                                          |
-| Config         | `app.config.ts` title/description copied as-is, customize after generate |
+| What happens   | Detail                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| Output         | New folder with a full copy of this template                                                     |
+| `package.json` | `name` updated to your app name                                                                  |
+| Git            | `git init` in the output folder                                                                  |
+| Config         | `app.config.ts` title/description copied as-is, customize after generate                         |
+| Folder name    | Spaces in `name` → kebab-case (e.g. `my new app` → `my-new-app`); CLI prints the normalized path |
 
 **FileDownload demo files:** `public/samples/` (`report.pdf`, `data.csv`, `readme.txt`) is included so mock download works out of the box.
 

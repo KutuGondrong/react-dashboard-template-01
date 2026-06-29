@@ -489,12 +489,12 @@ make feature name=products label="Products" label-id="Produk"
 
 ### Parameter
 
-| Parameter  | Wajib            | Deskripsi                                                    |
-| ---------- | ---------------- | ------------------------------------------------------------ |
-| `name`     | Ya               | Key fitur → folder, route `/products`, locale `nav.products` |
-| `label`    | Direkomendasikan | Label menu bahasa Inggris                                    |
-| `label-id` | Direkomendasikan | Label menu bahasa Indonesia                                  |
-| `scope`    | Tidak            | `full` · `hook` · `page`                                     |
+| Parameter  | Wajib            | Deskripsi                                                                                                                          |
+| ---------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | Ya               | Key fitur → folder, route `/products`, locale `nav.products`. Spasi → camelCase (`abc def` → `abcDef`). Key sudah ada? Ganti nama. |
+| `label`    | Direkomendasikan | Label menu bahasa Inggris (boleh spasi — pakai tanda kutip)                                                                        |
+| `label-id` | Direkomendasikan | Label menu bahasa Indonesia (boleh spasi — pakai tanda kutip)                                                                      |
+| `scope`    | Tidak            | `full` · `hook` · `page`                                                                                                           |
 
 ### Contoh
 
@@ -507,6 +507,8 @@ make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 File yang diubah otomatis (`make feature` — jangan edit manual): feature folder, `featureRoutesGenerate.tsx`, `featureMenuItemsGenerate.tsx`, `en.json`, `id.json`.
 
 Registry manual: `featureRoutes.tsx` (route bawaan), `featureMenuItems.tsx` (menu bawaan). Ikon kustom opsional di `SidebarIcons.tsx`, lalu ganti `<FeatureMenuIcon />` di `featureMenuItemsGenerate.tsx`.
+
+Di repo creator, tab **Dokumentasi → Tutorial** punya builder perintah interaktif yang menormalisasi `name` dengan cara yang sama dan menampilkan key sebelum perintah disalin.
 
 ---
 
@@ -589,12 +591,13 @@ make generate name=my-new-app
 make generate name=my-new-app out=~/projects/my-new-app
 ```
 
-| Yang terjadi   | Detail                                                                              |
-| -------------- | ----------------------------------------------------------------------------------- |
-| Output         | Folder baru berisi salinan penuh template ini                                       |
-| `package.json` | `name` diperbarui ke nama aplikasi Anda                                             |
-| Git            | `git init` di folder output                                                         |
-| Config         | Title/description di `app.config.ts` disalin apa adanya: sesuaikan setelah generate |
+| Yang terjadi   | Detail                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------- |
+| Output         | Folder baru berisi salinan penuh template ini                                                           |
+| `package.json` | `name` diperbarui ke nama aplikasi Anda                                                                 |
+| Git            | `git init` di folder output                                                                             |
+| Config         | Title/description di `app.config.ts` disalin apa adanya: sesuaikan setelah generate                     |
+| Nama folder    | Spasi di `name` → kebab-case (mis. `my new app` → `my-new-app`); CLI menampilkan path hasil normalisasi |
 
 **File demo FileDownload:** `public/samples/` sudah disertakan agar mock download berfungsi langsung.
 

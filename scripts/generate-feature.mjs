@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { runLocalBin } from './shell-utils.mjs';
+import { parseFeatureName } from './name-utils.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const VALID_SCOPES = ['full', 'hook', 'page'];
@@ -31,40 +32,6 @@ function parseScope(raw) {
     throw new Error(`Invalid scope "${raw}". Use: full, hook, page (alias: empty)`);
   }
   return scope;
-}
-
-function splitNameParts(raw) {
-  const trimmed = raw.trim();
-  if (!trimmed) return [];
-
-  const normalized = trimmed.replace(/[\s_]+/g, '-');
-  if (normalized.includes('-')) {
-    return normalized
-      .toLowerCase()
-      .replace(/[^a-z0-9-]+/g, '')
-      .split('-')
-      .filter(Boolean);
-  }
-
-  const camelParts = trimmed.replace(/[^a-zA-Z0-9]/g, '').match(/[A-Z]?[a-z0-9]+/g);
-  if (camelParts?.length) {
-    return camelParts.map((part) => part.toLowerCase());
-  }
-
-  return [];
-}
-
-function parseName(raw) {
-  const parts = splitNameParts(raw);
-
-  if (parts.length === 0) {
-    throw new Error('Feature name is required, e.g. products, my-feature, or multiWord');
-  }
-
-  const kebab = parts.join('-');
-  const pascal = parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join('');
-  const camel = parts[0] + parts.slice(1).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join('');
-  return { kebab, pascal, camel, parts };
 }
 
 function readLocaleData(relativePath) {
@@ -173,15 +140,18 @@ function suggestFeatureNames(meta) {
   });
 }
 
-function exitFeatureAlreadyExists(meta, found) {
+function exitFeatureAlreadyExists(meta, found, rawName) {
   console.error('');
-  console.error(`✗ Feature name "${meta.camel}" is already in use — choose a different name.`);
+  console.error(`✗ Feature key "${meta.camel}" is already in use — choose a different name.`);
+  if (rawName && rawName.trim() !== meta.camel) {
+    console.error(`  Input "${rawName.trim()}" resolves to key "${meta.camel}".`);
+  }
   console.error('');
   console.error('  Found:');
   found.forEach((item) => console.error(`    - ${item}`));
   console.error('');
-  console.error('  Locale keys use the feature name directly (nav.<name>, <name>.subtitle).');
-  console.error('  Each name must be unique across features and locale files.');
+  console.error('  Locale keys use the feature key directly (nav.<key>, <key>.subtitle).');
+  console.error('  Each key must be unique — pick another name if this one is taken.');
   console.error('');
   console.error('  Examples:');
   suggestFeatureNames(meta).forEach((example) => console.error(`    ${example}`));
@@ -198,11 +168,6 @@ function writeFileIfMissing(filePath, content) {
   return true;
 }
 
-function resolveLocalBin(name) {
-  const local = path.join(ROOT, 'node_modules', '.bin', name);
-  return fs.existsSync(local) ? local : name;
-}
-
 function formatGeneratedFiles(relativePaths) {
   const absolutePaths = [...new Set(relativePaths)]
     .map((rel) => path.join(ROOT, rel))
@@ -216,21 +181,11 @@ function formatGeneratedFiles(relativePaths) {
     return false;
   }
 
-  const prettier = resolveLocalBin('prettier');
-  const eslint = resolveLocalBin('eslint');
-  const quote = (filePath) => `"${filePath}"`;
-
-  execSync(`${prettier} --write ${absolutePaths.map(quote).join(' ')}`, {
-    cwd: ROOT,
-    stdio: 'pipe',
-  });
+  runLocalBin(ROOT, 'prettier', ['--write', ...absolutePaths]);
 
   const lintTargets = absolutePaths.filter((filePath) => /\.tsx?$/.test(filePath));
   if (lintTargets.length > 0) {
-    execSync(`${eslint} ${lintTargets.map(quote).join(' ')} --fix`, {
-      cwd: ROOT,
-      stdio: 'pipe',
-    });
+    runLocalBin(ROOT, 'eslint', [...lintTargets, '--fix']);
   }
 
   return true;
@@ -781,7 +736,15 @@ function main() {
     process.exit(1);
   }
 
-  const meta = parseName(args.name);
+  const rawName = args.name.trim();
+  let meta;
+  try {
+    meta = parseFeatureName(args.name);
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
+
   const labels = {
     labelEn: args.label || meta.pascal,
     labelId: args.labelId || args.label || meta.pascal,
@@ -791,7 +754,7 @@ function main() {
     ...new Set([...detectExistingFeature(meta), ...detectExistingLocaleKey(meta.camel)]),
   ];
   if (existing.length > 0) {
-    exitFeatureAlreadyExists(meta, existing);
+    exitFeatureAlreadyExists(meta, existing, rawName);
   }
 
   const featureRoot = path.join(ROOT, 'src/features', meta.camel);
@@ -830,6 +793,9 @@ function main() {
   const scopeLabels = { full: 'full (page + table + hook + usecase)', hook: 'hook (page + table + hook)', page: 'page (empty page only)' };
 
   console.log(`\n✓ Feature "${meta.camel}" generated (${scopeLabels[scope]}).\n`);
+  if (rawName !== meta.camel) {
+    console.log(`  Name normalized: "${rawName}" → key "${meta.camel}"`);
+  }
   console.log('Created:');
   created.forEach((file) => console.log(`  ${file}`));
   console.log('\nUpdated (generated — do not edit manually):');
@@ -855,4 +821,4 @@ if (isMain) {
   main();
 }
 
-export { buildTemplates, parseName };
+export { buildTemplates, parseFeatureName as parseName };
