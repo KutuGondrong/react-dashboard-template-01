@@ -46,7 +46,7 @@ generate:
 ifndef name
 	$(error Usage: make generate name=<app-name> [out=<path>])
 endif
-	@$(NODE) scripts/generate-app.mjs --name=$(name) $(if $(out),--out=$(out),)
+	@$(NODE) scripts/generate-app.mjs --name="$(name)" $(if $(out),--out="$(out)",)
 
 feature:
 ifndef name
