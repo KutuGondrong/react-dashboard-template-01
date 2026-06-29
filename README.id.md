@@ -5,7 +5,7 @@
 **Live template preview:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01)
 
 <a href="https://template.teristimewa.com/react-dashboard-template-01">
-  <img src="./public/og-image.jpg" alt="Teristimewa Dashboard" width="1200" height="630" />
+  <img src="./public/og-image.jpg" alt="Teristimewa Dashboard" width="600" />
 </a>
 
 Choose Language / Pilih Bahasa:
