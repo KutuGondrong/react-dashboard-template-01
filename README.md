@@ -4,6 +4,8 @@
 
 **Live template preview:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01)
 
+[![Teristimewa Dashboard](./public/og-image.jpg)](https://template.teristimewa.com/react-dashboard-template-01)
+
 Choose Language / Pilih Bahasa:
 
 - English (this document)
@@ -39,13 +41,13 @@ This project pins **Node.js** and **pnpm** with [Volta](https://volta.sh) for co
 }
 ```
 
-| Tool | Version | Role |
-|------|---------|------|
-| **Node.js** | `v20.11.0` | Runtime, build scripts, Vite dev server |
-| **pnpm** | `v8.15.4` | Dependency management and npm scripts |
-| **Git** | latest | Clone, branch, commit, `make generate` |
-| **GNU Make** | optional | Dev shortcuts (`make dev`, `make build`, etc.) |
-| **rsync** | optional | Required for `make generate` only |
+| Tool         | Version    | Role                                           |
+| ------------ | ---------- | ---------------------------------------------- |
+| **Node.js**  | `v20.11.0` | Runtime, build scripts, Vite dev server        |
+| **pnpm**     | `v8.15.4`  | Dependency management and npm scripts          |
+| **Git**      | latest     | Clone, branch, commit, `make generate`         |
+| **GNU Make** | optional   | Dev shortcuts (`make dev`, `make build`, etc.) |
+| **rsync**    | optional   | Required for `make generate` only              |
 
 **Install Volta**
 
@@ -83,14 +85,14 @@ pnpm install
 pnpm run dev
 ```
 
-| Step | Command | Result |
-|------|---------|--------|
-| Install deps | `pnpm install` | Resolves `pnpm-lock.yaml` |
-| Dev server | `pnpm run dev` | Vite on `http://localhost:5173` |
-| Lint | `pnpm run lint` | ESLint + `tsc --noEmit` |
-| Format | `pnpm run format` | Prettier + ESLint auto-fix |
-| Build | `pnpm run build` | Type-check → production bundle in `dist/` |
-| Preview | `pnpm run preview` | Serve `dist/` locally |
+| Step         | Command            | Result                                    |
+| ------------ | ------------------ | ----------------------------------------- |
+| Install deps | `pnpm install`     | Resolves `pnpm-lock.yaml`                 |
+| Dev server   | `pnpm run dev`     | Vite on `http://localhost:5173`           |
+| Lint         | `pnpm run lint`    | ESLint + `tsc --noEmit`                   |
+| Format       | `pnpm run format`  | Prettier + ESLint auto-fix                |
+| Build        | `pnpm run build`   | Type-check → production bundle in `dist/` |
+| Preview      | `pnpm run preview` | Serve `dist/` locally                     |
 
 **Demo login:** `admin@mail.com` / `password123`
 
@@ -98,14 +100,14 @@ pnpm run dev
 
 ### 3. Tech Stack & Architecture
 
-| Category | Package | Version |
-|----------|---------|---------|
-| UI | `react` + `react-dom` | 18.3.1 |
-| Language | `typescript` | 5.7.2 |
-| Bundler | `vite` | 5.4.11 |
-| Styling | `tailwindcss` | 3.4.16 |
-| HTTP | `axios` | 1.7.9 |
-| Routing | `react-router-dom` | 6.28.0 |
+| Category | Package               | Version |
+| -------- | --------------------- | ------- |
+| UI       | `react` + `react-dom` | 18.3.1  |
+| Language | `typescript`          | 5.7.2   |
+| Bundler  | `vite`                | 5.4.11  |
+| Styling  | `tailwindcss`         | 3.4.16  |
+| HTTP     | `axios`               | 1.7.9   |
+| Routing  | `react-router-dom`    | 6.28.0  |
 
 **Clean Layered Architecture** with domain-driven `features/` modules:
 
@@ -121,6 +123,7 @@ Infrastructure → Axios, localStorage, config, router
 API responses are mapped via `model.map.ts` (snake_case JSON → camelCase UI types) before reaching components.
 
 **Dependency rules:**
+
 - Presentation may import Application, Domain, Infrastructure
 - Application may import Domain, Infrastructure
 - Domain must not import Presentation or Application
@@ -151,16 +154,16 @@ src/
 
 ### 5. Development Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm run dev` / `make dev` | Start Vite dev server (port 5173) |
-| `pnpm run lint` / `make lint` | ESLint + TypeScript check |
-| `pnpm run format` / `make format` | Prettier + ESLint auto-fix |
-| `pnpm run build` / `make build` | Format → type-check → production build |
-| `pnpm run preview` / `make preview` | Serve `dist/` locally |
-| `make clean` | Remove `dist/`, `.turbo`, `node_modules/.vite` |
-| `make generate name=my-app` | Scaffold micro-app outside this repo |
-| `make feature name=X label="Name" label-id="Nama"` | Scaffold sidebar menu + page |
+| Command                                            | Description                                    |
+| -------------------------------------------------- | ---------------------------------------------- |
+| `pnpm run dev` / `make dev`                        | Start Vite dev server (port 5173)              |
+| `pnpm run lint` / `make lint`                      | ESLint + TypeScript check                      |
+| `pnpm run format` / `make format`                  | Prettier + ESLint auto-fix                     |
+| `pnpm run build` / `make build`                    | Format → type-check → production build         |
+| `pnpm run preview` / `make preview`                | Serve `dist/` locally                          |
+| `make clean`                                       | Remove `dist/`, `.turbo`, `node_modules/.vite` |
+| `make generate name=my-app`                        | Scaffold micro-app outside this repo           |
+| `make feature name=X label="Name" label-id="Nama"` | Scaffold sidebar menu + page                   |
 
 **Pre-commit checklist:**
 
@@ -174,14 +177,14 @@ pnpm run build   # recommended
 
 ### 6. Routing & Auth
 
-| Path | Layout | Guard | Page |
-|------|--------|-------|------|
-| `/dashboard` | MainLayout | Protected | DashboardPage |
-| `/users` | MainLayout | Protected | UsersPage |
-| `/settings` | MainLayout | Protected | SettingsPage |
-| `/login` | AuthLayout | Public | LoginPage |
-| `/register` | AuthLayout | Public | RegisterPage |
-| `*` | MainLayout | Protected | NotFoundPage (404) |
+| Path         | Layout     | Guard     | Page               |
+| ------------ | ---------- | --------- | ------------------ |
+| `/dashboard` | MainLayout | Protected | DashboardPage      |
+| `/users`     | MainLayout | Protected | UsersPage          |
+| `/settings`  | MainLayout | Protected | SettingsPage       |
+| `/login`     | AuthLayout | Public    | LoginPage          |
+| `/register`  | AuthLayout | Public    | RegisterPage       |
+| `*`          | MainLayout | Protected | NotFoundPage (404) |
 
 - **ProtectedRoute**: requires authentication; redirects to `/login`
 - **PublicRoute**: guest only; redirects to `/dashboard` if logged in
@@ -193,13 +196,14 @@ pnpm run build   # recommended
 
 Three network layers:
 
-| Layer | File | Responsibility |
-|-------|------|----------------|
-| Transport | `backendService.ts` | Axios instance, interceptors, base URL |
-| Endpoint | `apiSource.ts` | REST endpoint calls |
-| Repository | `apiRepository.ts` | Business logic, mock data, mappers |
+| Layer      | File                | Responsibility                         |
+| ---------- | ------------------- | -------------------------------------- |
+| Transport  | `backendService.ts` | Axios instance, interceptors, base URL |
+| Endpoint   | `apiSource.ts`      | REST endpoint calls                    |
+| Repository | `apiRepository.ts`  | Business logic, mock data, mappers     |
 
 **Rules:**
+
 - Do not call `axios` or `fetch` directly from components/hooks
 - Do not use `localStorage` directly; use `localSource`
 - Do not expose API snake_case fields in UI; use mappers
@@ -238,11 +242,13 @@ Run `pnpm run dev` and open **Components** (DEV badge) for the in-app catalog an
 
 ### 10. Deployment
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `VITE_API_BASE_URL` | `/api` | Backend API base URL |
-| `VITE_BASE_PATH` | `/` | Subpath deploy (e.g. `/react-dashboard-template-01/`) |
-| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Show Tutorial & Storybook |
+| Variable                 | Default      | Purpose                                               |
+| ------------------------ | ------------ | ----------------------------------------------------- |
+| `VITE_API_BASE_URL`      | `/api`       | Backend API base URL                                  |
+| `VITE_BASE_PATH`         | `/`          | Subpath deploy (e.g. `/react-dashboard-template-01/`) |
+| `VITE_SHOW_DEV_FEATURES` | `true` (dev) | Show Tutorial & Storybook                             |
+
+Set `previewUrl` in `src/config/external-links.json` (or `VITE_OG_SITE_URL` in `.env.production`) to your deployed app URL so link previews use `public/og-image.jpg`.
 
 Set `VITE_BASE_PATH` before `pnpm run build` when the app is served under a subpath (not domain root). The `dist/` output must be served with **SPA fallback** so deep links (e.g. `/dashboard`) resolve to `index.html`. Configure fallback in your hosting provider's docs.
 
@@ -274,15 +280,15 @@ make generate name=my-new-app out=~/projects/my-new-app
 
 ### 12. Troubleshooting
 
-| Issue | Fix |
-|-------|-----|
-| `node_modules not found` | Run `pnpm install` |
-| Wrong Node version | `volta pin node@20.11.0 && volta pin pnpm@8.15.4`, restart terminal |
-| `pnpm: command not found` | `volta install pnpm@8.15.4` |
-| ESLint `no-explicit-any` | Replace `any` with a specific type or `unknown` |
-| Blank page after subpath deploy | Match `VITE_BASE_PATH` with your hosting path; enable SPA fallback on the server |
-| `make generate` fails on Windows | Use WSL (requires `rsync`) |
-| Login not working | Use demo credentials; clear localStorage in DevTools |
+| Issue                            | Fix                                                                              |
+| -------------------------------- | -------------------------------------------------------------------------------- |
+| `node_modules not found`         | Run `pnpm install`                                                               |
+| Wrong Node version               | `volta pin node@20.11.0 && volta pin pnpm@8.15.4`, restart terminal              |
+| `pnpm: command not found`        | `volta install pnpm@8.15.4`                                                      |
+| ESLint `no-explicit-any`         | Replace `any` with a specific type or `unknown`                                  |
+| Blank page after subpath deploy  | Match `VITE_BASE_PATH` with your hosting path; enable SPA fallback on the server |
+| `make generate` fails on Windows | Use WSL (requires `rsync`)                                                       |
+| Login not working                | Use demo credentials; clear localStorage in DevTools                             |
 
 ---
 

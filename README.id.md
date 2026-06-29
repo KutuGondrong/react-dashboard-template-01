@@ -4,6 +4,8 @@
 
 **Live template preview:** [https://template.teristimewa.com/react-dashboard-template-01](https://template.teristimewa.com/react-dashboard-template-01)
 
+[![Teristimewa Dashboard](./public/og-image.jpg)](https://template.teristimewa.com/react-dashboard-template-01)
+
 Choose Language / Pilih Bahasa:
 
 - [English](./README.md)
@@ -34,7 +36,7 @@ Choose Language / Pilih Bahasa:
 
 #### 1.1 Filosofi Toolchain: Volta sebagai Single Source of Truth
 
-Project ini **mengunci versi runtime dan package manager** menggunakan [**Volta**](https://volta.sh) demi konsistensi antar tim. Volta bekerja sebagai *version manager* yang otomatis mengaktifkan versi Node.js dan pnpm yang tepat **setiap kali Anda masuk ke direktori project**, tanpa perlu `nvm use`, `fnm use`, atau konfigurasi manual lainnya.
+Project ini **mengunci versi runtime dan package manager** menggunakan [**Volta**](https://volta.sh) demi konsistensi antar tim. Volta bekerja sebagai _version manager_ yang otomatis mengaktifkan versi Node.js dan pnpm yang tepat **setiap kali Anda masuk ke direktori project**, tanpa perlu `nvm use`, `fnm use`, atau konfigurasi manual lainnya.
 
 Konfigurasi pin tercatat eksplisit di `package.json`:
 
@@ -45,13 +47,13 @@ Konfigurasi pin tercatat eksplisit di `package.json`:
 }
 ```
 
-| Tool | Versi Terkunci | Peran dalam Project |
-|------|----------------|---------------------|
-| **Node.js** | `v20.11.0` | Runtime JavaScript, eksekusi script build, dev server Vite |
-| **pnpm** | `v8.15.4` | Resolusi dependency, symlink `node_modules`, menjalankan npm scripts |
-| **Git** | versi terbaru | Clone, branch, commit, scaffolding `make generate` |
-| **GNU Make** | opsional | Shortcut perintah development (`make dev`, `make build`, dll.) |
-| **rsync** | opsional | Hanya diperlukan untuk `make generate` / `generate-app.mjs` |
+| Tool         | Versi Terkunci | Peran dalam Project                                                  |
+| ------------ | -------------- | -------------------------------------------------------------------- |
+| **Node.js**  | `v20.11.0`     | Runtime JavaScript, eksekusi script build, dev server Vite           |
+| **pnpm**     | `v8.15.4`      | Resolusi dependency, symlink `node_modules`, menjalankan npm scripts |
+| **Git**      | versi terbaru  | Clone, branch, commit, scaffolding `make generate`                   |
+| **GNU Make** | opsional       | Shortcut perintah development (`make dev`, `make build`, dll.)       |
+| **rsync**    | opsional       | Hanya diperlukan untuk `make generate` / `generate-app.mjs`          |
 
 #### 1.2 Instalasi Volta per Sistem Operasi
 
@@ -165,11 +167,11 @@ git clone https://github.com/KutuGondrong/react-dashboard-template-01.git react-
 cd react-app
 ```
 
-| Skenario | Perintah |
-|----------|----------|
-| Clone via SSH | `git clone git@github.com:KutuGondrong/react-dashboard-template-01.git react-app` |
-| Clone branch tertentu | `git clone -b <branch> <url>` |
-| Update setelah clone | `git pull origin main` |
+| Skenario              | Perintah                                                                          |
+| --------------------- | --------------------------------------------------------------------------------- |
+| Clone via SSH         | `git clone git@github.com:KutuGondrong/react-dashboard-template-01.git react-app` |
+| Clone branch tertentu | `git clone -b <branch> <url>`                                                     |
+| Update setelah clone  | `git pull origin main`                                                            |
 
 #### 2.2 Langkah 2: Instalasi Dependency
 
@@ -179,12 +181,12 @@ pnpm install
 
 **Mengapa pnpm (bukan npm/yarn)?**
 
-| Aspek | Penjelasan |
-|-------|------------|
-| **Efisiensi disk** | pnpm menyimpan satu salinan setiap versi package di store global (`~/.pnpm-store`). Project hanya membuat hard link/symlink; tidak ada duplikasi ribuan file antar project. |
-| **Kecepatan** | Instalasi paralel dan deduplikasi agresif. Pada project dengan ratusan transitive dependency, `pnpm install` konsisten lebih cepat. |
-| **Determinisme** | `pnpm-lock.yaml` mengunci dependency tree secara ketat. Cocok dengan filosofi Volta: **reproducible builds** di semua mesin developer. |
-| **Strict `node_modules`** | Package hanya bisa mengakses dependency yang dideklarasikan; mencegah *phantom dependency* yang sering terjadi di npm. |
+| Aspek                     | Penjelasan                                                                                                                                                                  |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Efisiensi disk**        | pnpm menyimpan satu salinan setiap versi package di store global (`~/.pnpm-store`). Project hanya membuat hard link/symlink; tidak ada duplikasi ribuan file antar project. |
+| **Kecepatan**             | Instalasi paralel dan deduplikasi agresif. Pada project dengan ratusan transitive dependency, `pnpm install` konsisten lebih cepat.                                         |
+| **Determinisme**          | `pnpm-lock.yaml` mengunci dependency tree secara ketat. Cocok dengan filosofi Volta: **reproducible builds** di semua mesin developer.                                      |
+| **Strict `node_modules`** | Package hanya bisa mengakses dependency yang dideklarasikan; mencegah _phantom dependency_ yang sering terjadi di npm.                                                      |
 
 Struktur lock file:
 
@@ -203,14 +205,14 @@ pnpm run dev
 # setara: make dev
 ```
 
-| Parameter | Nilai |
-|-----------|-------|
-| Bundler | Vite 5.4 + `@vitejs/plugin-react` 4.3 |
-| Mode | `development` (`vite --mode development`) |
-| Port | `5173` (konfigurasi di `vite.config.ts`) |
-| Auto-open browser | `true` |
-| HMR | Aktif; perubahan TSX/CSS langsung di browser tanpa full reload |
-| Demo login | `admin@mail.com` / `password123` |
+| Parameter         | Nilai                                                          |
+| ----------------- | -------------------------------------------------------------- |
+| Bundler           | Vite 5.4 + `@vitejs/plugin-react` 4.3                          |
+| Mode              | `development` (`vite --mode development`)                      |
+| Port              | `5173` (konfigurasi di `vite.config.ts`)                       |
+| Auto-open browser | `true`                                                         |
+| HMR               | Aktif; perubahan TSX/CSS langsung di browser tanpa full reload |
+| Demo login        | `admin@mail.com` / `password123`                               |
 
 Apa yang terjadi saat `pnpm run dev`:
 
@@ -246,12 +248,12 @@ tsc --noEmit
                noFallthroughCasesInSwitch, no-explicit-any
 ```
 
-| Aturan ESLint Kunci | Efek |
-|---------------------|------|
-| `@typescript-eslint/no-explicit-any` | `any` dilarang; wajib type eksplisit |
-| `@typescript-eslint/no-unused-vars` | Variabel tidak terpakai = error |
-| `react-hooks/rules-of-hooks` | Hooks hanya di top-level function component |
-| `react/react-in-jsx-scope` | Off (React 17+ JSX transform) |
+| Aturan ESLint Kunci                  | Efek                                        |
+| ------------------------------------ | ------------------------------------------- |
+| `@typescript-eslint/no-explicit-any` | `any` dilarang; wajib type eksplisit        |
+| `@typescript-eslint/no-unused-vars`  | Variabel tidak terpakai = error             |
+| `react-hooks/rules-of-hooks`         | Hooks hanya di top-level function component |
+| `react/react-in-jsx-scope`           | Off (React 17+ JSX transform)               |
 
 #### 2.5 Langkah 5: Auto-Formatting
 
@@ -318,16 +320,16 @@ pnpm run preview
 
 #### 2.7 Tanpa Make: Alternatif Pnpm Murni
 
-| Makefile | Pnpm setara |
-|----------|-------------|
-| `make dev` | `pnpm run dev` |
-| `make lint` | `pnpm run lint` |
-| `make format` | `pnpm run format` |
-| `make build` | `pnpm run format && pnpm run build` |
-| `make preview` | `pnpm run preview` |
-| `make clean` | `rm -rf dist .turbo node_modules/.vite` |
-| `make generate name=X` | `node scripts/generate-app.mjs --name=X` |
-| `make feature name=X` | `node scripts/generate-feature.mjs --name=X` |
+| Makefile               | Pnpm setara                                  |
+| ---------------------- | -------------------------------------------- |
+| `make dev`             | `pnpm run dev`                               |
+| `make lint`            | `pnpm run lint`                              |
+| `make format`          | `pnpm run format`                            |
+| `make build`           | `pnpm run format && pnpm run build`          |
+| `make preview`         | `pnpm run preview`                           |
+| `make clean`           | `rm -rf dist .turbo node_modules/.vite`      |
+| `make generate name=X` | `node scripts/generate-app.mjs --name=X`     |
+| `make feature name=X`  | `node scripts/generate-feature.mjs --name=X` |
 
 ---
 
@@ -335,19 +337,19 @@ pnpm run preview
 
 #### 3.1 Stack Lengkap & Versi
 
-| Kategori | Package | Versi | Peran |
-|----------|---------|-------|-------|
-| UI Framework | `react` + `react-dom` | 18.3.1 | Rendering, concurrent features, Suspense |
-| Language | `typescript` | 5.7.2 | Static typing, strict mode |
-| Bundler | `vite` | 5.4.11 | Dev server ESM + production Rollup |
-| React Plugin | `@vitejs/plugin-react` | 4.3.4 | Fast Refresh, JSX transform |
-| Styling | `tailwindcss` | 3.4.16 | Utility-first CSS |
-| CSS Pipeline | `postcss` + `autoprefixer` | 8.4 / 10.4 | Transform + vendor prefix |
-| HTTP Client | `axios` | 1.7.9 | REST API dengan interceptors |
-| Routing | `react-router-dom` | 6.28.0 | SPA routing, nested layout, guards |
-| Linting | `eslint` + `@typescript-eslint` | 8.57 / 8.62 | Static analysis |
-| Formatting | `prettier` + `prettier-plugin-tailwindcss` | 3.4 / 0.6 | Code style + Tailwind sort |
-| Runtime Pin | `volta` (via package.json) | node 20.11.0, pnpm 8.15.4 | Toolchain consistency |
+| Kategori     | Package                                    | Versi                     | Peran                                    |
+| ------------ | ------------------------------------------ | ------------------------- | ---------------------------------------- |
+| UI Framework | `react` + `react-dom`                      | 18.3.1                    | Rendering, concurrent features, Suspense |
+| Language     | `typescript`                               | 5.7.2                     | Static typing, strict mode               |
+| Bundler      | `vite`                                     | 5.4.11                    | Dev server ESM + production Rollup       |
+| React Plugin | `@vitejs/plugin-react`                     | 4.3.4                     | Fast Refresh, JSX transform              |
+| Styling      | `tailwindcss`                              | 3.4.16                    | Utility-first CSS                        |
+| CSS Pipeline | `postcss` + `autoprefixer`                 | 8.4 / 10.4                | Transform + vendor prefix                |
+| HTTP Client  | `axios`                                    | 1.7.9                     | REST API dengan interceptors             |
+| Routing      | `react-router-dom`                         | 6.28.0                    | SPA routing, nested layout, guards       |
+| Linting      | `eslint` + `@typescript-eslint`            | 8.57 / 8.62               | Static analysis                          |
+| Formatting   | `prettier` + `prettier-plugin-tailwindcss` | 3.4 / 0.6                 | Code style + Tailwind sort               |
+| Runtime Pin  | `volta` (via package.json)                 | node 20.11.0, pnpm 8.15.4 | Toolchain consistency                    |
 
 #### 3.2 React 18.3 + TypeScript 5.7 + Vite 5.4: Kombinasi Mutakhir
 
@@ -369,6 +371,7 @@ pnpm run preview
 ```
 
 Implikasi praktis:
+
 - Semua props komponen harus di-type (`interface` / `type`)
 - `null` dan `undefined` ditangani eksplisit
 - Import yang tidak terpakai = compile error
@@ -376,13 +379,13 @@ Implikasi praktis:
 
 **Vite 5.4: mengapa bukan webpack/CRA?**
 
-| Aspek | Vite | Webpack (CRA) |
-|-------|------|---------------|
-| Cold start dev server | < 1 detik | 30–120 detik |
-| HMR latency | < 50ms | 1–5 detik |
-| Transform dev | Esbuild (Go, native) | Babel (JS, interpreted) |
-| Production bundler | Rollup | Webpack |
-| Config complexity | Minimal (`vite.config.ts` ~50 baris) | Sering butuh eject / craco |
+| Aspek                 | Vite                                 | Webpack (CRA)              |
+| --------------------- | ------------------------------------ | -------------------------- |
+| Cold start dev server | < 1 detik                            | 30–120 detik               |
+| HMR latency           | < 50ms                               | 1–5 detik                  |
+| Transform dev         | Esbuild (Go, native)                 | Babel (JS, interpreted)    |
+| Production bundler    | Rollup                               | Webpack                    |
+| Config complexity     | Minimal (`vite.config.ts` ~50 baris) | Sering butuh eject / craco |
 
 #### 3.3 Tailwind CSS v3.4 & PostCSS
 
@@ -397,18 +400,19 @@ Implikasi praktis:
 
 ```js
 // tailwind.config.js
-content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}']
+content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'];
 ```
 
 **Dark mode**: custom variant untuk isolasi preview tema di Storybook:
 
 ```js
-darkMode: ['variant', '.dark &:not(.theme-preview-light *)']
+darkMode: ['variant', '.dark &:not(.theme-preview-light *)'];
 ```
 
 Artinya: class `dark:*` aktif saat ancestor memiliki class `.dark`, kecuali di dalam `.theme-preview-light`.
 
 **Global styles**: `src/index.css` mendefinisikan:
+
 - Scrollbar styling (light/dark)
 - `body` background (`bg-gray-50` / `dark:bg-gray-950`)
 - Utility `.focus-ring`: focus ring konsisten memakai `ring-primary-500`
@@ -419,15 +423,15 @@ Artinya: class `dark:*` aktif saat ancestor memiliki class `.dark`, kecuali di d
 
 **Mengapa Axios, bukan `fetch` bawaan?**
 
-| Fitur | `fetch` | Axios (`backendService`) |
-|-------|---------|--------------------------|
-| Interceptor global | Tidak ada (manual wrapper) | Request + Response interceptor built-in |
-| Auto JSON parse | Manual `.json()` | Otomatis |
-| Timeout | `AbortSignal` manual | `timeout: 30000` declarative |
-| Error handling | Hanya network error throw | HTTP 4xx/5xx = rejected promise dengan `response` |
-| Cancel request | `AbortController` | `CancelToken` / `AbortController` |
-| Base URL | Concat manual | `baseURL: appConfig.apiBaseUrl` |
-| Auth header inject | Manual setiap call | Request interceptor otomatis |
+| Fitur              | `fetch`                    | Axios (`backendService`)                          |
+| ------------------ | -------------------------- | ------------------------------------------------- |
+| Interceptor global | Tidak ada (manual wrapper) | Request + Response interceptor built-in           |
+| Auto JSON parse    | Manual `.json()`           | Otomatis                                          |
+| Timeout            | `AbortSignal` manual       | `timeout: 30000` declarative                      |
+| Error handling     | Hanya network error throw  | HTTP 4xx/5xx = rejected promise dengan `response` |
+| Cancel request     | `AbortController`          | `CancelToken` / `AbortController`                 |
+| Base URL           | Concat manual              | `baseURL: appConfig.apiBaseUrl`                   |
+| Auth header inject | Manual setiap call         | Request interceptor otomatis                      |
 
 **Arsitektur HTTP 3 lapis:**
 
@@ -441,15 +445,15 @@ apiRepository.ts      → Business logic + mock data (development)
 
 #### 3.5 React Router DOM v6.28
 
-| Fitur | Implementasi di Project |
-|-------|------------------------|
-| Router API | `createBrowserRouter` (data router) |
-| Nested layout | `MainLayout` + `AuthLayout` dengan `<Outlet />` |
-| Route guards | `ProtectedRoute`, `PublicRoute` |
-| Code splitting | `React.lazy()` + `Suspense` per halaman |
-| Basename | `routerBasename` dari `import.meta.env.BASE_URL` |
-| Auth shell | `AuthShell` membungkus `AuthProvider` di luar layout |
-| 404 handling | `path: '*'` → `NotFoundPage` (404 + tombol kembali ke dashboard) |
+| Fitur          | Implementasi di Project                                          |
+| -------------- | ---------------------------------------------------------------- |
+| Router API     | `createBrowserRouter` (data router)                              |
+| Nested layout  | `MainLayout` + `AuthLayout` dengan `<Outlet />`                  |
+| Route guards   | `ProtectedRoute`, `PublicRoute`                                  |
+| Code splitting | `React.lazy()` + `Suspense` per halaman                          |
+| Basename       | `routerBasename` dari `import.meta.env.BASE_URL`                 |
+| Auth shell     | `AuthShell` membungkus `AuthProvider` di luar layout             |
+| 404 handling   | `path: '*'` → `NotFoundPage` (404 + tombol kembali ke dashboard) |
 
 #### 3.6 ESLint v8 + Prettier v3: Standar Ketat
 
@@ -671,7 +675,7 @@ Akses via helper `assetUrl()`:
 
 ```tsx
 import { assetUrl } from '@/config/basePath';
-<img src={assetUrl('logo-light.svg')} alt="Logo" />
+<img src={assetUrl('logo-light.svg')} alt="Logo" />;
 // Hasil: /logo-light.svg (atau /subpath/logo-light.svg jika VITE_BASE_PATH diset)
 ```
 
@@ -681,23 +685,23 @@ import { assetUrl } from '@/config/basePath';
 
 ##### `src/config/`: Konstanta & Design Tokens
 
-| File | Isi | Larangan |
-|------|-----|----------|
-| `app.config.ts` | `title`, `apiBaseUrl`, `defaultLocale`, storage keys | Jangan hardcode di komponen |
-| `color.tokens.ts` | Palet warna primary, accent, semantic | Jangan pakai hex di JSX |
-| `basePath.ts` | `routerBasename`, `assetUrl()` | Jangan construct URL manual |
-| `external-links.json` | URL publik tutorial & katalog komponen | Jangan hardcode URL di komponen |
+| File                  | Isi                                                  | Larangan                        |
+| --------------------- | ---------------------------------------------------- | ------------------------------- |
+| `app.config.ts`       | `title`, `apiBaseUrl`, `defaultLocale`, storage keys | Jangan hardcode di komponen     |
+| `color.tokens.ts`     | Palet warna primary, accent, semantic                | Jangan pakai hex di JSX         |
+| `basePath.ts`         | `routerBasename`, `assetUrl()`                       | Jangan construct URL manual     |
+| `external-links.json` | URL publik tutorial & katalog komponen               | Jangan hardcode URL di komponen |
 
 ##### `src/context/`: State Global React
 
 Satu concern per context. Setiap context **wajib** mengekspor custom hook:
 
-| Context | Hook | State yang Dikelola |
-|---------|------|---------------------|
-| `AuthContext` | `useAuth()` | user, token, login, logout, isBootstrapping |
-| `LocaleContext` | `useLocale()` | locale, setLocale, t(key, params) |
-| `ThemeContext` | `useTheme()` | mode, resolvedTheme, setMode, toggleTheme |
-| `ScrollContext` | `useScroll()` | scroll container ref |
+| Context         | Hook          | State yang Dikelola                         |
+| --------------- | ------------- | ------------------------------------------- |
+| `AuthContext`   | `useAuth()`   | user, token, login, logout, isBootstrapping |
+| `LocaleContext` | `useLocale()` | locale, setLocale, t(key, params)           |
+| `ThemeContext`  | `useTheme()`  | mode, resolvedTheme, setMode, toggleTheme   |
+| `ScrollContext` | `useScroll()` | scroll container ref                        |
 
 ##### `src/models/`: Anti-Corruption Layer
 
@@ -707,7 +711,7 @@ Pemisahan ketat antara kontrak API dan tipe UI:
 // model.response.ts: APA ADANYA dari API (snake_case, string dates)
 interface ApiUserResponse {
   full_name: string;
-  created_at: string;   // ISO string
+  created_at: string; // ISO string
   is_active: boolean;
 }
 
@@ -730,17 +734,18 @@ function toUser(api: ApiUserResponse): User {
 ```
 
 **Mengapa layer ini penting?**
+
 - Backend bisa ganti field name tanpa merusak seluruh UI; cukup update mapper.
 - UI tidak perlu tahu format snake_case API.
 - Type safety terjaga di kedua sisi kontrak.
 
 ##### `src/datasource/`: Satu-satunya Gerbang Data
 
-| Larangan | Alasan |
-|----------|--------|
-| `import axios from 'axios'` di komponen/hook | Semua HTTP harus melalui `backendService` |
-| `localStorage.setItem()` langsung di komponen | Gunakan `localSource` abstraction |
-| `fetch()` untuk API calls | Gunakan `apiSource` / `apiRepository` |
+| Larangan                                      | Alasan                                    |
+| --------------------------------------------- | ----------------------------------------- |
+| `import axios from 'axios'` di komponen/hook  | Semua HTTP harus melalui `backendService` |
+| `localStorage.setItem()` langsung di komponen | Gunakan `localSource` abstraction         |
+| `fetch()` untuk API calls                     | Gunakan `apiSource` / `apiRepository`     |
 
 ##### `src/components/`: Shared UI tanpa Business Logic
 
@@ -753,10 +758,10 @@ function toUser(api: ApiUserResponse): User {
 
 Layout hanya mengatur **struktur visual**; tidak berisi fetch data atau business rule.
 
-| Layout | Route | Fungsi |
-|--------|-------|--------|
+| Layout       | Route                     | Fungsi                                   |
+| ------------ | ------------------------- | ---------------------------------------- |
 | `MainLayout` | `/dashboard`, `/users`, … | Header + Sidebar + Footer + `<Outlet />` |
-| `AuthLayout` | `/login`, `/register` | Card centered, branding, toolbar |
+| `AuthLayout` | `/login`, `/register`     | Card centered, branding, toolbar         |
 
 ##### `src/features/`: Modul Domain Terisolasi
 
@@ -776,45 +781,45 @@ features/<nama>/
 
 ##### Sumber Kebenaran Ganda (Wajib Sinkron)
 
-| File | Konsumen | Kapan Dipakai |
-|------|----------|---------------|
-| `src/config/color.tokens.ts` | Chart SVG, programmatic color, runtime logic | `resolveChartColor('primary')` |
-| `tailwind.config.js` → `theme.extend.colors` | Semua class Tailwind di JSX | `bg-primary-500`, `text-accent-600` |
+| File                                         | Konsumen                                     | Kapan Dipakai                       |
+| -------------------------------------------- | -------------------------------------------- | ----------------------------------- |
+| `src/config/color.tokens.ts`                 | Chart SVG, programmatic color, runtime logic | `resolveChartColor('primary')`      |
+| `tailwind.config.js` → `theme.extend.colors` | Semua class Tailwind di JSX                  | `bg-primary-500`, `text-accent-600` |
 
 ##### Palet Lengkap
 
 **Primary (Brand: Indigo)**
 
-| Token | Hex | Penggunaan Umum |
-|-------|-----|-----------------|
-| `primary-50` | `#eef2ff` | Background subtle |
-| `primary-100`–`300` | gradasi terang | Hover state ringan |
-| `primary-400` | `#818cf8` | Chart light variant |
-| `primary-500` | `#6366f1` | Default brand color |
-| `primary-600` | `#4f46e5` | Button primary default |
-| `primary-700`–`950` | gradasi gelap | Text on light, dark mode |
+| Token               | Hex            | Penggunaan Umum          |
+| ------------------- | -------------- | ------------------------ |
+| `primary-50`        | `#eef2ff`      | Background subtle        |
+| `primary-100`–`300` | gradasi terang | Hover state ringan       |
+| `primary-400`       | `#818cf8`      | Chart light variant      |
+| `primary-500`       | `#6366f1`      | Default brand color      |
+| `primary-600`       | `#4f46e5`      | Button primary default   |
+| `primary-700`–`950` | gradasi gelap  | Text on light, dark mode |
 
 **Accent (Secondary: Amber)**
 
-| Token | Hex | Penggunaan Umum |
-|-------|-----|-----------------|
+| Token        | Hex       | Penggunaan Umum         |
+| ------------ | --------- | ----------------------- |
 | `accent-500` | `#f59e0b` | Highlight, badge accent |
-| `accent-600` | `#d97706` | Hover accent |
+| `accent-600` | `#d97706` | Hover accent            |
 
 **Semantic Colors**
 
-| Kategori | Token | Hex (500) | Penggunaan |
-|----------|-------|-----------|------------|
-| Success | `success-400/500/600` | `#22c55e` | Status aktif, toast sukses |
-| Danger | `danger-400/500/600` | `#ef4444` | Error, delete, toast error |
-| Info | `info-400/500/600` | `#3b82f6` | Informasi, tooltip |
+| Kategori | Token                 | Hex (500) | Penggunaan                 |
+| -------- | --------------------- | --------- | -------------------------- |
+| Success  | `success-400/500/600` | `#22c55e` | Status aktif, toast sukses |
+| Danger   | `danger-400/500/600`  | `#ef4444` | Error, delete, toast error |
+| Info     | `info-400/500/600`    | `#3b82f6` | Informasi, tooltip         |
 
 **Surface**
 
-| Token | Hex | Penggunaan |
-|-------|-----|------------|
+| Token           | Hex       | Penggunaan                 |
+| --------------- | --------- | -------------------------- |
 | `surface-light` | `#ffffff` | Card background light mode |
-| `surface-dark` | `#0f172a` | Card background dark mode |
+| `surface-dark`  | `#0f172a` | Card background dark mode  |
 
 ##### Aturan Keras: Contoh Lengkap
 
@@ -873,16 +878,16 @@ main.tsx
 
 #### 5.1 Konvensi Penamaan File
 
-| Jenis File | Konvensi | Ekstensi | Contoh |
-|------------|----------|----------|--------|
-| Komponen React | **PascalCase** | `.tsx` | `ButtonPrimary.tsx`, `UserEditDrawer.tsx` |
-| Custom hooks | **camelCase** + prefix `use` | `.ts` | `useAuthForm.ts`, `useUsersPage.ts` |
-| Usecase | **camelCase** | `.ts` | `usersUsecase.ts` |
-| Utils/helpers | **camelCase** | `.ts` | `scrollContainer.ts`, `tableColumnUtils.ts` |
-| Types | **camelCase** atau `*.types.ts` | `.ts` | `chart.types.ts`, `comboBox.types.ts` |
-| Config/constants | **camelCase** | `.ts` | `app.config.ts`, `color.tokens.ts` |
-| Locale JSON | **kebab atau nested** | `.json` | `en.json`, `id.json` |
-| Barrel export | `index.ts` | `.ts` | `components/Button/index.ts` |
+| Jenis File       | Konvensi                        | Ekstensi | Contoh                                      |
+| ---------------- | ------------------------------- | -------- | ------------------------------------------- |
+| Komponen React   | **PascalCase**                  | `.tsx`   | `ButtonPrimary.tsx`, `UserEditDrawer.tsx`   |
+| Custom hooks     | **camelCase** + prefix `use`    | `.ts`    | `useAuthForm.ts`, `useUsersPage.ts`         |
+| Usecase          | **camelCase**                   | `.ts`    | `usersUsecase.ts`                           |
+| Utils/helpers    | **camelCase**                   | `.ts`    | `scrollContainer.ts`, `tableColumnUtils.ts` |
+| Types            | **camelCase** atau `*.types.ts` | `.ts`    | `chart.types.ts`, `comboBox.types.ts`       |
+| Config/constants | **camelCase**                   | `.ts`    | `app.config.ts`, `color.tokens.ts`          |
+| Locale JSON      | **kebab atau nested**           | `.json`  | `en.json`, `id.json`                        |
+| Barrel export    | `index.ts`                      | `.ts`    | `components/Button/index.ts`                |
 
 #### 5.2 Anatomi Folder Komponen Baru
 
@@ -944,6 +949,7 @@ export function StatusTag({
 ```
 
 Checklist yang dipenuhi template di atas:
+
 - ✅ PascalCase nama file dan function
 - ✅ Props di-type dengan `interface`
 - ✅ Warna dari token Tailwind (`success-*`, `danger-*`); bukan hex
@@ -997,7 +1003,9 @@ export function useInventoryPage() {
     }
   }, []);
 
-  useEffect(() => { void fetchItems(); }, [fetchItems]);
+  useEffect(() => {
+    void fetchItems();
+  }, [fetchItems]);
 
   return { items, isLoading, refetch: fetchItems };
 }
@@ -1016,27 +1024,27 @@ pnpm run lint
 pnpm run build
 ```
 
-| Kriteria | Status yang Diharapkan |
-|----------|------------------------|
-| ESLint errors | **0** |
-| ESLint warnings | **0** |
-| TypeScript errors | **0** |
-| Prettier diff setelah format | **0** (sudah bersih) |
-| Hardcoded hex colors | **0** |
-| `any` type | **0** |
-| String UI hardcoded di `components/` | **0** |
+| Kriteria                             | Status yang Diharapkan |
+| ------------------------------------ | ---------------------- |
+| ESLint errors                        | **0**                  |
+| ESLint warnings                      | **0**                  |
+| TypeScript errors                    | **0**                  |
+| Prettier diff setelah format         | **0** (sudah bersih)   |
+| Hardcoded hex colors                 | **0**                  |
+| `any` type                           | **0**                  |
+| String UI hardcoded di `components/` | **0**                  |
 
 #### 5.6 Anti-Patterns: Yang Dilarang
 
-| Anti-Pattern | Mengapa Salah | Solusi Benar |
-|--------------|---------------|--------------|
-| `axios.get()` di komponen | Bypass interceptor & mock layer | `usecase` → `apiRepository` |
-| `localStorage.setItem('token')` di hook | Key tidak terpusat | `localSource.setToken()` |
-| `full_name` di UI component | API leak ke presentation | `toUser()` mapper → `fullName` |
-| Business logic di `components/` | Tidak reusable, sulit di-test | Pindah ke `usecase/` atau `hooks/` |
-| Import `features/users/` dari `features/products/` | Coupling antar domain | Ekstrak ke `components/` atau `context/` |
-| `bg-[#hex]` di className | Di luar design system | Token Tailwind |
-| Skip `pnpm run format` sebelum commit | CI gagal, review noise | Selalu format dulu |
+| Anti-Pattern                                       | Mengapa Salah                   | Solusi Benar                             |
+| -------------------------------------------------- | ------------------------------- | ---------------------------------------- |
+| `axios.get()` di komponen                          | Bypass interceptor & mock layer | `usecase` → `apiRepository`              |
+| `localStorage.setItem('token')` di hook            | Key tidak terpusat              | `localSource.setToken()`                 |
+| `full_name` di UI component                        | API leak ke presentation        | `toUser()` mapper → `fullName`           |
+| Business logic di `components/`                    | Tidak reusable, sulit di-test   | Pindah ke `usecase/` atau `hooks/`       |
+| Import `features/users/` dari `features/products/` | Coupling antar domain           | Ekstrak ke `components/` atau `context/` |
+| `bg-[#hex]` di className                           | Di luar design system           | Token Tailwind                           |
+| Skip `pnpm run format` sebelum commit              | CI gagal, review noise          | Selalu format dulu                       |
 
 #### 5.7 Path Alias
 
@@ -1069,17 +1077,17 @@ resolve: { alias: { '@': path.resolve(__dirname, './src') } }
 
 #### 6.1 Peta Route Lengkap
 
-| Path | Layout | Guard | Halaman | Lazy |
-|------|--------|-------|---------|------|
-| `/` | MainLayout | Protected | Redirect → `/dashboard` | - |
-| `/dashboard` | MainLayout | Protected | DashboardPage | ✅ |
-| `/users` | MainLayout | Protected | UsersPage | ✅ |
-| `/settings` | MainLayout | Protected | SettingsPage | ✅ |
-| `/login` | AuthLayout | Public | LoginPage | ✅ |
-| `/register` | AuthLayout | Public | RegisterPage | ✅ |
-| `/tutorial/*` | MainLayout | Protected | Tutorial landing (dev) | ✅ |
-| `/components/*` | MainLayout | Protected | Components landing (dev) | ✅ |
-| `*` | MainLayout | Protected | NotFoundPage (404) | ✅ |
+| Path            | Layout     | Guard     | Halaman                  | Lazy |
+| --------------- | ---------- | --------- | ------------------------ | ---- |
+| `/`             | MainLayout | Protected | Redirect → `/dashboard`  | -    |
+| `/dashboard`    | MainLayout | Protected | DashboardPage            | ✅   |
+| `/users`        | MainLayout | Protected | UsersPage                | ✅   |
+| `/settings`     | MainLayout | Protected | SettingsPage             | ✅   |
+| `/login`        | AuthLayout | Public    | LoginPage                | ✅   |
+| `/register`     | AuthLayout | Public    | RegisterPage             | ✅   |
+| `/tutorial/*`   | MainLayout | Protected | Tutorial landing (dev)   | ✅   |
+| `/components/*` | MainLayout | Protected | Components landing (dev) | ✅   |
+| `*`             | MainLayout | Protected | NotFoundPage (404)       | ✅   |
 
 #### 6.2 Route Guards: Implementasi
 
@@ -1144,11 +1152,11 @@ sequenceDiagram
 
 #### 7.1 Tiga Lapis Network
 
-| Lapis | File | Tanggung Jawab |
-|-------|------|----------------|
-| **Transport** | `backendService.ts` | Axios instance, base URL, timeout, interceptors |
-| **Endpoint** | `apiSource.ts` | Mapping 1:1 ke REST endpoint (`POST /auth/login`) |
-| **Repository** | `apiRepository.ts` | Business validation, mock data, panggil mapper |
+| Lapis          | File                | Tanggung Jawab                                    |
+| -------------- | ------------------- | ------------------------------------------------- |
+| **Transport**  | `backendService.ts` | Axios instance, base URL, timeout, interceptors   |
+| **Endpoint**   | `apiSource.ts`      | Mapping 1:1 ke REST endpoint (`POST /auth/login`) |
+| **Repository** | `apiRepository.ts`  | Business validation, mock data, panggil mapper    |
 
 #### 7.2 `backendService`: Interceptor Detail
 
@@ -1172,24 +1180,24 @@ if (error.response?.status === 401) {
 
 #### 7.3 `localSource`: Abstraksi localStorage
 
-| Method | Key (dari app.config) | Tipe |
-|--------|----------------------|------|
-| `getToken()` / `setToken()` | `auth_token` | `string` |
-| `getUser()` / `setUser()` | `auth_user` | `User` (JSON serialized) |
-| `getTheme()` / `setTheme()` | `app_theme` | `'light' \| 'dark' \| 'system'` |
-| `getLocale()` / `setLocale()` | `app_locale` | `'en' \| 'id'` |
-| `getToastPosition()` / `setToastPosition()` | `app_toast_position` | `ToastPosition` |
-| `clearAuth()` | hapus token + user | - |
+| Method                                      | Key (dari app.config) | Tipe                            |
+| ------------------------------------------- | --------------------- | ------------------------------- |
+| `getToken()` / `setToken()`                 | `auth_token`          | `string`                        |
+| `getUser()` / `setUser()`                   | `auth_user`           | `User` (JSON serialized)        |
+| `getTheme()` / `setTheme()`                 | `app_theme`           | `'light' \| 'dark' \| 'system'` |
+| `getLocale()` / `setLocale()`               | `app_locale`          | `'en' \| 'id'`                  |
+| `getToastPosition()` / `setToastPosition()` | `app_toast_position`  | `ToastPosition`                 |
+| `clearAuth()`                               | hapus token + user    | -                               |
 
 Semua operasi localStorage dibungkus `safeGetItem` / `safeSetItem`: tidak crash di private browsing atau saat quota penuh.
 
 #### 7.4 Mock Auth (Development)
 
-| Kredential | Peran |
-|------------|-------|
-| `admin@mail.com` / `password123` | Akun demo admin |
-| Token | `mock_jwt_token_admin_session_2024` |
-| Delay simulasi | 800ms per request |
+| Kredential                       | Peran                               |
+| -------------------------------- | ----------------------------------- |
+| `admin@mail.com` / `password123` | Akun demo admin                     |
+| Token                            | `mock_jwt_token_admin_session_2024` |
+| Delay simulasi                   | 800ms per request                   |
 
 Mock ada di `apiRepository.ts`: saat backend nyata tersedia, cukup ganti implementasi repository tanpa mengubah usecase atau UI.
 
@@ -1203,11 +1211,11 @@ Mock ada di `apiRepository.ts`: saat backend nyata tersedia, cukup ganti impleme
 
 **File locale:**
 
-| File | Scope |
-|------|-------|
-| `src/locales/en.json` + `id.json` | String UI global (nav, error, halaman) |
-| `src/components/locales/en.json` + `id.json` | Default text komponen shared |
-| `src/features/*/locales/` | String khusus feature (tutorial, storybook) |
+| File                                         | Scope                                       |
+| -------------------------------------------- | ------------------------------------------- |
+| `src/locales/en.json` + `id.json`            | String UI global (nav, error, halaman)      |
+| `src/components/locales/en.json` + `id.json` | Default text komponen shared                |
+| `src/features/*/locales/`                    | String khusus feature (tutorial, storybook) |
 
 **Penggunaan:**
 
@@ -1256,17 +1264,18 @@ function UsersPage() {
 ```
 
 **Aturan:**
+
 - Parameter interpolasi `{{param}}`: nama param **harus sama** di en dan id.
 - `defaultLocale` di `app.config.ts` (default: `'en'`).
 - Locale persisten di localStorage via `localSource`.
 
 #### 8.2 Sistem Tema
 
-| Mode | Perilaku |
-|------|----------|
-| `light` | Force light mode |
-| `dark` | Force dark mode: tambah class `.dark` di `<html>` |
-| `system` | Ikuti `prefers-color-scheme` OS |
+| Mode     | Perilaku                                          |
+| -------- | ------------------------------------------------- |
+| `light`  | Force light mode                                  |
+| `dark`   | Force dark mode: tambah class `.dark` di `<html>` |
+| `system` | Ikuti `prefers-color-scheme` OS                   |
 
 ```tsx
 import { useTheme } from '@/context/ThemeContext';
@@ -1284,31 +1293,31 @@ Persisten di localStorage (`app_theme`). `ThemeToggleButton` di header memanggil
 
 Semua komponen di `src/components/` dibangun dengan Tailwind CSS dan token warna design system.
 
-| Komponen | Folder | Fungsi Utama |
-|----------|--------|--------------|
-| **Button** | `Button/` | Variant: primary, secondary, outline, ghost, danger. Size: sm, md, lg. Loading state. |
-| **Input** | `Input/` | Text input dengan label, error, helper text |
-| **ComboBox** | `ComboBox/` | Select searchable dengan keyboard navigation |
-| **DataTable** | `DataTable/` | Tabel generik dengan sort, selection, grouping, status icon |
-| **Pagination** | `Pagination/` | Navigasi halaman dengan page size selector |
-| **Modal** | `Modal/` | Dialog + `ModalProvider` global stack |
-| **Drawer** | `Drawer/` | Panel slide dari kiri/kanan |
-| **Toast** | `Toast/` | Notifikasi dengan 5 tipe, 7 posisi, auto-dismiss |
-| **Badge** | `Badge/` | Label status dengan variant warna |
-| **Card** | `Card/` | Container dengan header, body, footer |
-| **Avatar** | `Avatar/` | Gambar profil dengan fallback inisial |
-| **Toggle** | `Toggle/` | Switch on/off |
-| **Typography** | `Typography/` | Heading, text, label konsisten |
-| **Chart** | `Chart/` | LineChart, BarChart, DonutChart dengan animasi |
-| **FileManagement** | `FileManagement/` | Upload, download, progress, drag & drop |
-| **Layout** | `Layout/` | Primitif Header, Sider, Footer, Content |
-| **NavMenu** | `NavMenu/` | Menu navigasi sidebar dengan tree connector |
-| **SkeletonLoader** | `SkeletonLoader/` | Placeholder loading animasi shimmer |
-| **ErrorBoundary** | `ErrorBoundary/` | Tangkap error React + recovery screen terlokalisasi |
-| **ScrollToTop** | `ScrollToTop/` | Scroll container + anchor navigation |
-| **CodeBlock** | `CodeBlock/` | Syntax display dengan copy button |
-| **AnimatedBackground** | `AnimatedBackground/` | Background animasi untuk layout |
-| **DevFeatureBanner** | `DevFeatureBanner/` | Banner mode DEV untuk fitur pengembangan |
+| Komponen               | Folder                | Fungsi Utama                                                                          |
+| ---------------------- | --------------------- | ------------------------------------------------------------------------------------- |
+| **Button**             | `Button/`             | Variant: primary, secondary, outline, ghost, danger. Size: sm, md, lg. Loading state. |
+| **Input**              | `Input/`              | Text input dengan label, error, helper text                                           |
+| **ComboBox**           | `ComboBox/`           | Select searchable dengan keyboard navigation                                          |
+| **DataTable**          | `DataTable/`          | Tabel generik dengan sort, selection, grouping, status icon                           |
+| **Pagination**         | `Pagination/`         | Navigasi halaman dengan page size selector                                            |
+| **Modal**              | `Modal/`              | Dialog + `ModalProvider` global stack                                                 |
+| **Drawer**             | `Drawer/`             | Panel slide dari kiri/kanan                                                           |
+| **Toast**              | `Toast/`              | Notifikasi dengan 5 tipe, 7 posisi, auto-dismiss                                      |
+| **Badge**              | `Badge/`              | Label status dengan variant warna                                                     |
+| **Card**               | `Card/`               | Container dengan header, body, footer                                                 |
+| **Avatar**             | `Avatar/`             | Gambar profil dengan fallback inisial                                                 |
+| **Toggle**             | `Toggle/`             | Switch on/off                                                                         |
+| **Typography**         | `Typography/`         | Heading, text, label konsisten                                                        |
+| **Chart**              | `Chart/`              | LineChart, BarChart, DonutChart dengan animasi                                        |
+| **FileManagement**     | `FileManagement/`     | Upload, download, progress, drag & drop                                               |
+| **Layout**             | `Layout/`             | Primitif Header, Sider, Footer, Content                                               |
+| **NavMenu**            | `NavMenu/`            | Menu navigasi sidebar dengan tree connector                                           |
+| **SkeletonLoader**     | `SkeletonLoader/`     | Placeholder loading animasi shimmer                                                   |
+| **ErrorBoundary**      | `ErrorBoundary/`      | Tangkap error React + recovery screen terlokalisasi                                   |
+| **ScrollToTop**        | `ScrollToTop/`        | Scroll container + anchor navigation                                                  |
+| **CodeBlock**          | `CodeBlock/`          | Syntax display dengan copy button                                                     |
+| **AnimatedBackground** | `AnimatedBackground/` | Background animasi untuk layout                                                       |
+| **DevFeatureBanner**   | `DevFeatureBanner/`   | Banner mode DEV untuk fitur pengembangan                                              |
 
 ---
 
@@ -1316,11 +1325,13 @@ Semua komponen di `src/components/` dibangun dengan Tailwind CSS dan token warna
 
 #### 10.1 Environment Variables
 
-| Variable | File | Default | Fungsi |
-|----------|------|---------|--------|
-| `VITE_API_BASE_URL` | `.env` | `/api` | Base URL backend API |
-| `VITE_BASE_PATH` | `.env.production` | `/` | Subpath deploy (mis. `/react-dashboard-template-01/`) |
-| `VITE_SHOW_DEV_FEATURES` | `.env.development` | `true` | Tampilkan Tutorial & Storybook |
+| Variable                 | File               | Default | Fungsi                                                |
+| ------------------------ | ------------------ | ------- | ----------------------------------------------------- |
+| `VITE_API_BASE_URL`      | `.env`             | `/api`  | Base URL backend API                                  |
+| `VITE_BASE_PATH`         | `.env.production`  | `/`     | Subpath deploy (mis. `/react-dashboard-template-01/`) |
+| `VITE_SHOW_DEV_FEATURES` | `.env.development` | `true`  | Tampilkan Tutorial & Storybook                        |
+
+Set `previewUrl` di `src/config/external-links.json` (atau `VITE_OG_SITE_URL` di `.env.production`) ke URL deploy agar preview link memakai `public/og-image.jpg`.
 
 #### 10.2 Deploy di Subpath
 
@@ -1337,6 +1348,7 @@ pnpm run preview   # opsional, cek dist/ secara lokal
 ```
 
 **Penting:**
+
 - `VITE_BASE_PATH` harus sama dengan path hosting Anda.
 - `assetUrl()` dan `routerBasename` otomatis resolve dari `import.meta.env.BASE_URL`.
 - Deep link (mis. `/dashboard`) membutuhkan **SPA fallback** di web server: tanpa itu, refresh di URL dalam aplikasi bisa menampilkan halaman kosong atau 404. Ikuti dokumentasi provider hosting Anda.
@@ -1349,16 +1361,16 @@ Penjelasan lebih lengkap: [DOCUMENTATION.id.md](./DOCUMENTATION.id.md).
 
 #### 11.1 Semua Target Makefile
 
-| Target | Perintah Internal | Deskripsi |
-|--------|-------------------|-----------|
-| `make dev` | `pnpm run dev` | Dev server port 5173 |
-| `make format` | `pnpm run format` | Prettier + ESLint fix |
-| `make lint` | `pnpm run lint` | ESLint + tsc (no write) |
-| `make build` | `format` → `pnpm run build` | Production build |
-| `make preview` | `pnpm run preview` | Serve dist/ lokal |
-| `make clean` | `rm -rf dist .turbo node_modules/.vite` | Bersihkan artefak build |
-| `make generate name=X` | `node scripts/generate-app.mjs` | Scaffold micro-app di luar repo |
-| `make feature name=X` | `node scripts/generate-feature.mjs` | Tambah menu + halaman feature |
+| Target                 | Perintah Internal                       | Deskripsi                       |
+| ---------------------- | --------------------------------------- | ------------------------------- |
+| `make dev`             | `pnpm run dev`                          | Dev server port 5173            |
+| `make format`          | `pnpm run format`                       | Prettier + ESLint fix           |
+| `make lint`            | `pnpm run lint`                         | ESLint + tsc (no write)         |
+| `make build`           | `format` → `pnpm run build`             | Production build                |
+| `make preview`         | `pnpm run preview`                      | Serve dist/ lokal               |
+| `make clean`           | `rm -rf dist .turbo node_modules/.vite` | Bersihkan artefak build         |
+| `make generate name=X` | `node scripts/generate-app.mjs`         | Scaffold micro-app di luar repo |
+| `make feature name=X`  | `node scripts/generate-feature.mjs`     | Tambah menu + halaman feature   |
 
 #### 11.2 Scaffold Feature
 
@@ -1368,20 +1380,21 @@ make feature name=inventory scope=hook label="Inventory" label-id="Inventaris"
 make feature name=analytics scope=page label="Analytics" label-id="Analitik"
 ```
 
-| Parameter | Wajib? | Deskripsi |
-|-----------|--------|-----------|
-| `name` | ✅ | Key feature: folder, route (`/name`), locale key (`nav.name`). Kebab-case. |
-| `label` | Direkomendasikan | Label menu bahasa Inggris |
-| `label-id` | Direkomendasikan | Label menu bahasa Indonesia |
-| `scope` | Opsional | `full` (default), `hook`, `page` |
+| Parameter  | Wajib?           | Deskripsi                                                                  |
+| ---------- | ---------------- | -------------------------------------------------------------------------- |
+| `name`     | ✅               | Key feature: folder, route (`/name`), locale key (`nav.name`). Kebab-case. |
+| `label`    | Direkomendasikan | Label menu bahasa Inggris                                                  |
+| `label-id` | Direkomendasikan | Label menu bahasa Indonesia                                                |
+| `scope`    | Opsional         | `full` (default), `hook`, `page`                                           |
 
-| Scope | File Dihasilkan | Mock Data |
-|-------|-----------------|-----------|
+| Scope  | File Dihasilkan               | Mock Data      |
+| ------ | ----------------------------- | -------------- |
 | `full` | page + table + hook + usecase | `usecase/*.ts` |
-| `hook` | page + table + hook | inline di hook |
-| `page` | page saja | tidak ada |
+| `hook` | page + table + hook           | inline di hook |
+| `page` | page saja                     | tidak ada      |
 
 Yang di-generate otomatis:
+
 - Folder `src/features/<name>/`
 - Route di `src/router/featureRoutes.tsx`
 - Menu item di `src/layouts/sidebar/featureMenuItems.tsx`
@@ -1396,6 +1409,7 @@ make generate name=my-new-app out=~/projects/my-new-app
 ```
 
 Hasil:
+
 - Copy seluruh template ke direktori luar repo
 - Update `package.json` name
 - `git init` di folder baru
@@ -1448,6 +1462,7 @@ pnpm run lint   # lihat error TypeScript detail
 #### `make generate` gagal di Windows
 
 Gunakan WSL: native Windows tidak punya `rsync`:
+
 ```bash
 # Di WSL Ubuntu
 node scripts/generate-app.mjs --name=my-app
