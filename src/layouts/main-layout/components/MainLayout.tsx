@@ -47,17 +47,17 @@ export function MainLayout() {
           </Layout.Sider>
           <ScrollContainer
             className={cn(
-              'relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden !p-0',
+              'relative flex min-h-0 min-w-0 flex-1 flex-col overflow-auto !p-0',
               layoutSurfaces.main,
             )}
           >
-            <div className="flex h-full min-h-0 flex-col">
-              <div className="flex min-h-0 flex-1 flex-col overflow-auto p-3 sm:p-4 lg:p-6">
+            <div className="flex min-h-full flex-col">
+              <div className="flex flex-1 flex-col p-3 sm:p-4 lg:p-6">
                 <Outlet />
               </div>
               <Layout.Footer
                 className={cn(
-                  'relative shrink-0 !border-0 px-3 py-3 text-center sm:px-4 sm:py-4 sm:text-left lg:px-6',
+                  'relative mt-auto shrink-0 !border-0 px-3 py-3 text-center sm:px-4 sm:py-4 sm:text-left lg:px-6',
                   layoutSurfaces.footer,
                 )}
               >
