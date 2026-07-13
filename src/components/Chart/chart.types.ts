@@ -30,10 +30,17 @@ export interface BarChartProps {
   showYAxis?: boolean;
 }
 
+export type DonutLegendLayout = 'center' | 'right' | 'bottom';
+
 export interface DonutChartProps {
   segments: Array<DonutSegment & { label: string }>;
   total: number;
-  size?: number;
+  /**
+   * Ring size in px.
+   * - `0` / `undefined` / `null` → dynamic (fill remaining container space). Default: `0`.
+   * - `> 0` → preferred ring size; shrinks only if the container is smaller.
+   */
+  size?: number | null;
   className?: string;
   animated?: boolean;
   centerLabel?: string;

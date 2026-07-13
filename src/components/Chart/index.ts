@@ -7,6 +7,7 @@ export type {
   LineChartProps,
   BarChartProps,
   DonutChartProps,
+  DonutLegendLayout,
   MetricCardProps,
   ChartDimensions,
 } from './chart.types';

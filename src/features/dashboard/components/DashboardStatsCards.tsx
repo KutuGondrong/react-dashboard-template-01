@@ -20,23 +20,23 @@ function formatChange(trend: TrendDirection, value: number): string {
 
 export function DashboardStatsCards({ stats, resolveLabel }: DashboardStatsCardsProps) {
   return (
-    <div className="grid grid-cols-3 gap-2 sm:gap-4">
+    <div className="@[28rem]/dash:gap-3 @[40rem]/dash:gap-4 grid grid-cols-3 gap-2">
       {stats.stats.map((stat) => (
         <div
           key={stat.id}
-          className="min-w-0 rounded-xl border border-gray-200 bg-white p-3 sm:p-6 dark:border-gray-700 dark:bg-gray-900"
+          className="@[28rem]/dash:p-4 @[40rem]/dash:p-6 min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white p-2.5 dark:border-gray-700 dark:bg-gray-900"
         >
-          <p className="truncate text-xs text-gray-500 sm:text-sm dark:text-gray-400">
+          <p className="@[28rem]/dash:text-xs @[40rem]/dash:text-sm truncate text-[11px] text-gray-500 dark:text-gray-400">
             {resolveLabel(stat.labelKey)}
           </p>
-          <div className="mt-1 flex flex-col items-start gap-1 sm:mt-2 sm:flex-row sm:items-baseline sm:gap-2">
-            <span className="text-xl font-bold text-gray-900 sm:text-3xl dark:text-white">
+          <div className="@[32rem]/dash:mt-2 @[40rem]/dash:flex-row @[40rem]/dash:items-baseline @[40rem]/dash:gap-2 mt-1 flex min-w-0 flex-col items-start gap-1">
+            <span className="@[28rem]/dash:text-2xl @[40rem]/dash:text-3xl max-w-full truncate text-lg font-bold tabular-nums text-gray-900 dark:text-white">
               {stat.value.toLocaleString()}
             </span>
             <Badge
               variant={trendBadgeVariant(stat.trend)}
               size="sm"
-              className="w-fit shrink-0 px-1.5 sm:px-2"
+              className="@[40rem]/dash:px-2 w-fit max-w-full shrink-0 truncate px-1.5"
             >
               {formatChange(stat.trend, stat.changePercent)}
             </Badge>
@@ -49,7 +49,7 @@ export function DashboardStatsCards({ stats, resolveLabel }: DashboardStatsCards
 
 export function DashboardStatsSkeleton() {
   return (
-    <div className="grid grid-cols-3 gap-2 sm:gap-4">
+    <div className="@[28rem]/dash:gap-3 @[40rem]/dash:gap-4 grid grid-cols-3 gap-2">
       {Array.from({ length: 3 }).map((_, i) => (
         <CardSkeleton key={i} />
       ))}

@@ -5,9 +5,8 @@ import {
   DashboardCharts,
   DashboardChartsSkeleton,
 } from '@/features/dashboard/components/DashboardCharts';
-import { DashboardHeader } from '@/features/dashboard/components/DashboardHeader';
 import { DashboardInsightsSection } from '@/features/dashboard/components/DashboardInsights';
-import { DashboardProfileCard } from '@/features/dashboard/components/DashboardProfileCard';
+import { DashboardWelcomeRow } from '@/features/dashboard/components/DashboardWelcomeRow';
 import {
   DashboardStatsCards,
   DashboardStatsSkeleton,
@@ -31,23 +30,34 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto] lg:items-stretch">
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto] sm:items-stretch">
-            <DashboardHeader title={t('dashboard.title')} subtitle={t('dashboard.subtitle')} />
-            {user && <DashboardProfileCard user={user} />}
-          </div>
+      {/*
+        One donut chart on the right — height comes from the full left stack
+        (welcome + profile + stats). Welcome | profile stay side by side while
+        the title fits on one line; otherwise profile moves below.
+      */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(17.5rem,22rem)] lg:items-stretch">
+        <div className="@container/dash flex min-w-0 flex-col gap-4">
+          <DashboardWelcomeRow
+            title={t('dashboard.title')}
+            subtitle={t('dashboard.subtitle')}
+            user={user}
+          />
           {isLoading ? (
             <DashboardStatsSkeleton />
           ) : (
             stats && <DashboardStatsCards stats={stats} resolveLabel={t} />
           )}
         </div>
-        <DashboardUserDistribution
-          userDistribution={userDistribution}
-          resolveLabel={t}
-          isLoading={isLoading}
-        />
+
+        <div className="min-h-0 w-full lg:relative">
+          <div className="w-full lg:absolute lg:inset-0">
+            <DashboardUserDistribution
+              userDistribution={userDistribution}
+              resolveLabel={t}
+              isLoading={isLoading}
+            />
+          </div>
+        </div>
       </div>
 
       {error && (

@@ -13,11 +13,14 @@ export function DashboardUserDistribution({
   isLoading = false,
 }: DashboardUserDistributionProps) {
   if (isLoading || !userDistribution) {
-    return <DonutChartSkeleton className="h-full" />;
+    return <DonutChartSkeleton className="h-full min-h-0 w-full overflow-hidden" />;
   }
 
   return (
-    <MetricCard title={resolveLabel(userDistribution.titleKey)} className="h-full">
+    <MetricCard
+      title={resolveLabel(userDistribution.titleKey)}
+      className="h-full min-h-0 w-full overflow-hidden"
+    >
       <DonutChart
         segments={userDistribution.segments.map((segment) => ({
           ...segment,
@@ -25,7 +28,7 @@ export function DashboardUserDistribution({
         }))}
         total={userDistribution.total}
         centerLabel={resolveLabel('dashboard.charts.totalUsers')}
-        size={140}
+        className="h-full min-h-0"
       />
     </MetricCard>
   );

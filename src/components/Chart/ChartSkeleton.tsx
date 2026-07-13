@@ -20,12 +20,12 @@ export function ChartSkeleton({ className = '' }: { className?: string }) {
 export function DonutChartSkeleton({ className = '' }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900 ${className}`}
+      className={`flex animate-pulse flex-col rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900 ${className}`}
     >
-      <div className="mb-4 h-4 w-40 rounded bg-gray-200 dark:bg-gray-700" />
-      <div className="flex items-center gap-8">
-        <div className="h-40 w-40 rounded-full border-[28px] border-gray-200 dark:border-gray-700" />
-        <div className="flex-1 space-y-3">
+      <div className="mb-4 h-4 w-40 shrink-0 rounded bg-gray-200 dark:bg-gray-700" />
+      <div className="flex min-h-0 flex-1 items-center justify-center gap-8">
+        <div className="h-40 w-40 shrink-0 rounded-full border-[28px] border-gray-200 dark:border-gray-700" />
+        <div className="w-24 space-y-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="h-4 rounded bg-gray-200 dark:bg-gray-700" />
           ))}
