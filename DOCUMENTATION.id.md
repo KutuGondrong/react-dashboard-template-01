@@ -119,8 +119,8 @@ Versi dipin via [Volta](https://volta.sh) di `package.json`:
 
 | Tool    | Versi     |
 | ------- | --------- |
-| Node.js | `20.11.0` |
-| pnpm    | `8.15.4`  |
+| Node.js | `24.18.0` |
+| pnpm    | `11.17.0` |
 
 ### Dependensi runtime
 
@@ -152,13 +152,13 @@ Versi dipin via [Volta](https://volta.sh) di `package.json`:
 | Tool         | Wajib            | Catatan                              |
 | ------------ | ---------------- | ------------------------------------ |
 | Git          | Direkomendasikan | Clone repositori                     |
-| Node.js 20.x | Ya               | `20.11.0` direkomendasikan           |
-| pnpm 8.x     | Ya\*             | `8.15.4` direkomendasikan            |
+| Node.js 24.x | Ya               | `24.18.0` direkomendasikan           |
+| pnpm 11.x    | Ya\*             | `11.17.0` direkomendasikan           |
 | GNU Make     | Opsional         | Shortcut: `make dev`, `make feature` |
 
 ```bash
-volta pin node@20.11.0
-volta pin pnpm@8.15.4
+volta pin node@24.18.0
+volta pin pnpm@11.17.0
 ```
 
 ### Langkah 2: Clone repositori template
@@ -173,6 +173,15 @@ cd react-app
 ```bash
 pnpm install
 ```
+
+**Kebijakan pnpm 11 `allowBuilds`:** Lifecycle script dependency diblokir secara default. Project ini hanya mengizinkan `esbuild` di `pnpm-workspace.yaml`:
+
+```yaml
+allowBuilds:
+  esbuild: true
+```
+
+Jangan pakai `dangerouslyAllowAllBuilds`. Jika muncul `[ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: esbuild@...`, pastikan entri tersebut ada, hapus `node_modules` jika corrupt, lalu jalankan ulang `pnpm install`.
 
 ### Langkah 4: Jalankan dev server
 

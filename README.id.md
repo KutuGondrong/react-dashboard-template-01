@@ -44,15 +44,15 @@ Konfigurasi pin tercatat eksplisit di `package.json`:
 
 ```json
 "volta": {
-  "node": "20.11.0",
-  "pnpm": "8.15.4"
+  "node": "24.18.0",
+  "pnpm": "11.17.0"
 }
 ```
 
 | Tool         | Versi Terkunci | Peran dalam Project                                                  |
 | ------------ | -------------- | -------------------------------------------------------------------- |
-| **Node.js**  | `v20.11.0`     | Runtime JavaScript, eksekusi script build, dev server Vite           |
-| **pnpm**     | `v8.15.4`      | Resolusi dependency, symlink `node_modules`, menjalankan npm scripts |
+| **Node.js**  | `v24.18.0`     | Runtime JavaScript, eksekusi script build, dev server Vite           |
+| **pnpm**     | `v11.17.0`     | Resolusi dependency, symlink `node_modules`, menjalankan npm scripts |
 | **Git**      | versi terbaru  | Clone, branch, commit, scaffolding `make generate`                   |
 | **GNU Make** | opsional       | Shortcut perintah development (`make dev`, `make build`, dll.)       |
 | **rsync**    | opsional       | Hanya diperlukan untuk `make generate` / `generate-app.mjs`          |
@@ -73,10 +73,10 @@ Setelah instalasi, buka **PowerShell baru** atau **Git Bash**, lalu:
 
 ```powershell
 cd path\to\react-app
-volta pin node@20.11.0
-volta pin pnpm@8.15.4
-node --version    # harus: v20.11.0
-pnpm --version    # harus: 8.15.4
+volta pin node@24.18.0
+volta pin pnpm@11.17.0
+node --version    # harus: v24.18.0
+pnpm --version    # harus: 11.17.0
 ```
 
 > **Catatan Windows:** Untuk `make generate` yang membutuhkan `rsync`, gunakan **WSL (Windows Subsystem for Linux)**. Native Windows tidak menyertakan `rsync` secara default.
@@ -95,8 +95,8 @@ Restart terminal, lalu:
 
 ```bash
 cd ~/path/to/react-app
-volta pin node@20.11.0
-volta pin pnpm@8.15.4
+volta pin node@24.18.0
+volta pin pnpm@11.17.0
 ```
 
 Prasyarat tambahan macOS (untuk `make generate`):
@@ -113,8 +113,8 @@ xcode-select --install   # Git + make (Command Line Tools)
 curl https://get.volta.sh | bash
 
 # Restart shell, lalu pin versi
-volta pin node@20.11.0
-volta pin pnpm@8.15.4
+volta pin node@24.18.0
+volta pin pnpm@11.17.0
 ```
 
 Debian/Ubuntu: prasyarat build tools:
@@ -141,8 +141,8 @@ sudo pacman -S --needed git make rsync
 Jalankan seluruh perintah berikut. Semua harus berhasil sebelum melanjutkan:
 
 ```bash
-node --version          # v20.11.0
-pnpm --version          # 8.15.4
+node --version          # v24.18.0
+pnpm --version          # 11.17.0
 git --version           # git version 2.x
 volta --version         # 1.x (opsional tapi disarankan)
 make --version          # opsional
@@ -152,7 +152,7 @@ rsync --version         # opsional (wajib untuk make generate)
 #### 1.4 Catatan Penting Setelah Instalasi Volta
 
 1. **Restart terminal** setelah instalasi Volta pertama kali; PATH belum ter-update sebelum restart.
-2. Jalankan `volta pin node@20.11.0` dan `volta pin pnpm@8.15.4` jika:
+2. Jalankan `volta pin node@24.18.0` dan `volta pin pnpm@11.17.0` jika:
    - Anda fork/clone repo tanpa blok `volta` di `package.json`
    - Versi yang aktif tidak sesuai saat `node --version`
 3. **Jangan campur version manager**; hindari `nvm`, `fnm`, atau `asdf` bersamaan dengan Volta di project yang sama; konflik PATH dapat menyebabkan versi Node yang salah terpakai.
@@ -198,7 +198,16 @@ package.json       → deklarasi dependency + volta pin
 node_modules/      → symlink tree (jangan edit manual)
 ```
 
-> Fallback `npm install` tetap berfungsi, namun project ini **diuji resmi hanya dengan pnpm 8.15.4**.
+> Fallback `npm install` tetap berfungsi, namun project ini **diuji resmi hanya dengan pnpm 11.17.0**.
+
+**Kebijakan pnpm 11 `allowBuilds`:** pnpm 11 memblokir lifecycle script dependency secara default. Project ini hanya mengizinkan `esbuild` (dibutuhkan Vite) di `pnpm-workspace.yaml`:
+
+```yaml
+allowBuilds:
+  esbuild: true
+```
+
+Jangan gunakan `dangerouslyAllowAllBuilds`. Jika muncul `[ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: esbuild@...`, pastikan `allowBuilds.esbuild: true` ada, hapus `node_modules` jika tree terlihat corrupt, lalu jalankan ulang `pnpm install`.
 
 #### 2.3 Langkah 3: Development Mode
 
@@ -339,19 +348,19 @@ pnpm run preview
 
 #### 3.1 Stack Lengkap & Versi
 
-| Kategori     | Package                                    | Versi                     | Peran                                    |
-| ------------ | ------------------------------------------ | ------------------------- | ---------------------------------------- |
-| UI Framework | `react` + `react-dom`                      | 18.3.1                    | Rendering, concurrent features, Suspense |
-| Language     | `typescript`                               | 5.7.2                     | Static typing, strict mode               |
-| Bundler      | `vite`                                     | 5.4.11                    | Dev server ESM + production Rollup       |
-| React Plugin | `@vitejs/plugin-react`                     | 4.3.4                     | Fast Refresh, JSX transform              |
-| Styling      | `tailwindcss`                              | 3.4.16                    | Utility-first CSS                        |
-| CSS Pipeline | `postcss` + `autoprefixer`                 | 8.4 / 10.4                | Transform + vendor prefix                |
-| HTTP Client  | `axios`                                    | 1.7.9                     | REST API dengan interceptors             |
-| Routing      | `react-router-dom`                         | 6.28.0                    | SPA routing, nested layout, guards       |
-| Linting      | `eslint` + `@typescript-eslint`            | 8.57 / 8.62               | Static analysis                          |
-| Formatting   | `prettier` + `prettier-plugin-tailwindcss` | 3.4 / 0.6                 | Code style + Tailwind sort               |
-| Runtime Pin  | `volta` (via package.json)                 | node 20.11.0, pnpm 8.15.4 | Toolchain consistency                    |
+| Kategori     | Package                                    | Versi                      | Peran                                    |
+| ------------ | ------------------------------------------ | -------------------------- | ---------------------------------------- |
+| UI Framework | `react` + `react-dom`                      | 18.3.1                     | Rendering, concurrent features, Suspense |
+| Language     | `typescript`                               | 5.7.2                      | Static typing, strict mode               |
+| Bundler      | `vite`                                     | 5.4.11                     | Dev server ESM + production Rollup       |
+| React Plugin | `@vitejs/plugin-react`                     | 4.3.4                      | Fast Refresh, JSX transform              |
+| Styling      | `tailwindcss`                              | 3.4.16                     | Utility-first CSS                        |
+| CSS Pipeline | `postcss` + `autoprefixer`                 | 8.4 / 10.4                 | Transform + vendor prefix                |
+| HTTP Client  | `axios`                                    | 1.7.9                      | REST API dengan interceptors             |
+| Routing      | `react-router-dom`                         | 6.28.0                     | SPA routing, nested layout, guards       |
+| Linting      | `eslint` + `@typescript-eslint`            | 8.57 / 8.62                | Static analysis                          |
+| Formatting   | `prettier` + `prettier-plugin-tailwindcss` | 3.4 / 0.6                  | Code style + Tailwind sort               |
+| Runtime Pin  | `volta` (via package.json)                 | node 24.18.0, pnpm 11.17.0 | Toolchain consistency                    |
 
 #### 3.2 React 18.3 + TypeScript 5.7 + Vite 5.4: Kombinasi Mutakhir
 
@@ -1451,21 +1460,40 @@ pnpm install
 make dev
 ```
 
-#### Versi Node salah (`v18.x` atau `v22.x`)
+#### Versi Node / pnpm salah
 
 ```bash
-volta pin node@20.11.0
-volta pin pnpm@8.15.4
+volta pin node@24.18.0
+volta pin pnpm@11.17.0
 # restart terminal
-node --version  # harus v20.11.0
+node --version  # harus v24.18.0
+pnpm --version  # harus 11.17.0
 ```
 
 #### `pnpm: command not found`
 
 ```bash
-volta install pnpm@8.15.4
-# atau: npm install -g pnpm@8.15.4
+volta install pnpm@11.17.0
+# atau: npm install -g pnpm@11.17.0
 ```
+
+#### `ERR_PNPM_IGNORED_BUILDS` (esbuild)
+
+pnpm 11 mengabaikan build script dependency yang belum di-approve. Pastikan `pnpm-workspace.yaml` berisi:
+
+```yaml
+allowBuilds:
+  esbuild: true
+```
+
+Lalu:
+
+```bash
+rm -rf node_modules
+pnpm install
+```
+
+Jangan pakai `dangerouslyAllowAllBuilds`; approve package per-package via `allowBuilds` saja.
 
 #### ESLint error `no-explicit-any`
 

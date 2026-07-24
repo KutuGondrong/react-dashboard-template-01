@@ -109,8 +109,8 @@ Pinned via [Volta](https://volta.sh) in `package.json`:
 
 | Tool    | Version   |
 | ------- | --------- |
-| Node.js | `20.11.0` |
-| pnpm    | `8.15.4`  |
+| Node.js | `24.18.0` |
+| pnpm    | `11.17.0` |
 
 ### Runtime dependencies
 
@@ -140,12 +140,12 @@ Pinned via [Volta](https://volta.sh) in `package.json`:
 
 ### Step 1: Install prerequisites
 
-| Tool         | Required    | Notes                                       |
-| ------------ | ----------- | ------------------------------------------- |
-| Git          | Recommended | Clone the repository                        |
-| Node.js 20.x | Yes         | `20.11.0` recommended                       |
-| pnpm 8.x     | Yes\*       | `8.15.4` recommended; npm works as fallback |
-| GNU Make     | Optional    | Shortcuts: `make dev`, `make feature`, etc. |
+| Tool         | Required    | Notes                                        |
+| ------------ | ----------- | -------------------------------------------- |
+| Git          | Recommended | Clone the repository                         |
+| Node.js 24.x | Yes         | `24.18.0` recommended                        |
+| pnpm 11.x    | Yes\*       | `11.17.0` recommended; npm works as fallback |
+| GNU Make     | Optional    | Shortcuts: `make dev`, `make feature`, etc.  |
 
 Install Volta (recommended for version pinning):
 
@@ -163,10 +163,10 @@ winget install Volta.Volta
 Pin versions inside the project:
 
 ```bash
-volta pin node@20.11.0
-volta pin pnpm@8.15.4
-node --version   # v20.11.0
-pnpm --version   # 8.15.4
+volta pin node@24.18.0
+volta pin pnpm@11.17.0
+node --version   # v24.18.0
+pnpm --version   # 11.17.0
 ```
 
 ### Step 2: Clone the template repository
@@ -183,6 +183,15 @@ pnpm install
 ```
 
 This resolves `pnpm-lock.yaml` and installs all packages listed in `package.json`.
+
+**pnpm 11 `allowBuilds`:** Lifecycle scripts are blocked by default. This project approves only `esbuild` in `pnpm-workspace.yaml`:
+
+```yaml
+allowBuilds:
+  esbuild: true
+```
+
+Do not use `dangerouslyAllowAllBuilds`. If install fails with `[ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: esbuild@...`, confirm that entry, remove a corrupt `node_modules` if needed, then re-run `pnpm install`.
 
 ### Step 4: Start the development server
 

@@ -38,15 +38,15 @@ This project pins **Node.js** and **pnpm** with [Volta](https://volta.sh) for co
 
 ```json
 "volta": {
-  "node": "20.11.0",
-  "pnpm": "8.15.4"
+  "node": "24.18.0",
+  "pnpm": "11.17.0"
 }
 ```
 
 | Tool         | Version    | Role                                           |
 | ------------ | ---------- | ---------------------------------------------- |
-| **Node.js**  | `v20.11.0` | Runtime, build scripts, Vite dev server        |
-| **pnpm**     | `v8.15.4`  | Dependency management and npm scripts          |
+| **Node.js**  | `v24.18.0` | Runtime, build scripts, Vite dev server        |
+| **pnpm**     | `v11.17.0` | Dependency management and npm scripts          |
 | **Git**      | latest     | Clone, branch, commit, `make generate`         |
 | **GNU Make** | optional   | Dev shortcuts (`make dev`, `make build`, etc.) |
 | **rsync**    | optional   | Required for `make generate` only              |
@@ -68,10 +68,10 @@ After installation, restart your terminal and verify:
 
 ```bash
 cd react-app
-volta pin node@20.11.0
-volta pin pnpm@8.15.4
-node --version   # v20.11.0
-pnpm --version   # 8.15.4
+volta pin node@24.18.0
+volta pin pnpm@11.17.0
+node --version   # v24.18.0
+pnpm --version   # 11.17.0
 ```
 
 > **Windows note:** Use **WSL** for `make generate`. Native Windows does not include `rsync` by default.
@@ -95,6 +95,15 @@ pnpm run dev
 | Format       | `pnpm run format`  | Prettier + ESLint auto-fix                |
 | Build        | `pnpm run build`   | Type-check → production bundle in `dist/` |
 | Preview      | `pnpm run preview` | Serve `dist/` locally                     |
+
+**pnpm 11 build scripts (`allowBuilds`):** pnpm 11 blocks dependency lifecycle scripts by default. This project approves only `esbuild` (needed by Vite) in `pnpm-workspace.yaml`:
+
+```yaml
+allowBuilds:
+  esbuild: true
+```
+
+Do **not** use `dangerouslyAllowAllBuilds`. If you see `[ERR_PNPM_IGNORED_BUILDS] Ignored build scripts: esbuild@...`, confirm `allowBuilds.esbuild: true` is present, then re-run `pnpm install` (remove `node_modules` first if the tree looks corrupt).
 
 **Demo login:** `admin@mail.com` / `password123`
 
@@ -299,8 +308,9 @@ make generate name=my-new-app out=~/projects/my-new-app
 | Issue                            | Fix                                                                              |
 | -------------------------------- | -------------------------------------------------------------------------------- |
 | `node_modules not found`         | Run `pnpm install`                                                               |
-| Wrong Node version               | `volta pin node@20.11.0 && volta pin pnpm@8.15.4`, restart terminal              |
-| `pnpm: command not found`        | `volta install pnpm@8.15.4`                                                      |
+| Wrong Node / pnpm version        | `volta pin node@24.18.0 && volta pin pnpm@11.17.0`, restart terminal             |
+| `pnpm: command not found`        | `volta install pnpm@11.17.0`                                                     |
+| `ERR_PNPM_IGNORED_BUILDS`        | Ensure `allowBuilds.esbuild: true` in `pnpm-workspace.yaml`, then `pnpm install` |
 | ESLint `no-explicit-any`         | Replace `any` with a specific type or `unknown`                                  |
 | Blank page after subpath deploy  | Match `VITE_BASE_PATH` with your hosting path; enable SPA fallback on the server |
 | `make generate` fails on Windows | Use WSL (requires `rsync`)                                                       |
