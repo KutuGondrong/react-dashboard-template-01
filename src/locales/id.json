@@ -1,0 +1,161 @@
+{
+  "nav": {
+    "dashboard": "Dasbor",
+    "users": "Pengguna",
+    "settings": "Pengaturan",
+    "components": "Komponen",
+    "componentsOverview": "Ringkasan",
+    "storybook": "Storybook",
+    "documentation": "Dokumentasi",
+    "documentationOverview": "Overview",
+    "documentationTutorial": "Tutorial",
+    "documentationPreview": "Preview",
+    "login": "Masuk",
+    "register": "Daftar"
+  },
+  "auth": {
+    "loginTitle": "Masuk",
+    "loginSubtitle": "Masukkan kredensial Anda untuk mengakses akun",
+    "registerTitle": "Buat Akun",
+    "registerSubtitle": "Isi detail untuk mendaftarkan akun baru",
+    "emailLabel": "Alamat Email",
+    "emailPlaceholder": "anda@contoh.com",
+    "passwordLabel": "Kata Sandi",
+    "passwordPlaceholder": "Masukkan kata sandi",
+    "confirmPasswordLabel": "Konfirmasi Kata Sandi",
+    "confirmPasswordPlaceholder": "Masukkan ulang kata sandi",
+    "loginButton": "Masuk",
+    "registerButton": "Buat Akun",
+    "noAccount": "Belum punya akun?",
+    "hasAccount": "Sudah punya akun?",
+    "signUpLink": "Daftar",
+    "signInLink": "Masuk",
+    "invalidCredentials": "Email atau kata sandi tidak valid",
+    "emailRequired": "Email wajib diisi",
+    "emailInvalid": "Masukkan alamat email yang valid",
+    "passwordRequired": "Kata sandi wajib diisi",
+    "passwordMinLength": "Kata sandi minimal 6 karakter",
+    "confirmPasswordRequired": "Konfirmasi kata sandi wajib diisi",
+    "passwordMismatch": "Kata sandi tidak cocok",
+    "loginSuccess": "Berhasil masuk",
+    "logoutSuccess": "Anda telah keluar",
+    "demoCredentialsTitle": "Kredensial demo",
+    "demoCredentialsHint": "admin@mail.com / password123"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Halaman tidak ditemukan",
+      "description": "Halaman yang Anda cari tidak ada atau mungkin sudah dipindahkan. Gunakan menu atau kembali ke dasbor.",
+      "descriptionDev": "Petunjuk dev: jika Anda menambah item sidebar secara manual, daftarkan route di featureRoutes.tsx dan menu di featureMenuItems.tsx.",
+      "backToDashboard": "Kembali ke dasbor"
+    }
+  },
+  "dashboard": {
+    "title": "Selamat Datang Kembali",
+    "subtitle": "Pantau metrik, aktivitas, dan tren aplikasi Anda. Semua terkumpul rapi di satu tempat.",
+    "totalUsers": "Total Pengguna",
+    "activeSessions": "Sesi Aktif",
+    "recentActivity": "Aktivitas Terbaru",
+    "loadError": "Gagal memuat data dasbor",
+    "charts": {
+      "revenue": "Pendapatan Bulanan",
+      "activity": "Aktivitas Mingguan",
+      "userDistribution": "Distribusi Pengguna",
+      "totalUsers": "Total",
+      "admin": "Admin",
+      "moderator": "Moderator",
+      "user": "Pengguna"
+    },
+    "insights": {
+      "title": "Insight Dasbor",
+      "subtitle": "Sorotan utama dan kesehatan platform dalam satu tampilan.",
+      "live": "Live",
+      "updatedAt": "Diperbarui {{time}}",
+      "badges": {
+        "growth": "Pertumbuhan",
+        "record": "Rekor",
+        "peak": "Puncak"
+      },
+      "highlights": {
+        "growth": {
+          "title": "Basis pengguna terus bertumbuh",
+          "description": "128 total pengguna dengan pertumbuhan +12% bulan ini — momentum platform semakin kuat."
+        },
+        "revenue": {
+          "title": "Pendapatan Juni capai rekor baru",
+          "description": "Pendapatan bulanan mencapai 8,2M, naik dari 7,0M di Mei — bulan terbaik sejauh ini."
+        },
+        "activity": {
+          "title": "Jumat jadi hari puncak aktivitas",
+          "description": "Aktivitas mingguan puncak di 52 sesi pada Jumat, dengan pertumbuhan +18% pada event terbaru."
+        }
+      },
+      "actions": {
+        "viewUsers": "Lihat pengguna",
+        "viewReports": "Buka laporan",
+        "viewAlerts": "Cek peringatan"
+      },
+      "summary": {
+        "title": "Ringkasan platform",
+        "status": {
+          "label": "Status sistem",
+          "value": "Operasional"
+        },
+        "sync": {
+          "label": "Sinkronisasi data",
+          "value": "Real-time"
+        },
+        "uptime": {
+          "label": "Uptime",
+          "value": "99,9%"
+        },
+        "response": {
+          "label": "Respon rata-rata",
+          "value": "< 120ms"
+        }
+      }
+    }
+  },
+  "users": {
+    "subtitle": "Kelola pengguna dengan pagination server-side, seleksi baris, dan aksi.",
+    "editTitle": "Ubah Pengguna",
+    "editDescription": "Perbarui informasi pengguna",
+    "saveTitle": "Simpan Perubahan",
+    "saveMessage": "Apakah Anda yakin ingin menyimpan perubahan untuk {{name}}?",
+    "deleteTitle": "Hapus Pengguna",
+    "deleteDescription": "Tinjau detail pengguna sebelum menghapus",
+    "deleteMessage": "Apakah Anda yakin ingin menghapus {{name}}? Tindakan ini tidak dapat dibatalkan.",
+    "bulkDeleteTitle": "Hapus Pengguna Terpilih",
+    "bulkDeleteDescription": "Tinjau {{count}} pengguna terpilih sebelum menghapus",
+    "bulkDeleteMessage": "Apakah Anda yakin ingin menghapus semua {{count}} pengguna terpilih? Tindakan ini tidak dapat dibatalkan."
+  },
+  "error": {
+    "boundaryTitle": "Kesalahan Tidak Terduga",
+    "boundaryDescription": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi atau hubungi dukungan jika masalah berlanjut.",
+    "chunkTitle": "Kayaknya ada masalah",
+    "chunkDescription": "Kayaknya sedang ada masalah. Refresh aja deh.",
+    "reloadPage": "Muat Ulang Halaman",
+    "goHome": "Ke Beranda"
+  },
+  "validation": {
+    "required": "Field ini wajib diisi",
+    "email": "Masukkan alamat email yang valid",
+    "minLength": "Nilai terlalu pendek",
+    "pattern": "Format tidak valid"
+  },
+  "toast": {
+    "position": {
+      "top-left": "Kiri Atas",
+      "top-center": "Tengah Atas",
+      "top-right": "Kanan Atas",
+      "center": "Tengah",
+      "bottom-left": "Kiri Bawah",
+      "bottom-center": "Tengah Bawah",
+      "bottom-right": "Kanan Bawah"
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} Teristimewa Dashboard. Hak cipta dilindungi.",
+    "version": "Versi {{version}}"
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "settings": "Settings",
+    "components": "Components",
+    "componentsOverview": "Overview",
+    "storybook": "Storybook",
+    "documentation": "Documentation",
+    "documentationOverview": "Overview",
+    "documentationTutorial": "Tutorial",
+    "documentationPreview": "Preview",
+    "login": "Login",
+    "register": "Register"
+  },
+  "auth": {
+    "loginTitle": "Sign In",
+    "loginSubtitle": "Enter your credentials to access your account",
+    "registerTitle": "Create Account",
+    "registerSubtitle": "Fill in the details to register a new account",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordLabel": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "loginButton": "Sign In",
+    "registerButton": "Create Account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUpLink": "Sign up",
+    "signInLink": "Sign in",
+    "invalidCredentials": "Invalid email or password",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordMismatch": "Passwords do not match",
+    "loginSuccess": "Login successful",
+    "logoutSuccess": "You have been logged out",
+    "demoCredentialsTitle": "Demo credentials",
+    "demoCredentialsHint": "admin@mail.com / password123"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or may have been moved. Use the menu or go back to the dashboard.",
+      "descriptionDev": "Dev hint: if you added a sidebar item manually, register the route in featureRoutes.tsx and the menu in featureMenuItems.tsx.",
+      "backToDashboard": "Back to dashboard"
+    }
+  },
+  "dashboard": {
+    "title": "Welcome Back",
+    "subtitle": "Monitor metrics, activity, and trends. Everything you need, in one place.",
+    "totalUsers": "Total Users",
+    "activeSessions": "Active Sessions",
+    "recentActivity": "Recent Activity",
+    "loadError": "Failed to load dashboard data",
+    "charts": {
+      "revenue": "Monthly Revenue",
+      "activity": "Weekly Activity",
+      "userDistribution": "User Distribution",
+      "totalUsers": "Total",
+      "admin": "Admin",
+      "moderator": "Moderator",
+      "user": "Users"
+    },
+    "insights": {
+      "title": "Dashboard Insights",
+      "subtitle": "Key highlights and platform health at a glance.",
+      "live": "Live",
+      "updatedAt": "Updated {{time}}",
+      "badges": {
+        "growth": "Growth",
+        "record": "Record",
+        "peak": "Peak Day"
+      },
+      "highlights": {
+        "growth": {
+          "title": "User base is expanding",
+          "description": "128 total users with +12% growth this month — momentum is building across the platform."
+        },
+        "revenue": {
+          "title": "June revenue hits a new high",
+          "description": "Monthly revenue reached 8.2M, up from 7.0M in May — your strongest month so far."
+        },
+        "activity": {
+          "title": "Friday drives peak activity",
+          "description": "Weekly activity peaked at 52 sessions on Friday, with +18% overall growth in recent events."
+        }
+      },
+      "actions": {
+        "viewUsers": "View users",
+        "viewReports": "Open reports",
+        "viewAlerts": "Check alerts"
+      },
+      "summary": {
+        "title": "Platform overview",
+        "status": {
+          "label": "System status",
+          "value": "Operational"
+        },
+        "sync": {
+          "label": "Data sync",
+          "value": "Real-time"
+        },
+        "uptime": {
+          "label": "Uptime",
+          "value": "99.9%"
+        },
+        "response": {
+          "label": "Avg. response",
+          "value": "< 120ms"
+        }
+      }
+    }
+  },
+  "users": {
+    "subtitle": "Manage users with server-side pagination, row selection, and actions.",
+    "editTitle": "Edit User",
+    "editDescription": "Update user information",
+    "saveTitle": "Save Changes",
+    "saveMessage": "Are you sure you want to save changes for {{name}}?",
+    "deleteTitle": "Delete User",
+    "deleteDescription": "Review user details before deleting",
+    "deleteMessage": "Are you sure you want to delete {{name}}? This action cannot be undone.",
+    "bulkDeleteTitle": "Delete Selected Users",
+    "bulkDeleteDescription": "Review {{count}} selected users before deleting",
+    "bulkDeleteMessage": "Are you sure you want to delete all {{count}} selected users? This action cannot be undone."
+  },
+  "error": {
+    "boundaryTitle": "Unexpected Error",
+    "boundaryDescription": "An unexpected error occurred. Please try again or contact support if the problem persists.",
+    "chunkTitle": "Something went wrong",
+    "chunkDescription": "Looks like something went wrong. Try refreshing the page.",
+    "reloadPage": "Reload Page",
+    "goHome": "Go to Home"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "minLength": "Value is too short",
+    "pattern": "Invalid format"
+  },
+  "toast": {
+    "position": {
+      "top-left": "Top Left",
+      "top-center": "Top Center",
+      "top-right": "Top Right",
+      "center": "Center",
+      "bottom-left": "Bottom Left",
+      "bottom-center": "Bottom Center",
+      "bottom-right": "Bottom Right"
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} Teristimewa Dashboard. All rights reserved.",
+    "version": "Version {{version}}"
+  }
+}
